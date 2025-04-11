@@ -1,7 +1,7 @@
-package miau.auau.amigosdequatropatas.db.dals;
+package miau.auau.amigosdequatropatas.dao;
 
-import miau.auau.amigosdequatropatas.entidades.TipoLancamento;
-import miau.auau.amigosdequatropatas.entidades.Usuario;
+import miau.auau.amigosdequatropatas.entities.Usuario;
+import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.stereotype.Component;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UsuarioDAL implements IDAL<Usuario> {
+public class UsuarioDAO implements IDAL<Usuario> {
 
     @Override
-    public boolean gravar(Usuario entidade) {
+    public boolean gravar(Usuario entidade, Conexao conexao) {
         String sql = """
                 INSERT INTO usuario (usu_nome, usu_email, usu_senha, usu_telefone, usu_cpf, usu_privilegio, 
                 usu_sexo, usu_cep, usu_rua, usu_bairro, usu_numero)
@@ -31,11 +31,11 @@ public class UsuarioDAL implements IDAL<Usuario> {
         .replace("#9", entidade.getRua())
         .replace("#10", entidade.getBairro())
         .replace("#11", entidade.getNumero());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean alterar(Usuario entidade) {
+    public boolean alterar(Usuario entidade, Conexao conexao) {
         String sql = """
                 UPDATE usuario
                 SET usu_nome = '#1', usu_email = '#2', usu_senha = '#3', usu_telefone = '#4', usu_cpf = '#5', 
@@ -55,20 +55,20 @@ public class UsuarioDAL implements IDAL<Usuario> {
                 .replace("#10", entidade.getBairro())
                 .replace("#11", entidade.getNumero())
                 .replace("#12", "" + entidade.getCodUsuario());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean apagar(Usuario entidade) {
+    public boolean apagar(Usuario entidade, Conexao conexao) {
         String sql = "DELETE FROM usuario WHERE usu_id = " + entidade.getCodUsuario();
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public Usuario get(int id) {
+    public Usuario get(int id, Conexao conexao) {
         Usuario usuario = null;
         String sql = "SELECT * FROM usuario WHERE usu_id = " + id;
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             if (resultSet.next()) {
                 usuario = new Usuario(
@@ -93,7 +93,7 @@ public class UsuarioDAL implements IDAL<Usuario> {
     }
 
     @Override
-    public List<Usuario> get(String filtro) {
+    public List<Usuario> get(String filtro, Conexao conexao) {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuario";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
@@ -102,7 +102,7 @@ public class UsuarioDAL implements IDAL<Usuario> {
         }
         sql += " ORDER BY usu_nome";
         System.out.println("SQL gerado: " + sql);
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
                 lista.add(new Usuario(

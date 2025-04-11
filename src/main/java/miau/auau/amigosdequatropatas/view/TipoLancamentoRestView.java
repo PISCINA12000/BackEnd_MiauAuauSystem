@@ -1,11 +1,14 @@
 package miau.auau.amigosdequatropatas.view;
 
-import miau.auau.amigosdequatropatas.control.TipoLancamentoController;
-import miau.auau.amigosdequatropatas.entidades.TipoLancamento;
+import miau.auau.amigosdequatropatas.controller.TipoLancamentoController;
+import miau.auau.amigosdequatropatas.entities.TipoLancamento;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -15,7 +18,6 @@ public class TipoLancamentoRestView {
     @Autowired
     private TipoLancamentoController tipoLancamentoController;
 
-    // MÉTODOS ---------------------------------------------
     // BUSCAR
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getTiposLancamento(@PathVariable(value = "filtro") String filtro) {
@@ -35,9 +37,14 @@ public class TipoLancamentoRestView {
 
     // GRAVAR
     @PostMapping("gravar")
-    public ResponseEntity<Object> gravarTipoLancamento(@RequestBody TipoLancamento tipoLancamento) {
-        if (tipoLancamentoController.onGravar(tipoLancamento))
-            return ResponseEntity.ok(tipoLancamento);
+    public ResponseEntity<Object> gravarTipoLancamento(@RequestParam String descricao) {
+        //criar um JSON
+        Map<String, Object> json = new HashMap<>();
+        json.put("descricao", descricao);
+
+        //mandar para a controller
+        if (tipoLancamentoController.onGravar(json))
+            return ResponseEntity.ok(json);
         else
             return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de lançamento"));
     }
@@ -48,15 +55,23 @@ public class TipoLancamentoRestView {
         if (tipoLancamentoController.onDelete(id)) {
             return ResponseEntity.ok(new Erro("Tipo de lançamento excluído com sucesso!"));
         } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de lançamento"));
+            return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de lançamento!!"));
     }
 
     // ATUALIZAR
     @PutMapping("atualizar")
-    public ResponseEntity<Object> atualizarTipoLancamento(@RequestBody TipoLancamento tipoLancamento) {
-        if (tipoLancamentoController.onAlterar(tipoLancamento)) {
-            return ResponseEntity.ok(tipoLancamento);
+    public ResponseEntity<Object> atualizarTipoLancamento(
+            @RequestParam int cod,
+            @RequestParam String descricao)
+    {
+        Map<String, Object> json = new HashMap<>();
+        json.put("cod", cod);
+        json.put("descricao", descricao);
+
+        //mandar para a controller
+        if (tipoLancamentoController.onAlterar(json)) {
+            return ResponseEntity.ok(json);
         } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de lançamento"));
+            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de lançamento!!"));
     }
 }

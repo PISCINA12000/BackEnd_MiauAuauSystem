@@ -1,29 +1,31 @@
-package miau.auau.amigosdequatropatas.db.dals;
+package miau.auau.amigosdequatropatas.dao;
 
-import miau.auau.amigosdequatropatas.entidades.TipoLancamento;
+import miau.auau.amigosdequatropatas.entities.TipoLancamento;
+import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 @Component
-public class TipoLancamentoDAL implements IDAL<TipoLancamento> {
+public class TipoLancamentoDAO implements IDAL<TipoLancamento> {
 
     @Override
-    public boolean gravar(TipoLancamento entidade) {
+    public boolean gravar(TipoLancamento entidade, Conexao conexao) {
         String sql = """
                 INSERT INTO tipo_lancamento (tpl_descricao)
                 VALUES ('#1')
                 """;
         sql = sql.replace("#1", entidade.getDescricao());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean alterar(TipoLancamento entidade) {
+    public boolean alterar(TipoLancamento entidade, Conexao conexao) {
         String sql = """
                 UPDATE tipo_lancamento
                 SET tpl_descricao = '#1'
@@ -31,20 +33,20 @@ public class TipoLancamentoDAL implements IDAL<TipoLancamento> {
                 """;
         sql = sql.replace("#1", entidade.getDescricao())
                 .replace("#2", "" + entidade.getCod());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean apagar(TipoLancamento entidade) {
+    public boolean apagar(TipoLancamento entidade, Conexao conexao) {
         String sql = "DELETE FROM tipo_lancamento WHERE tlp_id = " + entidade.getCod();
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public TipoLancamento get(int id) {
+    public TipoLancamento get(int id, Conexao conexao) {
         TipoLancamento tipoLancamento = null;
         String sql = "SELECT * FROM tipo_lancamento WHERE tlp_id = " + id;
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             if (resultSet.next()) {
                 tipoLancamento = new TipoLancamento(
@@ -59,7 +61,7 @@ public class TipoLancamentoDAL implements IDAL<TipoLancamento> {
     }
 
     @Override
-    public List<TipoLancamento> get(String filtro) {
+    public List<TipoLancamento> get(String filtro, Conexao conexao) {
         List<TipoLancamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_lancamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
@@ -68,7 +70,7 @@ public class TipoLancamentoDAL implements IDAL<TipoLancamento> {
         }
         sql += " ORDER BY tpl_descricao";
         System.out.println("SQL gerado: " + sql);
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
                 lista.add(new TipoLancamento(

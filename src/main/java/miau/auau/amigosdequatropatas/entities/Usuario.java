@@ -1,6 +1,6 @@
-package miau.auau.amigosdequatropatas.entidades;
+package miau.auau.amigosdequatropatas.entities;
 
-import miau.auau.amigosdequatropatas.db.dals.UsuarioDAL;
+import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class Usuario {
 
     @Autowired
-    private UsuarioDAL usuarioDAL;
+    private UsuarioDAO usuarioDAL;
     private int codUsuario;
     private String nome;
     private String email;

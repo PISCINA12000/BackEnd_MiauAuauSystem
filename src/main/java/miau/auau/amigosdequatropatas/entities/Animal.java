@@ -1,38 +1,29 @@
-package miau.auau.amigosdequatropatas.entidades;
-import miau.auau.amigosdequatropatas.db.dals.AnimalDAL;
+package miau.auau.amigosdequatropatas.entities;
+
+import miau.auau.amigosdequatropatas.dao.AnimalDAO;
+import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
-
 
 @Component
 public class Animal {
-
     @Autowired
-    private AnimalDAL animalDAL;
+    private AnimalDAO animalDAL;
 
     private int codAnimal;
-
     private String nome;
-
-    private String  sexo;
-
+    private String sexo;
     private String raca;
-
     private int idade;
-
     private double peso;
-
     private String castrado;
-
     private String adotado;
-
-    private String fileName;
-
+    private String imagemBase64;
     // tratar foto depois
+
     // Construtores
-    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado,  String adotado, String fileName) {
+    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, String imagemBase64) {
         this.codAnimal = codAnimal;
         this.nome = nome;
         this.sexo = sexo;
@@ -41,14 +32,36 @@ public class Animal {
         this.peso = peso;
         this.castrado = castrado;
         this.adotado = adotado;
-        this.fileName = fileName;
+        this.imagemBase64 = imagemBase64;
 
     }
-    public Animal(){
-        this(0,"","","",0,0,"","", "");
+
+    public Animal() {
+        this(0, "", "", "", 0, 0, "", "", "");
     }
 
-    // Gets e Sets
+    // CRUD --------------------------------------------------------------------------
+    public boolean incluir(Conexao conexao) {
+        return animalDAL.gravar(this, conexao); // grava no banco
+    }
+
+    public boolean excluir(Conexao conexao) {
+        return animalDAL.apagar(this, conexao);
+    }
+
+    public Animal consultarID(int id, Conexao conexao) {
+        return animalDAL.get(id, conexao);
+    }
+
+    public List<Animal> consultar(String filtro, Conexao conexao) {
+        return animalDAL.get(filtro, conexao);
+    }
+
+    public boolean alterar(Conexao conexao) {
+        return animalDAL.alterar(this, conexao);
+    }
+
+    // Gets e Sets --------------------------------------------------------------------
     public int getCodAnimal() {
         return codAnimal;
     }
@@ -113,35 +126,11 @@ public class Animal {
         this.adotado = adotado;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getImagemBase64() {
+        return imagemBase64;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setImagemBase64(String imagemBase64) {
+        this.imagemBase64 = imagemBase64;
     }
-
-   // metodos
-
-    public boolean incluir(Animal animal)
-    {
-        return animalDAL.gravar(animal); // grava no banco
-    }
-    public boolean excluir(Animal animal)
-    {
-        return animalDAL.apagar(animal);
-    }
-    public Animal consultarID(int id)
-    {
-        return animalDAL.get(id);
-    }
-    public List<Animal> consultar(String filtro)
-    {
-        return animalDAL.get(filtro);
-    }
-    public boolean alterar(Animal animal)
-    {
-        return animalDAL.alterar(animal);
-    }
-
 }

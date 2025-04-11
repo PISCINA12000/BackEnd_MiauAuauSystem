@@ -7,7 +7,8 @@ public class Erro {
     public Erro(String mensagem) {
         this.mensagem = mensagem;
     }
-    public Erro () {
+
+    public Erro() {
         this("");
     }
 

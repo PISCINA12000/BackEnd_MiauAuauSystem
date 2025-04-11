@@ -1,6 +1,7 @@
-package miau.auau.amigosdequatropatas.db.dals;
+package miau.auau.amigosdequatropatas.dao;
 
-import miau.auau.amigosdequatropatas.entidades.TipoMedicamento;
+import miau.auau.amigosdequatropatas.entities.TipoMedicamento;
+import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.stereotype.Component;
@@ -10,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TipoMedicamentoDAL implements IDAL<TipoMedicamento> {
+public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
 
     @Override
-    public boolean gravar(TipoMedicamento entidade) {
+    public boolean gravar(TipoMedicamento entidade, Conexao conexao) {
         String sql = """
                 INSERT INTO tipo_medicamento (tpm_nome)
                 VALUES ('#1')
                 """;
         sql = sql.replace("#1", entidade.getNome());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean alterar(TipoMedicamento entidade) {
+    public boolean alterar(TipoMedicamento entidade, Conexao conexao) {
         String sql = """
                 UPDATE tipo_medicamento
                 SET tpm_nome = '#1'
@@ -31,20 +32,20 @@ public class TipoMedicamentoDAL implements IDAL<TipoMedicamento> {
                 """;
         sql = sql.replace("#1", entidade.getNome())
                 .replace("#2", "" + entidade.getCod());
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public boolean apagar(TipoMedicamento entidade) {
+    public boolean apagar(TipoMedicamento entidade, Conexao conexao) {
         String sql = "DELETE FROM tipo_medicamento WHERE tpm_id = " + entidade.getCod();
-        return SingletonDB.getConexao().manipular(sql);
+        return conexao.manipular(sql);
     }
 
     @Override
-    public TipoMedicamento get(int id) {
+    public TipoMedicamento get(int id, Conexao conexao) {
         TipoMedicamento tipoMedicamento = null;
         String sql = "SELECT * FROM tipo_medicamento WHERE tpm_id = " + id;
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             if (resultSet.next()) {
                 tipoMedicamento = new TipoMedicamento(
@@ -59,7 +60,7 @@ public class TipoMedicamentoDAL implements IDAL<TipoMedicamento> {
     }
 
     @Override
-    public List<TipoMedicamento> get(String filtro) {
+    public List<TipoMedicamento> get(String filtro, Conexao conexao) {
         List<TipoMedicamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_medicamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
@@ -68,7 +69,7 @@ public class TipoMedicamentoDAL implements IDAL<TipoMedicamento> {
         }
         sql += " ORDER BY tpm_nome";
         System.out.println("SQL gerado: " + sql);
-        ResultSet resultSet = SingletonDB.getConexao().consultar(sql);
+        ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
                 lista.add(new TipoMedicamento(

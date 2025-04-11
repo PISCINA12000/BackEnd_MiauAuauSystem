@@ -1,7 +1,6 @@
-package miau.auau.amigosdequatropatas.control;
+package miau.auau.amigosdequatropatas.controller;
 
-import miau.auau.amigosdequatropatas.entidades.TipoLancamento;
-import miau.auau.amigosdequatropatas.entidades.Usuario;
+import miau.auau.amigosdequatropatas.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
