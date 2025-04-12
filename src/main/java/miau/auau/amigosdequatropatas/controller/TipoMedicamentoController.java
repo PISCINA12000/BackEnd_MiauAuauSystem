@@ -21,7 +21,7 @@ public class TipoMedicamentoController {
     public boolean onGravar(Map<String, Object> json) {
         if(validar(json)) {
             //criando a conexao
-            SingletonDB singletonDB = new SingletonDB();
+            SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
             tipoMedicamentoModel.setNome((String) json.get("nome"));
@@ -36,7 +36,7 @@ public class TipoMedicamentoController {
 
     public boolean onDelete(int id) {
         //criando a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         tipoMedicamentoModel = tipoMedicamentoModel.consultarID(id, conexao);
@@ -48,7 +48,7 @@ public class TipoMedicamentoController {
 
     public Map<String, Object> onBuscarId(int id) {
         //criando a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //buscar pelo id
@@ -65,7 +65,7 @@ public class TipoMedicamentoController {
 
     public List<Map<String, Object>> onBuscar(String filtro) {
         //Criar a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
         List<TipoMedicamento> lista = tipoMedicamentoModel.consultar(filtro, conexao);
 
@@ -85,7 +85,7 @@ public class TipoMedicamentoController {
 
     public boolean onAlterar(Map<String, Object> json) {
         //Criar a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //colocar valores na instância da entidade

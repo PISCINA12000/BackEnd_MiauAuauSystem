@@ -19,7 +19,7 @@ public class TipoLancamentoController {
     public boolean onGravar(Map<String, Object> json) {
         if (validar(json)) {
             //gerar a conexao
-            SingletonDB singletonDB = new SingletonDB();
+            SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
             tipoLancamentoModel.setDescricao((String) json.get("descricao"));
             if(tipoLancamentoModel.incluir(conexao)) {
@@ -33,7 +33,7 @@ public class TipoLancamentoController {
 
     public boolean onDelete(int id) {
         //criar a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
         tipoLancamentoModel = tipoLancamentoModel.consultarID(id, conexao);
         if (tipoLancamentoModel != null) // achou tipo de lançamento
@@ -45,7 +45,7 @@ public class TipoLancamentoController {
 
     public Map<String, Object> onBuscarId(int id) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //instanciando um JSON
@@ -63,7 +63,7 @@ public class TipoLancamentoController {
 
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
         List<TipoLancamento> lista;
 
@@ -86,7 +86,7 @@ public class TipoLancamentoController {
 
     public boolean onAlterar(Map<String, Object> json) {
         //realizando a conexao
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         if (validarAlterar(json)) {

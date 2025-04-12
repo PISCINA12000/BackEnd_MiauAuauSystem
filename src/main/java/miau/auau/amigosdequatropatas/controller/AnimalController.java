@@ -19,7 +19,7 @@ public class AnimalController {
     public boolean onGravar(Map<String, Object> json) {
         if (validar(json)) {
             //criar aqui a conexão para o banco de dados
-            SingletonDB singletonDB = new SingletonDB();
+            SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
             //transferir oq chegou de JSON para a instência de Animal
@@ -40,13 +40,13 @@ public class AnimalController {
             //se chegou até aqui é porque algo deu errado
             // rollback; finalizar t. desconecta;
             return false;
-        } else
-            return false;
+        }
+        return false;
     }
 
     public boolean onDelete(int id) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
         Animal animal = animalModel.consultarID(id, conexao);
         animalModel = animal;
@@ -59,7 +59,7 @@ public class AnimalController {
 
     public Map<String, Object> onBuscarId(int id) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //instanciando um json
@@ -84,7 +84,7 @@ public class AnimalController {
 
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //criando a lista que conterá os JSON's
@@ -115,7 +115,7 @@ public class AnimalController {
 
     public boolean onAlterar(Map<String, Object> json) {
         //criando a conexão
-        SingletonDB singletonDB = new SingletonDB();
+        SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
         //Transferir o JSON recebido para a instância de modelo

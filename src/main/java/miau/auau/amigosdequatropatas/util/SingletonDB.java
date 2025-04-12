@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class SingletonDB {
+    private static SingletonDB instance;
     private static Conexao conexao;
     private static final String URL = "jdbc:postgresql://localhost/";
     private static final String BASE_NAME = "auauMiaudb";
@@ -22,6 +23,13 @@ public class SingletonDB {
     public boolean Conectar() {
         conexao = new Conexao();
         return conexao.conectar(URL, BASE_NAME, USER, SENHA);
+    }
+
+    public static synchronized SingletonDB getInstance() {
+        if (instance == null) {
+            instance = new SingletonDB();
+        }
+        return instance;
     }
 
     public Conexao getConexao() {

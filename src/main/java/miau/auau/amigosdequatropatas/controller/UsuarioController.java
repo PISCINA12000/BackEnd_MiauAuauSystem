@@ -17,25 +17,46 @@ public class UsuarioController {
     @Autowired
     private Usuario usuarioModel;
 
-    public boolean onGravar(Usuario usuario) {
-        if (validar(usuario))
-            return usuarioModel.incluir(usuario);
-        else
-            return false;
+    public boolean onGravar(Map<String, Object> json) {
+        if (validar(json)) {
+            //criar a conexao
+            SingletonDB singletonDB = SingletonDB.getInstance();
+            Conexao conexao = singletonDB.getConexao();
+
+            //setar valores para o usuario model
+            usuarioModel.setNome(json.get("nome").toString());
+            usuarioModel.setEmail(json.get("email").toString());
+            usuarioModel.setSenha(json.get("senha").toString());
+            usuarioModel.setTelefone(json.get("telefone").toString());
+            usuarioModel.setCpf(json.get("cpf").toString());
+            usuarioModel.setPrivilegio(json.get("privilegio").toString());
+            usuarioModel.setSexo(json.get("sexo").toString());
+            usuarioModel.setCep(json.get("cep").toString());
+            usuarioModel.setRua(json.get("rua").toString());
+            usuarioModel.setBairro(json.get("bairro").toString());
+            usuarioModel.setNumero(json.get("numero").toString());
+
+            return usuarioModel.incluir(conexao);
+        }
+        return false;
     }
 
     public boolean onDelete(int id) {
-        if (usuarioModel.consultarID(id) != null) // achou tipo de lançamento
-        {
-            return usuarioModel.excluir(usuarioModel.consultarID(id));
-        } else
-            return false;
+        //criar a conexao
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        usuarioModel.consultarID(id,conexao); //consulto para confirmar se existe ou não
+        if (usuarioModel != null) {
+            return usuarioModel.excluir(conexao);
+        }
+        return false;
     }
 
     public Map<String, Object> onBuscarId(int id) {
         //criar a conexao
-        SingletonDB singletonDB = new SingletonDB();
-        Conexao conexao = new Conexao();
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
         //mandar para a modelo
         usuarioModel = usuarioModel.consultarID(id, conexao);
@@ -60,16 +81,16 @@ public class UsuarioController {
     }
 
     public List<Map<String, Object>> onBuscar(String filtro) {
-        //criar conexao
-        SingletonDB singletonDB = new SingletonDB();
-        Conexao conexao = new Conexao();
+        //criar a conexao
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
         List<Usuario> listaUsers;
 
         //mandar para a model
         listaUsers = usuarioModel.consultar(filtro, conexao);
         if (!listaUsers.isEmpty()) {
             List<Map<String, Object>> listaJson = new ArrayList<>();
-            for(int i=0; i<listaUsers.size(); i++){
+            for (int i = 0; i < listaUsers.size(); i++) {
                 Map<String, Object> json = new HashMap<>();
                 json.put("cod", listaUsers.get(i).getCod());
                 json.put("nome", listaUsers.get(i).getNome());
@@ -92,11 +113,11 @@ public class UsuarioController {
     public boolean onAlterar(Map<String, Object> json) {
         if (validarAlterar(json)) {
             //criar a conexao
-            SingletonDB singletonDB = new SingletonDB();
-            Conexao conexao = new Conexao();
+            SingletonDB singletonDB = SingletonDB.getInstance();
+            Conexao conexao = singletonDB.getConexao();
 
             //setar valores para o usuario model
-            usuarioModel.setCod((Integer) json.get("cod"));
+            usuarioModel.setCod(Integer.parseInt(json.get("cod").toString()));
             usuarioModel.setNome(json.get("nome").toString());
             usuarioModel.setEmail(json.get("email").toString());
             usuarioModel.setSenha(json.get("senha").toString());
@@ -110,8 +131,8 @@ public class UsuarioController {
             usuarioModel.setNumero(json.get("numero").toString());
 
             return usuarioModel.alterar(conexao);
-        } else
-            return false;
+        }
+        return false;
     }
 
     public boolean validar(Map<String, Object> json) {

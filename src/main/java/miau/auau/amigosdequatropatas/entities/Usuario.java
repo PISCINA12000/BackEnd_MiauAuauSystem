@@ -4,7 +4,6 @@ import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
@@ -144,7 +143,7 @@ public class Usuario {
     }
 
     public boolean incluir(Conexao conexao) {
-        return usuarioDAL.gravar(this, conexao); // grava no banco
+        return usuarioDAL.gravar(this, conexao);
     }
 
     public boolean excluir(Conexao conexao) {

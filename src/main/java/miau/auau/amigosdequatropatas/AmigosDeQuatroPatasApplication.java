@@ -6,27 +6,29 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import javax.swing.*;
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class AmigosDeQuatroPatasApplication {
+    private static final String mydatabase = "auauMiaudb";
+
     public static void main(String[] args) {
         // Sua lógica personalizada de conexão de banco de dados
-        String mydatabase = "auauMiaudb";
-        if (SingletonDB.Conectar()) {
-            System.out.println("Conectado com sucesso");
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        if (singletonDB.Conectar()) {
+            System.out.println("Conectado com sucesso!");
         } else {
             JOptionPane.showMessageDialog(null,
-                    "Problemas ao conectar: " + SingletonDB.getConexao().getMensagemErro());
+                    "Problemas ao conectar: " + singletonDB.getConexao().getMensagemErro());
             if (JOptionPane.showConfirmDialog(null, "Confirma a tentativa de criação de uma nova base de dados") == JOptionPane.YES_OPTION) {
-                if (SingletonDB.criarBD(mydatabase)) {
+                if (singletonDB.criarBD(mydatabase)) {
                     try {
-                        SingletonDB.restaurar("bkpinicial.backup", mydatabase);
+                        singletonDB.restaurar("bkpinicial.backup", mydatabase);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-
         SpringApplication.run(AmigosDeQuatroPatasApplication.class, args);
     }
 }
