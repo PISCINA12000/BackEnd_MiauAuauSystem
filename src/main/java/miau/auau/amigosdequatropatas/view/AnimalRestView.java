@@ -1,11 +1,15 @@
 package miau.auau.amigosdequatropatas.view;
 
 import miau.auau.amigosdequatropatas.controller.AnimalController;
+import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -19,19 +23,27 @@ public class AnimalRestView {
     // BUSCAR
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getAnimais(@PathVariable(value = "filtro") String filtro) {
-        if(!animalController.onBuscar(filtro).isEmpty())
-            return ResponseEntity.ok().body(animalController.onBuscar(filtro));
+        List<Map<String, Object>> listaJson;
+
+        //mando para a controller
+        listaJson = animalController.onBuscar(filtro);
+        if(!listaJson.isEmpty())
+            return ResponseEntity.ok().body(listaJson);
         else
-            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado ou nenhum animal cadastrado"));
+            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado ou nenhum animal cadastrado!!"));
     }
 
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getAnimais(@PathVariable(value = "id") int id) {
-        if(animalController.onBuscarId(id) != null) {
-            return ResponseEntity.ok(animalController.onBuscarId(id));
+        Map<String, Object> json;
+
+        //mando para a controller
+        json = animalController.onBuscarId(id);
+        if(json != null) {
+            return ResponseEntity.ok(json);
         }
         else
-            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado!"));
+            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado!!"));
     }
 
     // GRAVAR
@@ -60,7 +72,7 @@ public class AnimalRestView {
         if (animalController.onGravar(json)) //json -> enviar
             return ResponseEntity.ok(json);
         else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar animal"));
+            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar animal!!"));
     }
 
     // DELETE
@@ -101,6 +113,6 @@ public class AnimalRestView {
         if (animalController.onAlterar(json)) {
             return ResponseEntity.ok(json);
         } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar animal"));
+            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar animal!!"));
     }
 }

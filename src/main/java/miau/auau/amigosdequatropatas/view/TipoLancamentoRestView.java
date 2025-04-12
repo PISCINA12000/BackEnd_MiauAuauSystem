@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -21,18 +22,28 @@ public class TipoLancamentoRestView {
     // BUSCAR
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getTiposLancamento(@PathVariable(value = "filtro") String filtro) {
-        if (!tipoLancamentoController.onBuscar(filtro).isEmpty())
-            return ResponseEntity.ok().body(tipoLancamentoController.onBuscar(filtro));
+        //criar o json
+        List<Map<String, Object>> listaJson;
+
+        //mandar para a controller
+        listaJson = tipoLancamentoController.onBuscar(filtro);
+        if (!listaJson.isEmpty())
+            return ResponseEntity.ok().body(listaJson);
         else
-            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado ou nenhum cadastrado"));
+            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado ou nenhum cadastrado!!"));
     }
 
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getTipoLancamento(@PathVariable(value = "id") int id) {
-        if (tipoLancamentoController.onBuscarId(id) != null) {
-            return ResponseEntity.ok(tipoLancamentoController.onBuscarId(id));
+        //criar o json
+        Map<String, Object> json;
+
+        //mandar para a controller
+        json = tipoLancamentoController.onBuscarId(id);
+        if (json != null) {
+            return ResponseEntity.ok(json);
         } else
-            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado!"));
+            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado!!"));
     }
 
     // GRAVAR
@@ -46,7 +57,7 @@ public class TipoLancamentoRestView {
         if (tipoLancamentoController.onGravar(json))
             return ResponseEntity.ok(json);
         else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de lançamento"));
+            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de lançamento!!"));
     }
 
     // DELETE

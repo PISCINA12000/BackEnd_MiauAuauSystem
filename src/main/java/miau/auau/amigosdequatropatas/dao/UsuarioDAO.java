@@ -3,7 +3,6 @@ package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
-import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -21,16 +20,16 @@ public class UsuarioDAO implements IDAL<Usuario> {
                 VALUES ('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11')
                 """;
         sql = sql.replace("#1", entidade.getNome())
-        .replace("#2", entidade.getEmail())
-        .replace("#3", entidade.getSenha())
-        .replace("#4", entidade.getTelefone())
-        .replace("#5", entidade.getCpf())
-        .replace("#6", entidade.getPrivilegio())
-        .replace("#7", entidade.getSexo())
-        .replace("#8", entidade.getCep())
-        .replace("#9", entidade.getRua())
-        .replace("#10", entidade.getBairro())
-        .replace("#11", entidade.getNumero());
+                .replace("#2", entidade.getEmail())
+                .replace("#3", entidade.getSenha())
+                .replace("#4", entidade.getTelefone())
+                .replace("#5", entidade.getCpf())
+                .replace("#6", entidade.getPrivilegio())
+                .replace("#7", entidade.getSexo())
+                .replace("#8", entidade.getCep())
+                .replace("#9", entidade.getRua())
+                .replace("#10", entidade.getBairro())
+                .replace("#11", entidade.getNumero());
         return conexao.manipular(sql);
     }
 
@@ -54,13 +53,13 @@ public class UsuarioDAO implements IDAL<Usuario> {
                 .replace("#9", entidade.getRua())
                 .replace("#10", entidade.getBairro())
                 .replace("#11", entidade.getNumero())
-                .replace("#12", "" + entidade.getCodUsuario());
+                .replace("#12", "" + entidade.getCod());
         return conexao.manipular(sql);
     }
 
     @Override
     public boolean apagar(Usuario entidade, Conexao conexao) {
-        String sql = "DELETE FROM usuario WHERE usu_id = " + entidade.getCodUsuario();
+        String sql = "DELETE FROM usuario WHERE usu_id = " + entidade.getCod();
         return conexao.manipular(sql);
     }
 

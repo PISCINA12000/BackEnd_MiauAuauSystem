@@ -1,9 +1,9 @@
 package miau.auau.amigosdequatropatas.entities;
 
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
+import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
@@ -11,7 +11,8 @@ public class Usuario {
 
     @Autowired
     private UsuarioDAO usuarioDAL;
-    private int codUsuario;
+
+    private int cod;
     private String nome;
     private String email;
     private String senha;
@@ -26,7 +27,7 @@ public class Usuario {
 
     // Construtores
     public Usuario(int cod, String nome, String email, String senha, String telefone, String cpf, String privilegio, String sexo, String cep, String rua, String bairro, String numero) {
-        this.codUsuario = cod;
+        this.cod = cod;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -45,12 +46,12 @@ public class Usuario {
     }
 
     // Gets e Sets
-    public int getCodUsuario() {
-        return codUsuario;
+    public int getCod() {
+        return cod;
     }
 
     public void setCod(int cod) {
-        this.codUsuario = cod;
+        this.cod = cod;
     }
 
     public String getNome() {
@@ -141,24 +142,23 @@ public class Usuario {
         this.numero = numero;
     }
 
-    public boolean incluir(Usuario usuario)
-    {
-        return usuarioDAL.gravar(usuario); // grava no banco
+    public boolean incluir(Conexao conexao) {
+        return usuarioDAL.gravar(this, conexao); // grava no banco
     }
-    public boolean excluir(Usuario usuario)
-    {
-        return usuarioDAL.apagar(usuario);
+
+    public boolean excluir(Conexao conexao) {
+        return usuarioDAL.apagar(this, conexao);
     }
-    public Usuario consultarID(int id)
-    {
-        return usuarioDAL.get(id);
+
+    public Usuario consultarID(int id, Conexao conexao) {
+        return usuarioDAL.get(id, conexao);
     }
-    public List<Usuario> consultar(String filtro)
-    {
-        return usuarioDAL.get(filtro);
+
+    public List<Usuario> consultar(String filtro, Conexao conexao) {
+        return usuarioDAL.get(filtro, conexao);
     }
-    public boolean alterar(Usuario usuario)
-    {
-        return usuarioDAL.alterar(usuario);
+
+    public boolean alterar(Conexao conexao) {
+        return usuarioDAL.alterar(this, conexao);
     }
 }

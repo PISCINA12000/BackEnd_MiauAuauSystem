@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @CrossOrigin
 @RestController
 @RequestMapping("apis/usuario")
@@ -18,10 +22,12 @@ public class UsuarioRestView
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getUsuarios(@PathVariable(value = "filtro") String filtro)
     {
-        if(!usuarioController.onBuscar(filtro).isEmpty())
-            return ResponseEntity.ok().body(usuarioController.onBuscar(filtro));
+        List<Map<String, Object>> listaJson = new ArrayList<>();
+        listaJson = usuarioController.onBuscar(filtro);
+        if(!listaJson.isEmpty())
+            return ResponseEntity.ok().body(listaJson);
         else
-            return ResponseEntity.badRequest().body(new Erro("Usuario nao encontrado ou nenhum Usuario cadastrado"));
+            return ResponseEntity.badRequest().body(new Erro("Usuario nao encontrado ou nenhum Usuario cadastrado!!"));
     }
 
     @GetMapping("buscar-id/{id}")

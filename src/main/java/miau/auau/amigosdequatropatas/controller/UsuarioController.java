@@ -1,10 +1,14 @@
 package miau.auau.amigosdequatropatas.controller;
 
 import miau.auau.amigosdequatropatas.entities.Usuario;
+import miau.auau.amigosdequatropatas.util.Conexao;
+import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class UsuarioController {
@@ -35,11 +39,17 @@ public class UsuarioController {
             return null;
     }
 
-    public List<Usuario> onBuscar(String filtro) {
-        if (usuarioModel.consultar(filtro) != null) {
-            return usuarioModel.consultar(filtro);
-        } else
-            return null;
+    public List<Map<String, Object>> onBuscar(String filtro) {
+        //criar conexao
+        SingletonDB singletonDB = new SingletonDB();
+        Conexao conexao = new Conexao();
+        List<Usuario> listaUsers;
+
+        //mandar para a model
+        listaUsers = usuarioModel.consultar(filtro, conexao);
+        if (!listaUsers.isEmpty()) {
+
+        }
     }
 
     public boolean onAlterar(Usuario usuario) {
@@ -54,6 +64,6 @@ public class UsuarioController {
     }
 
     public boolean validarAlterar(Usuario usuario) {
-        return usuario != null && usuario.getCodUsuario() > 0 && !usuario.getNome().isEmpty();
+        return usuario != null && usuario.getCod() > 0 && !usuario.getNome().isEmpty();
     }
 }

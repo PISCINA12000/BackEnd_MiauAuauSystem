@@ -6,6 +6,9 @@ import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.image.TileObserver;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,24 +46,54 @@ public class TipoMedicamentoController {
         return false;
     }
 
-    public TipoMedicamento onBuscarId(int id) {
-        if (tipoMedicamentoModel.consultarID(id) != null) // achou tipo de medicamento
-        {
-            return tipoMedicamentoModel.consultarID(id);
-        } else
-            return null;
+    public Map<String, Object> onBuscarId(int id) {
+        //criando a conexao
+        SingletonDB singletonDB = new SingletonDB();
+        Conexao conexao = singletonDB.getConexao();
+
+        //buscar pelo id
+        tipoMedicamentoModel = tipoMedicamentoModel.consultarID(id, conexao);
+        if(tipoMedicamentoModel != null) {
+            //achou um medicamento
+            Map<String, Object> json = new HashMap<>();
+            json.put("cod", tipoMedicamentoModel.getCod());
+            json.put("nome", tipoMedicamentoModel.getNome());
+            return json;
+        }
+        return null;
     }
 
-    public List<TipoMedicamento> onBuscar(String filtro) {
-        if (tipoMedicamentoModel.consultar(filtro) != null) {
-            return tipoMedicamentoModel.consultar(filtro);
-        } else
-            return null;
+    public List<Map<String, Object>> onBuscar(String filtro) {
+        //Criar a conexao
+        SingletonDB singletonDB = new SingletonDB();
+        Conexao conexao = singletonDB.getConexao();
+        List<TipoMedicamento> lista = tipoMedicamentoModel.consultar(filtro, conexao);
+
+        if(!lista.isEmpty()) {
+            //achou tipos de medicamentos
+            List<Map<String, Object>> listaJson = new ArrayList<>();
+            for (int i = 0; i < lista.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
+                json.put("cod", lista.get(i).getCod());
+                json.put("nome", lista.get(i).getNome());
+                listaJson.add(json);
+            }
+            return listaJson;
+        }
+        return null;
     }
 
-    public boolean onAlterar(TipoMedicamento tipoMedicamento) {
-        if (validarAlterar(tipoMedicamento)) {
-            return tipoMedicamentoModel.alterar(tipoMedicamento);
+    public boolean onAlterar(Map<String, Object> json) {
+        //Criar a conexao
+        SingletonDB singletonDB = new SingletonDB();
+        Conexao conexao = singletonDB.getConexao();
+
+        //colocar valores na instância da entidade
+        tipoMedicamentoModel.setCod(Integer.parseInt((String) json.get("cod")));
+        tipoMedicamentoModel.setNome((String) json.get("nome"));
+
+        if (validarAlterar(json)) {
+            return tipoMedicamentoModel.alterar(conexao);
         } else
             return false;
     }

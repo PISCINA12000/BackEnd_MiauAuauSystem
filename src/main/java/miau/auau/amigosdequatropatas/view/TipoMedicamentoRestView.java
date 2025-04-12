@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -21,16 +23,25 @@ public class TipoMedicamentoRestView {
     // BUSCAR
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getTiposMedicamento(@PathVariable(value = "filtro") String filtro) {
-        if (!tipoMedicamentoController.onBuscar(filtro).isEmpty())
-            return ResponseEntity.ok().body(tipoMedicamentoController.onBuscar(filtro));
+        //instancio uma lista de JSON
+        List<Map<String, Object>> listaJson;
+
+        //mando para a controller
+        listaJson = tipoMedicamentoController.onBuscar(filtro);
+        if (!listaJson.isEmpty())
+            return ResponseEntity.ok().body(listaJson);
         else
             return ResponseEntity.badRequest().body(new Erro("Tipo de medicamento não encontrado ou nenhum cadastrado!!"));
     }
 
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getTipoMedicamento(@PathVariable(value = "id") int id) {
-        if (tipoMedicamentoController.onBuscarId(id) != null) {
-            return ResponseEntity.ok(tipoMedicamentoController.onBuscarId(id));
+        Map<String, Object> json;
+
+        //mando para a controller
+        json = tipoMedicamentoController.onBuscarId(id);
+        if (json != null) {
+            return ResponseEntity.ok(json);
         } else
             return ResponseEntity.badRequest().body(new Erro("Tipo de medicamento não encontrado!!"));
     }
