@@ -4,6 +4,7 @@ import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
