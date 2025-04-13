@@ -65,7 +65,7 @@ public class AnimalRestView {
         json.put("castrado", castrado);
         json.put("adotado", adotado);
         json.put("imagemBase64", imagemBase64);
-
+        System.out.println("JSON recebido: " + json);
         if (animalController.onGravar(json)) //json -> enviar
             return ResponseEntity.ok(json);
         else
@@ -74,8 +74,8 @@ public class AnimalRestView {
 
     // DELETE
     @DeleteMapping("excluir/{id}") //
-    public ResponseEntity<Object> excluirAnimal(@PathVariable (value = "id") int id) {
-       if(animalController.onDelete(id)) {
+    public ResponseEntity<Object> excluirAnimal(@PathVariable (value = "id") int codAnimal) {
+       if(animalController.onDelete(codAnimal)) {
            return ResponseEntity.ok(new Erro("Animal excluido com sucesso!"));
        }
        else
@@ -85,7 +85,7 @@ public class AnimalRestView {
     // ATUALIZAR
     @PutMapping("atualizar")
     public ResponseEntity<Object> atualizarAnimal(
-            @RequestParam int id,
+            @RequestParam int codAnimal,
             @RequestParam String nome,
             @RequestParam String sexo,
             @RequestParam String raca,
@@ -97,7 +97,7 @@ public class AnimalRestView {
     {
         //criar o mapeamento do meu json ANIMAL
         Map<String, Object> json = new HashMap<>();
-        json.put("codAnimal", id);
+        json.put("codAnimal", codAnimal);
         json.put("nome", nome);
         json.put("sexo", sexo);
         json.put("raca", raca);

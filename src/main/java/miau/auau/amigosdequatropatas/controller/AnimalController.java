@@ -17,6 +17,8 @@ public class AnimalController {
     private Animal animalModel;
 
     public boolean onGravar(Map<String, Object> json) {
+
+
         if (validar(json)) {
             //criar aqui a conexão para o banco de dados
             SingletonDB singletonDB = SingletonDB.getInstance();
@@ -45,42 +47,50 @@ public class AnimalController {
     }
 
     public boolean onDelete(int id) {
-        //criando a conexão
+        // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
-        Animal animal = animalModel.consultarID(id, conexao);
-        animalModel = animal;
 
-        if (animalModel != null) {
-            return animalModel.excluir(conexao);
+        // Consultando o animal pelo ID
+        Animal animal = animalModel.consultarID(id, conexao);
+        // Se o animal for encontrado, exclui; caso contrário, retorna false
+        if (animal != null) {
+
+            return animal.excluir(conexao);
+
         }
+
         return false;
     }
 
+
     public Map<String, Object> onBuscarId(int id) {
-        //criando a conexão
+        // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        //instanciando um json
-        Map<String, Object> json = new HashMap<>();
-        animalModel = animalModel.consultarID(id, conexao);
+        // Consultando o animal pelo ID
+        Animal animal = animalModel.consultarID(id, conexao);
 
-        if (animalModel != null) {
-            json.put("codAnimal", animalModel.getCodAnimal());
-            json.put("nome", animalModel.getNome());
-            json.put("sexo", animalModel.getSexo());
-            json.put("raca", animalModel.getRaca());
-            json.put("idade", animalModel.getIdade());
-            json.put("peso", animalModel.getPeso());
-            json.put("castrado", animalModel.getCastrado());
-            json.put("adotado", animalModel.getAdotado());
-            json.put("imagemBase64", animalModel.getImagemBase64());
+        // Retornando os dados do animal, se encontrado
+        if (animal != null) {
+            Map<String, Object> json = new HashMap<>();
+            json.put("codAnimal", animal.getCodAnimal());
+            json.put("nome", animal.getNome());
+            json.put("sexo", animal.getSexo());
+            json.put("raca", animal.getRaca());
+            json.put("idade", animal.getIdade());
+            json.put("peso", animal.getPeso());
+            json.put("castrado", animal.getCastrado());
+            json.put("adotado", animal.getAdotado());
+            json.put("imagemBase64", animal.getImagemBase64());
             return json;
         }
 
+        // Retorna null se o animal não for encontrado
         return null;
     }
+
 
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criando a conexão

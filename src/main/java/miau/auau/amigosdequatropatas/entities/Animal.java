@@ -8,6 +8,7 @@ import java.util.List;
 
 @Component
 public class Animal {
+
     @Autowired
     private AnimalDAO animalDAL;
 
@@ -38,27 +39,6 @@ public class Animal {
 
     public Animal() {
         this(0, "", "", "", 0, 0, "", "", "");
-    }
-
-    // CRUD --------------------------------------------------------------------------
-    public boolean incluir(Conexao conexao) {
-        return animalDAL.gravar(this, conexao); // grava no banco
-    }
-
-    public boolean excluir(Conexao conexao) {
-        return animalDAL.apagar(this, conexao);
-    }
-
-    public Animal consultarID(int id, Conexao conexao) {
-        return animalDAL.get(id, conexao);
-    }
-
-    public List<Animal> consultar(String filtro, Conexao conexao) {
-        return animalDAL.get(filtro, conexao);
-    }
-
-    public boolean alterar(Conexao conexao) {
-        return animalDAL.alterar(this, conexao);
     }
 
     // Gets e Sets --------------------------------------------------------------------
@@ -133,4 +113,29 @@ public class Animal {
     public void setImagemBase64(String imagemBase64) {
         this.imagemBase64 = imagemBase64;
     }
+    // CRUD --------------------------------------------------------------------------
+    public boolean incluir(Conexao conexao) {
+        return animalDAL.gravar(this, conexao); // grava no banco
+    }
+
+    public boolean excluir(Conexao conexao) {
+
+        AnimalDAO animalDAO = new AnimalDAO();
+        return animalDAO.apagar(this, conexao);
+    }
+
+    public Animal consultarID(int id, Conexao conexao) {
+        return animalDAL.get(id, conexao);
+    }
+
+    public List<Animal> consultar(String filtro, Conexao conexao) {
+
+        return animalDAL.get(filtro, conexao);
+    }
+
+    public boolean alterar(Conexao conexao) {
+        return animalDAL.alterar(this, conexao);
+    }
+
+
 }

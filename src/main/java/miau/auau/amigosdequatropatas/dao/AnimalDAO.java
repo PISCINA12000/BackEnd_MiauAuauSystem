@@ -3,6 +3,7 @@ package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -10,10 +11,11 @@ import java.util.List;
 
 @Component
 public class AnimalDAO implements IDAL<Animal> {
+
     @Override
     public boolean gravar(Animal entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO animal (ani_nome, ani_sexo, ani_raca, ani_idade, ani_peso, ani_castrado, ani_adotado, ani_imagem)
+                INSERT INTO animal (ani_nome, ani_sexo, ani_raca, ani_idade, ani_peso, ani_castrado, ani_adotado, ani_filename)
                 VALUES ('#1', '#2', '#3', #4, #5, '#6', '#7', '#8')
                 """;
         sql = sql.replace("#1", entidade.getNome())
@@ -32,7 +34,7 @@ public class AnimalDAO implements IDAL<Animal> {
         String sql = """
                 UPDATE animal
                 SET ani_nome = '#1', ani_sexo = '#2', ani_raca = '#3', ani_idade = #4, ani_peso = #5, 
-                    ani_castrado = '#6', ani_adotado = '#7', ani_imagem = '#8'
+                    ani_castrado = '#6', ani_adotado = '#7', ani_filename = '#8'
                 WHERE ani_id = #9
                 """;
         sql = sql.replace("#1", entidade.getNome())
@@ -40,8 +42,8 @@ public class AnimalDAO implements IDAL<Animal> {
                 .replace("#3", entidade.getRaca())
                 .replace("#4", "" + entidade.getIdade())
                 .replace("#5", "" + entidade.getPeso())
-                .replace("#6", entidade.getAdotado())
-                .replace("#7", entidade.getCastrado())
+                .replace("#6", entidade.getCastrado())
+                .replace("#7", entidade.getAdotado())
                 .replace("#8", entidade.getImagemBase64())
                 .replace("#9", "" + entidade.getCodAnimal());
         return conexao.manipular(sql);
@@ -69,7 +71,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),
-                        resultSet.getString("ani_imagem")
+                        resultSet.getString("ani_filename")
                 );
             }
         } catch (Exception e) {
@@ -100,7 +102,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),
-                        resultSet.getString("ani_imagem")
+                        resultSet.getString("ani_filename")
                 ));
             }
         } catch (Exception e) {
