@@ -4,6 +4,8 @@ import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Base64;
 import java.util.List;
 
 @Component
@@ -20,11 +22,11 @@ public class Animal {
     private double peso;
     private String castrado;
     private String adotado;
-    private String imagemBase64;
+    private byte[] imagemBase64;
     // tratar foto depois
 
     // Construtores
-    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, String imagemBase64) {
+    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, byte[] imagemBase64) {
         this.codAnimal = codAnimal;
         this.nome = nome;
         this.sexo = sexo;
@@ -38,7 +40,7 @@ public class Animal {
     }
 
     public Animal() {
-        this(0, "", "", "", 0, 0, "", "", "");
+        this(0, "", "", "", 0, 0, "", "", "".getBytes());
     }
 
     // Gets e Sets --------------------------------------------------------------------
@@ -107,11 +109,11 @@ public class Animal {
     }
 
     public String getImagemBase64() {
-        return imagemBase64;
+        return Base64.getEncoder().encodeToString(imagemBase64);
     }
 
     public void setImagemBase64(String imagemBase64) {
-        this.imagemBase64 = imagemBase64;
+        this.imagemBase64 = Base64.getDecoder().decode(imagemBase64);
     }
     // CRUD --------------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
