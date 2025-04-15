@@ -15,7 +15,7 @@ CREATE TABLE animal (
     ani_peso DECIMAL(5, 2) NOT NULL CHECK (ani_peso > 0),
     ani_castrado VARCHAR(10) NOT NULL,
     ani_adotado VARCHAR(10) NOT NULL,
-    ani_imagem VARCHAR(255) NOT NULL
+    ani_imagem TEXT NOT NULL
 );
 CREATE TABLE usuario (
     usu_id SERIAL PRIMARY KEY,
