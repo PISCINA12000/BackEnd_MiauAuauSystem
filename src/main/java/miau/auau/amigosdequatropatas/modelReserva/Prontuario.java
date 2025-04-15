@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/miau/auau/amigosdequatropatas/modelReserva/Prontuario.java
 package miau.auau.amigosdequatropatas.modelReserva;
-========
-package miau.auau.amigosdequatropatas.entidades;
->>>>>>>> 712e201 (Implementação do esqueleto dos rests (Animal e TipoLancamento). Sem o Banco de Dados):src/main/java/miau/auau/amigosdequatropatas/entidades/Prontuario.java
 
 public class Prontuario {
     private int codAnimal;
@@ -17,8 +13,9 @@ public class Prontuario {
         this.descricao = descricao;
         this.medicamento = medicamento;
     }
+
     public Prontuario() {
-        this(0,0,"","");
+        this(0, 0, "", "");
     }
 
     // Gets e Sets

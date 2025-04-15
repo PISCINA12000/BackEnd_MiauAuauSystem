@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/miau/auau/amigosdequatropatas/modelReserva/Agendamento.java
 package miau.auau.amigosdequatropatas.modelReserva;
-========
-package miau.auau.amigosdequatropatas.entidades;
->>>>>>>> 712e201 (Implementação do esqueleto dos rests (Animal e TipoLancamento). Sem o Banco de Dados):src/main/java/miau/auau/amigosdequatropatas/entidades/Agendamento.java
 
 public class Agendamento {
     private int codMedi; //codigo do medicamento
@@ -16,8 +12,9 @@ public class Agendamento {
         this.codAnimal = codAnimal;
         this.periodo = periodo;
     }
+
     public Agendamento() {
-        this(0,0,"");
+        this(0, 0, "");
     }
 
     // Gets e Sets

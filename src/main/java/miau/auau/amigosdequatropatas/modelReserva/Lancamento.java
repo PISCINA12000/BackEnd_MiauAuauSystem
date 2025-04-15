@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/miau/auau/amigosdequatropatas/modelReserva/Lancamento.java
 package miau.auau.amigosdequatropatas.modelReserva;
-========
-package miau.auau.amigosdequatropatas.entidades;
->>>>>>>> 712e201 (Implementação do esqueleto dos rests (Animal e TipoLancamento). Sem o Banco de Dados):src/main/java/miau/auau/amigosdequatropatas/entidades/Lancamento.java
 
 import java.io.RandomAccessFile;
 
@@ -29,8 +25,9 @@ public class Lancamento {
         this.valor = valor;
         this.PDF = PDF;
     }
+
     public Lancamento() {
-        this(0,0,0,"",0,0,"",0,null);
+        this(0, 0, 0, "", 0, 0, "", 0, null);
     }
 
     // Gets e Sets

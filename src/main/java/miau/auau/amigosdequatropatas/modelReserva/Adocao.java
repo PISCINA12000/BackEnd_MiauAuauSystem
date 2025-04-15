@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/miau/auau/amigosdequatropatas/modelReserva/Adocao.java
 package miau.auau.amigosdequatropatas.modelReserva;
-========
-package miau.auau.amigosdequatropatas.entidades;
->>>>>>>> 712e201 (Implementação do esqueleto dos rests (Animal e TipoLancamento). Sem o Banco de Dados):src/main/java/miau/auau/amigosdequatropatas/entidades/Adocao.java
 
 public class Adocao {
     private int codAnimal;
@@ -16,8 +12,9 @@ public class Adocao {
         this.codUsuario = codUsuario;
         this.data = data;
     }
+
     public Adocao() {
-        this(0,0,"");
+        this(0, 0, "");
     }
 
     // Gets e Sets
