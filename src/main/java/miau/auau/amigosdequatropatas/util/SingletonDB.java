@@ -14,7 +14,7 @@ public class SingletonDB {
     private static final String URL = "jdbc:postgresql://localhost/";
     private static final String BASE_NAME = "auaumiaudb";
     private static final String USER = "postgres";
-    private static final String SENHA = "postgres123";
+    private static final String SENHA = "29012000";
 
     public SingletonDB() {
         Conectar();
