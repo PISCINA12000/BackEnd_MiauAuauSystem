@@ -5,6 +5,7 @@ import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class TipoMedicamentoRestView {
 
         //mando para a controller
         listaJson = tipoMedicamentoController.onBuscar(filtro);
-        if (listaJson!=null)
+        if (listaJson != null)
             return ResponseEntity.ok().body(listaJson);
         else
             return ResponseEntity.badRequest().body(new Erro("Tipo de medicamento não encontrado ou nenhum cadastrado!!"));
@@ -45,16 +46,21 @@ public class TipoMedicamentoRestView {
 
     // GRAVAR
     @PostMapping("gravar")
-    public ResponseEntity<Object> gravarTipoMedicamento(@RequestParam String nome) {
+    public ResponseEntity<Object> gravarTipoMedicamento(
+            @RequestParam String nome,
+            @RequestParam String formaFarmaceutica,
+            @RequestParam String descricao)
+    {
         //criar o json
         Map<String, Object> json = new HashMap<>();
         json.put("nome", nome);
+        json.put("formaFarmaceutica", formaFarmaceutica);
+        json.put("descricao", descricao);
 
         //mandar para a controller
         if (tipoMedicamentoController.onGravar(json))
             return ResponseEntity.ok(json);
-        else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de medicamento!!"));
+        return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de medicamento!!"));
     }
 
     // DELETE
@@ -70,17 +76,20 @@ public class TipoMedicamentoRestView {
     @PutMapping("atualizar")
     public ResponseEntity<Object> atualizarTipoMedicamento(
             @RequestParam int cod,
-            @RequestParam String nome)
+            @RequestParam String nome,
+            @RequestParam String formaFarmaceutica,
+            @RequestParam String descricao)
     {
         //criar o JSON
         Map<String, Object> json = new HashMap<>();
         json.put("cod", cod);
         json.put("nome", nome);
+        json.put("formaFarmaceutica", formaFarmaceutica);
+        json.put("descricao", descricao);
 
         //mandar para a controller
-        if (tipoMedicamentoController.onAlterar(json)) {
+        if (tipoMedicamentoController.onAlterar(json))
             return ResponseEntity.ok(json);
-        } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de medicamento"));
+        return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de medicamento"));
     }
 }

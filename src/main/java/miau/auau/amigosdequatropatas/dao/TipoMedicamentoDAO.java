@@ -3,7 +3,6 @@ package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.TipoMedicamento;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
-import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -16,10 +15,12 @@ public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
     @Override
     public boolean gravar(TipoMedicamento entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO tipo_medicamento (tpm_nome)
-                VALUES ('#1')
+                INSERT INTO tipo_medicamento (tpm_nome, tpm_forma, tpm_descricao)
+                VALUES ('#1', '#2', '#3')
                 """;
-        sql = sql.replace("#1", entidade.getNome());
+        sql = sql.replace("#1", entidade.getNome())
+                .replace("#2", entidade.getFormaFarmaceutica())
+                .replace("#3", entidade.getDescricao());
         return conexao.manipular(sql);
     }
 
@@ -27,11 +28,13 @@ public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
     public boolean alterar(TipoMedicamento entidade, Conexao conexao) {
         String sql = """
                 UPDATE tipo_medicamento
-                SET tpm_nome = '#1'
-                WHERE tpm_id = #2
+                SET tpm_nome = '#1', tpm_forma = '#2', tpm_descricao = '#3'
+                WHERE tpm_id = #4
                 """;
         sql = sql.replace("#1", entidade.getNome())
-                .replace("#2", "" + entidade.getCod());
+                .replace("#2", entidade.getFormaFarmaceutica())
+                .replace("#3", entidade.getDescricao())
+                .replace("#4", "" + entidade.getCod());
         return conexao.manipular(sql);
     }
 
@@ -50,7 +53,9 @@ public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
             if (resultSet.next()) {
                 tipoMedicamento = new TipoMedicamento(
                         id,
-                        resultSet.getString("tpm_nome")
+                        resultSet.getString("tpm_nome"),
+                        resultSet.getString("tpm_forma"),
+                        resultSet.getString("tpm_descricao")
                 );
             }
         } catch (Exception e) {
@@ -74,7 +79,9 @@ public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
             while (resultSet.next()) {
                 lista.add(new TipoMedicamento(
                         resultSet.getInt("tpm_id"),
-                        resultSet.getString("tpm_nome")
+                        resultSet.getString("tpm_nome"),
+                        resultSet.getString("tpm_forma"),
+                        resultSet.getString("tpm_descricao")
                 ));
             }
         } catch (Exception e) {

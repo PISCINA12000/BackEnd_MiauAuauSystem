@@ -19,16 +19,18 @@ public class TipoMedicamentoController {
     private TipoMedicamento tipoMedicamentoModel;
 
     public boolean onGravar(Map<String, Object> json) {
-        if(validar(json)) {
+        if (validar(json)) {
             //criando a conexao
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
-            tipoMedicamentoModel.setNome((String) json.get("nome"));
+            //setando os valores do json no objeto
+            tipoMedicamentoModel.setNome(json.get("nome").toString());
+            tipoMedicamentoModel.setFormaFarmaceutica(json.get("formaFarmaceutica").toString());
+            tipoMedicamentoModel.setDescricao(json.get("descricao").toString());
+
             if (tipoMedicamentoModel.incluir(conexao))
                 return true;
-
-            //chegando aqui algo deu errado
             return false;
         }
         return false;
@@ -40,7 +42,7 @@ public class TipoMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         TipoMedicamento tipoMedicamento = tipoMedicamentoModel.consultarID(id, conexao);
-        if(tipoMedicamento != null) {
+        if (tipoMedicamento != null) {
             return tipoMedicamento.excluir(conexao);
         }
         return false;
@@ -53,11 +55,13 @@ public class TipoMedicamentoController {
 
         //buscar pelo id
         TipoMedicamento tipoMedicamento = tipoMedicamentoModel.consultarID(id, conexao);
-        if(tipoMedicamento != null) {
+        if (tipoMedicamento != null) {
             //achou um medicamento
             Map<String, Object> json = new HashMap<>();
             json.put("cod", tipoMedicamento.getCod());
             json.put("nome", tipoMedicamento.getNome());
+            json.put("formaFarmaceutica", tipoMedicamento.getFormaFarmaceutica());
+            json.put("descricao", tipoMedicamento.getDescricao());
             return json;
         }
         return null;
@@ -69,13 +73,15 @@ public class TipoMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
         List<TipoMedicamento> lista = tipoMedicamentoModel.consultar(filtro, conexao);
 
-        if(!lista.isEmpty()) {
+        if (!lista.isEmpty()) {
             //achou tipos de medicamentos
             List<Map<String, Object>> listaJson = new ArrayList<>();
             for (int i = 0; i < lista.size(); i++) {
                 Map<String, Object> json = new HashMap<>();
                 json.put("cod", lista.get(i).getCod());
                 json.put("nome", lista.get(i).getNome());
+                json.put("formaFarmaceutica", lista.get(i).getFormaFarmaceutica());
+                json.put("descricao", lista.get(i).getDescricao());
                 listaJson.add(json);
             }
             return listaJson;
@@ -90,7 +96,9 @@ public class TipoMedicamentoController {
 
         //colocar valores na instância da entidade
         tipoMedicamentoModel.setCod(Integer.parseInt(json.get("cod").toString()));
-        tipoMedicamentoModel.setNome((String) json.get("nome"));
+        tipoMedicamentoModel.setNome(json.get("nome").toString());
+        tipoMedicamentoModel.setFormaFarmaceutica(json.get("formaFarmaceutica").toString());
+        tipoMedicamentoModel.setDescricao(json.get("descricao").toString());
 
         if (validarAlterar(json)) {
             return tipoMedicamentoModel.alterar(conexao);
@@ -99,7 +107,10 @@ public class TipoMedicamentoController {
     }
 
     public boolean validar(Map<String, Object> json) {
-        return !json.isEmpty() && !json.get("nome").toString().isEmpty();
+        return !json.isEmpty() &&
+                !json.get("nome").toString().isEmpty() &&
+                !json.get("formaFarmaceutica").toString().isEmpty() &&
+                !json.get("descricao").toString().isEmpty();
     }
 
     public boolean validarAlterar(Map<String, Object> json) {

@@ -4,6 +4,7 @@ import miau.auau.amigosdequatropatas.dao.TipoMedicamentoDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
@@ -14,15 +15,19 @@ public class TipoMedicamento {
 
     private int cod;
     private String nome;
+    private String formaFarmaceutica;
+    private String descricao;
 
     // Construtores
-    public TipoMedicamento(int cod, String nome) {
+    public TipoMedicamento(int cod, String nome, String formaFarmaceutica, String descricao) {
         this.cod = cod;
         this.nome = nome;
+        this.formaFarmaceutica = formaFarmaceutica;
+        this.descricao = descricao;
     }
 
     public TipoMedicamento() {
-        this(0, "");
+        this(0, "", "", "");
     }
 
     // Gets e Sets
@@ -42,6 +47,23 @@ public class TipoMedicamento {
         this.nome = nome;
     }
 
+    public String getFormaFarmaceutica() {
+        return formaFarmaceutica;
+    }
+
+    public void setFormaFarmaceutica(String formaFarmaceutica) {
+        this.formaFarmaceutica = formaFarmaceutica;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    //CRUD
     public boolean incluir(Conexao conexao) {
         return tipoMedicamentoDAL.gravar(this, conexao); // grava no banco
     }
@@ -60,6 +82,6 @@ public class TipoMedicamento {
     }
 
     public boolean alterar(Conexao conexao) {
-        return tipoMedicamentoDAL.alterar(this,conexao);
+        return tipoMedicamentoDAL.alterar(this, conexao);
     }
 }

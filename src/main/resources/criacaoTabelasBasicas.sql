@@ -1,6 +1,8 @@
 CREATE TABLE tipo_medicamento (
     tpm_id SERIAL PRIMARY KEY,
-    tpm_nome VARCHAR(255) NOT NULL
+    tpm_nome VARCHAR(255) NOT NULL,
+    tpm_forma VARCHAR(255) NOT NULL,
+    tpm_descricao VARCHAR(255) NOT NULL
 );
 CREATE TABLE tipo_lancamento (
     tpl_id SERIAL PRIMARY KEY,
