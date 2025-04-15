@@ -33,7 +33,7 @@ public class AnimalController {
             animalModel.setCastrado(json.get("castrado").toString());
             animalModel.setAdotado(json.get("adotado").toString());
             animalModel.setImagemBase64(json.get("imagemBase64").toString());
-
+            System.out.println(json.get("imagemBase64").toString());
             if (animalModel.incluir(conexao)) {
                 // commit; finalizar transação e desconectar
                 return true;

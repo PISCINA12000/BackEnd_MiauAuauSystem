@@ -71,7 +71,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),
-                        resultSet.getBytes("ani_filename")
+                        resultSet.getString("ani_filename")
                 );
             }
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),
-                        resultSet.getBytes("ani_filename")
+                        resultSet.getString("ani_filename")
                 ));
             }
         } catch (Exception e) {

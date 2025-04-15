@@ -22,11 +22,11 @@ public class Animal {
     private double peso;
     private String castrado;
     private String adotado;
-    private byte[] imagemBase64;
+    private String imagemBase64;
     // tratar foto depois
 
     // Construtores
-    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, byte[] imagemBase64) {
+    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, String imagemBase64) {
         this.codAnimal = codAnimal;
         this.nome = nome;
         this.sexo = sexo;
@@ -40,7 +40,7 @@ public class Animal {
     }
 
     public Animal() {
-        this(0, "", "", "", 0, 0, "", "", "".getBytes());
+        this(0, "", "", "", 0, 0, "", "", "");
     }
 
     // Gets e Sets --------------------------------------------------------------------
@@ -109,11 +109,11 @@ public class Animal {
     }
 
     public String getImagemBase64() {
-        return Base64.getEncoder().encodeToString(imagemBase64);
+        return imagemBase64;
     }
 
     public void setImagemBase64(String imagemBase64) {
-        this.imagemBase64 = Base64.getDecoder().decode(imagemBase64);
+        this.imagemBase64 = imagemBase64;
     }
     // CRUD --------------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
