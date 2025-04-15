@@ -48,7 +48,8 @@ public class TipoLancamento {
     }
 
     public boolean excluir(Conexao conexao) {
-        return tipoLancamentoDAL.apagar(this, conexao);
+        TipoLancamentoDAO tipoLancamentoDAO = new TipoLancamentoDAO();
+        return tipoLancamentoDAO.apagar(this,conexao);
     }
 
     public TipoLancamento consultarID(int id, Conexao conexao) {

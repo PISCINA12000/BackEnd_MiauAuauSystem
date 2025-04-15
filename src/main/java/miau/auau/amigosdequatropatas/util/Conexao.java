@@ -36,6 +36,10 @@ public class Conexao {
         return conectado;
     }
 
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        return this.connect.prepareStatement(sql);
+    }
+
     public String getMensagemErro() {
         return erro;
     }

@@ -4,8 +4,9 @@ import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import org.springframework.stereotype.Component;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,46 +16,60 @@ public class UsuarioDAO implements IDAL<Usuario> {
     @Override
     public boolean gravar(Usuario entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO usuario (usu_nome, usu_email, usu_senha, usu_telefone, usu_cpf, usu_privilegio, 
-                usu_sexo, usu_cep, usu_rua, usu_bairro, usu_numero)
-                VALUES ('#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', '#11')
-                """;
-        sql = sql.replace("#1", entidade.getNome())
-                .replace("#2", entidade.getEmail())
-                .replace("#3", entidade.getSenha())
-                .replace("#4", entidade.getTelefone())
-                .replace("#5", entidade.getCpf())
-                .replace("#6", entidade.getPrivilegio())
-                .replace("#7", entidade.getSexo())
-                .replace("#8", entidade.getCep())
-                .replace("#9", entidade.getRua())
-                .replace("#10", entidade.getBairro())
-                .replace("#11", entidade.getNumero());
-        return conexao.manipular(sql);
+            INSERT INTO usuario (
+                usu_nome, usu_email, usu_senha, usu_telefone, usu_cpf, 
+                usu_privilegio, usu_sexo, usu_cep, usu_rua, usu_bairro, usu_numero
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
+
+        try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
+            stmt.setString(1, entidade.getNome());
+            stmt.setString(2, entidade.getEmail());
+            stmt.setString(3, entidade.getSenha());
+            stmt.setString(4, entidade.getTelefone());
+            stmt.setString(5, entidade.getCpf());
+            stmt.setString(6, entidade.getPrivilegio());
+            stmt.setString(7, entidade.getSexo());
+            stmt.setString(8, entidade.getCep());
+            stmt.setString(9, entidade.getRua());
+            stmt.setString(10, entidade.getBairro());
+            stmt.setString(11, entidade.getNumero());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // ou logue o erro
+            return false;
+        }
     }
 
     @Override
     public boolean alterar(Usuario entidade, Conexao conexao) {
         String sql = """
-                UPDATE usuario
-                SET usu_nome = '#1', usu_email = '#2', usu_senha = '#3', usu_telefone = '#4', usu_cpf = '#5', 
-                usu_privilegio = '#6', usu_sexo = '#7', usu_cep = '#8', usu_rua = '#9', usu_bairro = '#10', 
-                usu_numero = '#11'
-                WHERE usu_id = #12
-                """;
-        sql = sql.replace("#1", entidade.getNome())
-                .replace("#2", entidade.getEmail())
-                .replace("#3", entidade.getSenha())
-                .replace("#4", entidade.getTelefone())
-                .replace("#5", entidade.getCpf())
-                .replace("#6", entidade.getPrivilegio())
-                .replace("#7", entidade.getSexo())
-                .replace("#8", entidade.getCep())
-                .replace("#9", entidade.getRua())
-                .replace("#10", entidade.getBairro())
-                .replace("#11", entidade.getNumero())
-                .replace("#12", "" + entidade.getCod());
-        return conexao.manipular(sql);
+            UPDATE usuario
+            SET usu_nome = ?, usu_email = ?, usu_senha = ?, usu_telefone = ?, usu_cpf = ?, 
+                usu_privilegio = ?, usu_sexo = ?, usu_cep = ?, usu_rua = ?, usu_bairro = ?, usu_numero = ?
+            WHERE usu_id = ?
+        """;
+
+        try (PreparedStatement ps = conexao.getPreparedStatement(sql)) {
+            ps.setString(1, entidade.getNome());
+            ps.setString(2, entidade.getEmail());
+            ps.setString(3, entidade.getSenha());
+            ps.setString(4, entidade.getTelefone());
+            ps.setString(5, entidade.getCpf());
+            ps.setString(6, entidade.getPrivilegio());
+            ps.setString(7, entidade.getSexo());
+            ps.setString(8, entidade.getCep());
+            ps.setString(9, entidade.getRua());
+            ps.setString(10, entidade.getBairro());
+            ps.setString(11, entidade.getNumero());
+            ps.setInt(12, entidade.getCod());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // ou logue como preferir
+            return false;
+        }
     }
 
     @Override

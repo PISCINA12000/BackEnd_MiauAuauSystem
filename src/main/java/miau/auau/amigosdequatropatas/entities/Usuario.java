@@ -147,7 +147,8 @@ public class Usuario {
     }
 
     public boolean excluir(Conexao conexao) {
-        return usuarioDAL.apagar(this, conexao);
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        return usuarioDAO.apagar(this, conexao);
     }
 
     public Usuario consultarID(int id, Conexao conexao) {

@@ -46,9 +46,9 @@ public class UsuarioController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        usuarioModel.consultarID(id,conexao); //consulto para confirmar se existe ou não
-        if (usuarioModel != null) {
-            return usuarioModel.excluir(conexao);
+        Usuario usuario =  usuarioModel.consultarID(id,conexao); //consulto para confirmar se existe ou não
+        if (usuario != null) {
+            return usuario.excluir(conexao);
         }
         return false;
     }
@@ -59,21 +59,21 @@ public class UsuarioController {
         Conexao conexao = singletonDB.getConexao();
 
         //mandar para a modelo
-        usuarioModel = usuarioModel.consultarID(id, conexao);
-        if (usuarioModel != null) {
+        Usuario usuario = usuarioModel.consultarID(id, conexao);
+        if (usuario != null) {
             Map<String, Object> json = new HashMap<>();
-            json.put("cod", usuarioModel.getCod());
-            json.put("nome", usuarioModel.getNome());
-            json.put("email", usuarioModel.getEmail());
-            json.put("senha", usuarioModel.getSenha());
-            json.put("telefone", usuarioModel.getTelefone());
-            json.put("cpf", usuarioModel.getCpf());
-            json.put("privilegio", usuarioModel.getPrivilegio());
-            json.put("sexo", usuarioModel.getSexo());
-            json.put("cep", usuarioModel.getCep());
-            json.put("rua", usuarioModel.getRua());
-            json.put("bairro", usuarioModel.getBairro());
-            json.put("numero", usuarioModel.getNumero());
+            json.put("cod", usuario.getCod());
+            json.put("nome", usuario.getNome());
+            json.put("email", usuario.getEmail());
+            json.put("senha", usuario.getSenha());
+            json.put("telefone", usuario.getTelefone());
+            json.put("cpf", usuario.getCpf());
+            json.put("privilegio", usuario.getPrivilegio());
+            json.put("sexo", usuario.getSexo());
+            json.put("cep", usuario.getCep());
+            json.put("rua", usuario.getRua());
+            json.put("bairro", usuario.getBairro());
+            json.put("numero", usuario.getNumero());
 
             return json;
         }
@@ -88,7 +88,7 @@ public class UsuarioController {
 
         //mandar para a model
         listaUsers = usuarioModel.consultar(filtro, conexao);
-        if (!listaUsers.isEmpty()) {
+        if (listaUsers!=null) {
             List<Map<String, Object>> listaJson = new ArrayList<>();
             for (int i = 0; i < listaUsers.size(); i++) {
                 Map<String, Object> json = new HashMap<>();
@@ -104,6 +104,7 @@ public class UsuarioController {
                 json.put("rua", listaUsers.get(i).getRua());
                 json.put("bairro", listaUsers.get(i).getBairro());
                 json.put("numero", listaUsers.get(i).getNumero());
+                listaJson.add(json);
             }
             return listaJson; //para retornar um json corretamente para a "rest-view"
         }

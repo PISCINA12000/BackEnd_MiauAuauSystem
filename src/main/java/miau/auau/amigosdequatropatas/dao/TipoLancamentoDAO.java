@@ -29,7 +29,7 @@ public class TipoLancamentoDAO implements IDAL<TipoLancamento> {
         String sql = """
                 UPDATE tipo_lancamento
                 SET tpl_descricao = '#1'
-                WHERE tlp_id = #2
+                WHERE tpl_id = #2
                 """;
         sql = sql.replace("#1", entidade.getDescricao())
                 .replace("#2", "" + entidade.getCod());
@@ -38,14 +38,14 @@ public class TipoLancamentoDAO implements IDAL<TipoLancamento> {
 
     @Override
     public boolean apagar(TipoLancamento entidade, Conexao conexao) {
-        String sql = "DELETE FROM tipo_lancamento WHERE tlp_id = " + entidade.getCod();
+        String sql = "DELETE FROM tipo_lancamento WHERE tpl_id = " + entidade.getCod();
         return conexao.manipular(sql);
     }
 
     @Override
     public TipoLancamento get(int id, Conexao conexao) {
         TipoLancamento tipoLancamento = null;
-        String sql = "SELECT * FROM tipo_lancamento WHERE tlp_id = " + id;
+        String sql = "SELECT * FROM tipo_lancamento WHERE tpl_id = " + id;
         ResultSet resultSet = conexao.consultar(sql);
         try {
             if (resultSet.next()) {
@@ -74,7 +74,7 @@ public class TipoLancamentoDAO implements IDAL<TipoLancamento> {
         try {
             while (resultSet.next()) {
                 lista.add(new TipoLancamento(
-                        resultSet.getInt("tlp_id"),
+                        resultSet.getInt("tpl_id"),
                         resultSet.getString("tpl_descricao")
                 ));
             }

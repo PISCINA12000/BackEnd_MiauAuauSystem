@@ -25,7 +25,7 @@ public class TipoLancamentoRestView {
 
         //mandar para a controller
         listaJson = tipoLancamentoController.onBuscar(filtro);
-        if (!listaJson.isEmpty())
+        if (listaJson!=null)
             return ResponseEntity.ok().body(listaJson);
         else
             return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado ou nenhum cadastrado!!"));

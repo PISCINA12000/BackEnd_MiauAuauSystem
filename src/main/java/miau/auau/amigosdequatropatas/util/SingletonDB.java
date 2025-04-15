@@ -12,7 +12,7 @@ public class SingletonDB {
     private static SingletonDB instance;
     private static Conexao conexao;
     private static final String URL = "jdbc:postgresql://localhost/";
-    private static final String BASE_NAME = "auauMiaudb";
+    private static final String BASE_NAME = "auaumiaudb";
     private static final String USER = "postgres";
     private static final String SENHA = "postgres123";
 
@@ -38,8 +38,7 @@ public class SingletonDB {
 
     public boolean criarBD(String BD) {
         try {
-            String url = "jdbc:postgresql://localhost/";
-            Connection con = DriverManager.getConnection(url, "postgres", "postgres123");
+            Connection con = DriverManager.getConnection(URL, USER, SENHA);
 
             Statement statement = con.createStatement();
             statement.execute("CREATE DATABASE " + BD + " WITH OWNER = postgres ENCODING = 'UTF8'  "

@@ -39,9 +39,9 @@ public class TipoMedicamentoController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        tipoMedicamentoModel = tipoMedicamentoModel.consultarID(id, conexao);
-        if(tipoMedicamentoModel != null) {
-            return tipoMedicamentoModel.excluir(conexao);
+        TipoMedicamento tipoMedicamento = tipoMedicamentoModel.consultarID(id, conexao);
+        if(tipoMedicamento != null) {
+            return tipoMedicamento.excluir(conexao);
         }
         return false;
     }
@@ -52,12 +52,12 @@ public class TipoMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         //buscar pelo id
-        tipoMedicamentoModel = tipoMedicamentoModel.consultarID(id, conexao);
-        if(tipoMedicamentoModel != null) {
+        TipoMedicamento tipoMedicamento = tipoMedicamentoModel.consultarID(id, conexao);
+        if(tipoMedicamento != null) {
             //achou um medicamento
             Map<String, Object> json = new HashMap<>();
-            json.put("cod", tipoMedicamentoModel.getCod());
-            json.put("nome", tipoMedicamentoModel.getNome());
+            json.put("cod", tipoMedicamento.getCod());
+            json.put("nome", tipoMedicamento.getNome());
             return json;
         }
         return null;
@@ -89,7 +89,7 @@ public class TipoMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         //colocar valores na instância da entidade
-        tipoMedicamentoModel.setCod(Integer.parseInt((String) json.get("cod")));
+        tipoMedicamentoModel.setCod(Integer.parseInt(json.get("cod").toString()));
         tipoMedicamentoModel.setNome((String) json.get("nome"));
 
         if (validarAlterar(json)) {

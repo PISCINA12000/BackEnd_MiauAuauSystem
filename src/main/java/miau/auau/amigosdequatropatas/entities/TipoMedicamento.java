@@ -47,7 +47,8 @@ public class TipoMedicamento {
     }
 
     public boolean excluir(Conexao conexao) {
-        return tipoMedicamentoDAL.apagar(this, conexao);
+        TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
+        return tipoMedicamentoDAO.apagar(this, conexao);
     }
 
     public TipoMedicamento consultarID(int id, Conexao conexao) {

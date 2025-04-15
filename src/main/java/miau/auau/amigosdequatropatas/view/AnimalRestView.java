@@ -28,7 +28,7 @@ public class AnimalRestView {
 
         //mando para a controller
         listaJson = animalController.onBuscar(filtro);
-        if(!listaJson.isEmpty())
+        if(listaJson != null)
             return ResponseEntity.ok().body(listaJson);
         else
             return ResponseEntity.badRequest().body(new Erro("Animal não encontrado ou nenhum animal cadastrado!!"));
@@ -57,7 +57,8 @@ public class AnimalRestView {
             @RequestParam double peso,
             @RequestParam String castrado,
             @RequestParam String adotado,
-            @RequestParam MultipartFile imagemBase64) throws IOException {
+            @RequestParam MultipartFile imagemBase64) throws IOException
+    {
         //criar o mapeamento do meu json ANIMAL
         Map<String, Object> json = new HashMap<>();
         json.put("nome", nome);

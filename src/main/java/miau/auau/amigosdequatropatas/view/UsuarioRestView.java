@@ -19,8 +19,9 @@ public class UsuarioRestView {
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getUsuarios(@PathVariable(value = "filtro") String filtro) {
         List<Map<String, Object>> listaJson;
+
         listaJson = usuarioController.onBuscar(filtro);
-        if(!listaJson.isEmpty())
+        if(listaJson!=null)
             return ResponseEntity.ok().body(listaJson);
         return ResponseEntity.badRequest().body(new Erro("Usuario nao encontrado ou nenhum Usuario cadastrado!!"));
     }

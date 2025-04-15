@@ -35,12 +35,12 @@ public class TipoLancamentoController {
         //criar a conexao
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
-        tipoLancamentoModel = tipoLancamentoModel.consultarID(id, conexao);
-        if (tipoLancamentoModel != null) // achou tipo de lançamento
-        {
-            return tipoLancamentoModel.excluir(conexao);
-        } else
-            return false;
+
+        TipoLancamento tipoLancamento = tipoLancamentoModel.consultarID(id, conexao);
+        if (tipoLancamento != null) {
+            return tipoLancamento.excluir(conexao);
+        }
+        return false;
     }
 
     public Map<String, Object> onBuscarId(int id) {
@@ -50,11 +50,11 @@ public class TipoLancamentoController {
 
         //instanciando um JSON
         Map<String, Object> json = new HashMap<>();
-        tipoLancamentoModel = tipoLancamentoModel.consultarID(id, conexao);
 
-        if(tipoLancamentoModel != null) {
-            json.put("cod", tipoLancamentoModel.getCod());
-            json.put("descricao", tipoLancamentoModel.getDescricao());
+        TipoLancamento tipoLancamento = tipoLancamentoModel.consultarID(id, conexao);
+        if(tipoLancamento != null) {
+            json.put("cod", tipoLancamento.getCod());
+            json.put("descricao", tipoLancamento.getDescricao());
             return json;
         }
 

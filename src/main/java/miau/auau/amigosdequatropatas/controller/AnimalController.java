@@ -17,8 +17,6 @@ public class AnimalController {
     private Animal animalModel;
 
     public boolean onGravar(Map<String, Object> json) {
-
-
         if (validar(json)) {
             //criar aqui a conexão para o banco de dados
             SingletonDB singletonDB = SingletonDB.getInstance();
@@ -54,12 +52,8 @@ public class AnimalController {
         // Consultando o animal pelo ID
         Animal animal = animalModel.consultarID(id, conexao);
         // Se o animal for encontrado, exclui; caso contrário, retorna false
-        if (animal != null) {
-
+        if (animal != null)
             return animal.excluir(conexao);
-
-        }
-
         return false;
     }
 
@@ -101,7 +95,7 @@ public class AnimalController {
         List<Animal> lista = animalModel.consultar(filtro, conexao);
 
         //verificação de a minha lista JSON está vazia ou não
-        if (!lista.isEmpty()) {
+        if (lista!=null) {
             //crio uma lista json contendo os animais que retornaram no meu consultar
             List<Map<String, Object>> listaJson = new ArrayList<>();
             for (int i=0; i<lista.size(); i++) {

@@ -25,7 +25,7 @@ public class TipoMedicamentoRestView {
 
         //mando para a controller
         listaJson = tipoMedicamentoController.onBuscar(filtro);
-        if (!listaJson.isEmpty())
+        if (listaJson!=null)
             return ResponseEntity.ok().body(listaJson);
         else
             return ResponseEntity.badRequest().body(new Erro("Tipo de medicamento não encontrado ou nenhum cadastrado!!"));

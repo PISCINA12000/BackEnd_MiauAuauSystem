@@ -9,7 +9,7 @@ import javax.swing.*;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class AmigosDeQuatroPatasApplication {
-    private static final String mydatabase = "auauMiaudb";
+    private static final String mydatabase = "auaumiaudb";
 
     public static void main(String[] args) {
         // Sua lógica personalizada de conexão de banco de dados
