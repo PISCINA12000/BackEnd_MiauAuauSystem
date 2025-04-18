@@ -1,7 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import miau.auau.amigosdequatropatas.dao.AdocaoDAO;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
@@ -9,8 +8,9 @@ import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.Map;
 public class AdocaoController {
 
 
+    private static final Logger log = LoggerFactory.getLogger(AdocaoController.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean onGravar(Map<String, Object> json) {
@@ -29,12 +30,21 @@ public class AdocaoController {
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
-            // Converter os objetos JSON em objetos das entidades
-            Animal animal = objectMapper.convertValue(json.get("animal"), Animal.class);
-            Usuario usuario = objectMapper.convertValue(json.get("usuario"), Usuario.class);
-            String data = json.get("data").toString();
+            Adocao adocao = new Adocao();
+            AnimalDAO animalDAO = new AnimalDAO();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            Animal animal;
+            Usuario usuario;
 
-            Adocao adocao = new Adocao(animal, usuario, data);
+            animal = animalDAO.get((int) json.get("animal"), conexao);
+            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+            String data = json.get("data").toString();
+            String status = json.get("status").toString();
+
+            adocao.setData(data);
+            adocao.setStatus(status);
+            adocao.setAnimal(animal);
+            adocao.setUsuario(usuario);
 
             if (adocao.incluir(conexao)) {
                 // commit; finalizar transação e desconectar
@@ -48,8 +58,136 @@ public class AdocaoController {
         return false;
     }
 
+    public List<Map<String, Object>> onBuscar(String filtro) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        //criando a lista que conterá os JSON's
+        Adocao adocao = new Adocao();
+        List<Adocao> lista = adocao.consultar(filtro, conexao);
+
+        //verificação de a minha lista JSON está vazia ou não
+        if (lista!=null) {
+            //crio uma lista json contendo os animais que retornaram no meu consultar
+            List<Map<String, Object>> listaJson = new ArrayList<>();
+            for (int i=0; i<lista.size(); i++) {
+
+                Adocao a = lista.get(i);
+                // dados animal
+                Map<String, Object> jsonAnimal = new HashMap<>();
+                jsonAnimal.put("codAnimal", a.getAnimal().getCodAnimal());
+                jsonAnimal.put("nome", a.getAnimal().getNome());
+                jsonAnimal.put("sexo", a.getAnimal().getSexo());
+                jsonAnimal.put("raca", a.getAnimal().getRaca());
+                jsonAnimal.put("idade", a.getAnimal().getIdade());
+                jsonAnimal.put("peso", a.getAnimal().getPeso());
+                jsonAnimal.put("castrado", a.getAnimal().getCastrado());
+                jsonAnimal.put("adotado", a.getAnimal().getAdotado());
+                jsonAnimal.put("imagemBase64", a.getAnimal().getImagemBase64());
+
+                Map<String, Object> jsonUsuario = new HashMap<>();
+                jsonUsuario.put("codUsuario", a.getUsuario().getCod());
+                jsonUsuario.put("nome", a.getUsuario().getNome());
+                jsonUsuario.put("email", a.getUsuario().getEmail());
+                jsonUsuario.put("telefone", a.getUsuario().getTelefone());
+
+                Map<String, Object> jsonAdocao = new HashMap<>();
+                jsonAdocao.put("codAdocao", a.getCodAdocao());
+                jsonAdocao.put("data", a.getData());
+                jsonAdocao.put("status", a.getStatus());
+                jsonAdocao.put("animal", jsonAnimal);
+                jsonAdocao.put("usuario", jsonUsuario);
+                listaJson.add(jsonAdocao);
+            }
+            return listaJson;
+        }
+        else
+            return null;
+    }
+
+    public boolean onDelete(int id) {
+        // Criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        // Consultando a adocao pelo ID
+        Adocao adocao = new Adocao();
+        adocao = adocao.consultarID(id, conexao);
+        // Se a adocao for encontrada, exclui; caso contrário, retorna false
+        if (adocao != null)
+            return adocao.excluir(conexao);
+        return false;
+    }
 
 
+    public Map<String, Object> onBuscarId(int id) {
+        // Criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        // Consultando a adocao pelo ID
+        Adocao adocao = new Adocao();
+        adocao = adocao.consultarID(id, conexao);
+
+        // Retornando os dados da adocao, se encontrado
+        if (adocao != null) {
+
+            Map<String, Object> jsonAnimal = new HashMap<>();
+            jsonAnimal.put("codAnimal", adocao.getAnimal().getCodAnimal());
+            jsonAnimal.put("nome", adocao.getAnimal().getNome());
+            jsonAnimal.put("sexo", adocao.getAnimal().getSexo());
+            jsonAnimal.put("raca", adocao.getAnimal().getRaca());
+            jsonAnimal.put("idade", adocao.getAnimal().getIdade());
+            jsonAnimal.put("peso", adocao.getAnimal().getPeso());
+            jsonAnimal.put("castrado", adocao.getAnimal().getCastrado());
+            jsonAnimal.put("adotado", adocao.getAnimal().getAdotado());
+            jsonAnimal.put("imagemBase64", adocao.getAnimal().getImagemBase64());
+
+            Map<String, Object> jsonUsuario = new HashMap<>();
+            jsonUsuario.put("codUsuario", adocao.getUsuario().getCod());
+            jsonUsuario.put("nome", adocao.getUsuario().getNome());
+            jsonUsuario.put("email", adocao.getUsuario().getEmail());
+            jsonUsuario.put("telefone", adocao.getUsuario().getTelefone());
+
+            Map<String, Object> jsonAdocao = new HashMap<>();
+            jsonAdocao.put("codAdocao", adocao.getCodAdocao());
+            jsonAdocao.put("data", adocao.getData());
+            jsonAdocao.put("status", adocao.getStatus());
+            jsonAdocao.put("animal", jsonAnimal);
+            jsonAdocao.put("usuario", jsonUsuario);
+
+            return jsonAdocao;
+        }
+
+        // Retorna null se a adocao não for encontrado
+        return null;
+    }
+    public boolean onAlterar(Map<String, Object> json) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+        if (validarAlterar(json))
+        {
+            Adocao adocao = new Adocao();
+            AnimalDAO animalDAO = new AnimalDAO();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+            Animal animal;
+            Usuario usuario;
+            animal = animalDAO.get((int) json.get("animal"), conexao);
+            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+            adocao.setCodAdocao((Integer)json.get("codAdocao"));
+            adocao.setAnimal(animal);
+            adocao.setUsuario(usuario);
+            adocao.setData(json.get("data").toString());
+            adocao.setStatus(json.get("status").toString());
+
+            return adocao.alterar(conexao);
+        }
+        else
+            return false;
+    }
 
     public boolean validar(Map<String, Object> json) {
         //retorna verdade se todas as informações forem válidas
@@ -58,20 +196,24 @@ public class AdocaoController {
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
-            Animal animal = objectMapper.convertValue(json.get("animal"), Animal.class);
-            Usuario usuario = objectMapper.convertValue(json.get("usuario"), Usuario.class);
-
             // Verificar se os objetos existem no banco
             AnimalDAO animalDAO = new AnimalDAO();
             UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-            animal = animalDAO.get(animal.getCodAnimal(), conexao);
-            usuario = usuarioDAO.get(usuario.getCod(), conexao);
+            Animal animal;
+            Usuario usuario;
+            animal = animalDAO.get((int) json.get("animal"), conexao);
+            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
             if (usuario != null && animal != null)
                 return true;
         }
 
         return false;
+    }
+
+    public boolean validarAlterar(Map<String, Object> json) {
+        //retorna verdade se todas as informações forem válidas
+        return validar(json) && json.containsKey("codAdocao");
     }
 
 
