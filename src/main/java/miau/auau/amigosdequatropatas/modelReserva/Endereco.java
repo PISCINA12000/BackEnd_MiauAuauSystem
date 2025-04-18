@@ -1,4 +1,4 @@
-package miau.auau.amigosdequatropatas.model;
+package miau.auau.amigosdequatropatas.modelReserva;
 
 public class Endereco {
     private String cep;

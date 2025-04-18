@@ -1,4 +1,4 @@
-package miau.auau.amigosdequatropatas.model;
+package miau.auau.amigosdequatropatas.util;
 
 public class Erro {
     private String mensagem;
@@ -7,7 +7,8 @@ public class Erro {
     public Erro(String mensagem) {
         this.mensagem = mensagem;
     }
-    public Erro () {
+
+    public Erro() {
         this("");
     }
 
