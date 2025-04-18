@@ -83,9 +83,9 @@ public class AnimalDAO implements IDAL<Animal> {
     public List<Animal> get(String filtro, Conexao conexao) {
         List<Animal> lista = new ArrayList<>();
         String sql = "SELECT * FROM animal";
-        if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE ani_nome = " + filtro;
+        if (!filtro.isEmpty() && !filtro.equals(" "))
+        {
+            sql += " WHERE ani_nome ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY ani_nome";
         System.out.println("SQL gerado: " + sql);

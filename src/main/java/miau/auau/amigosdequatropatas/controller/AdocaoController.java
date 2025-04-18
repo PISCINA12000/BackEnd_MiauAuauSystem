@@ -171,7 +171,7 @@ public class AdocaoController {
             Usuario usuario;
             animal = animalDAO.get((int) json.get("animal"), conexao);
             usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
-            adocao.setCodAdocao((Integer)json.get("codAdocao"));
+            adocao.setCodAdocao((int)json.get("codAdocao"));
             adocao.setAnimal(animal);
             adocao.setUsuario(usuario);
             adocao.setData(json.get("data").toString());
@@ -198,7 +198,7 @@ public class AdocaoController {
             Usuario usuario;
             animal = animalDAO.get((int) json.get("animal"), conexao);
             usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
-            if (usuario != null && animal != null)
+            if (usuario != null && animal != null && animal.getAdotado().equals("Não"))
                 return true;
         }
 
