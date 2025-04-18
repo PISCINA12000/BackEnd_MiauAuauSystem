@@ -71,7 +71,7 @@ public class AnimalRestView {
         String imagemBase64Encoded = Base64.getEncoder().encodeToString(imagemBase64.getBytes());
         System.out.println(imagemBase64Encoded);
         json.put("imagemBase64", imagemBase64Encoded);
-        System.out.println("JSON recebido: " + json);
+        //System.out.println("JSON recebido: " + json);
         if (animalController.onGravar(json)) //json -> enviar
             return ResponseEntity.ok(json);
         else
@@ -81,11 +81,9 @@ public class AnimalRestView {
     // DELETE
     @DeleteMapping("excluir/{id}") //
     public ResponseEntity<Object> excluirAnimal(@PathVariable (value = "id") int codAnimal) {
-       if(animalController.onDelete(codAnimal)) {
+       if(animalController.onDelete(codAnimal))
            return ResponseEntity.ok(new Erro("Animal excluido com sucesso!"));
-       }
-       else
-           return ResponseEntity.badRequest().body(new Erro("Erro ao excluir animal!!"));
+       return ResponseEntity.badRequest().body(new Erro("Erro ao excluir animal!!"));
     }
 
     // ATUALIZAR

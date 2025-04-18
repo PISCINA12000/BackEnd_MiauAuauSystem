@@ -1,23 +1,25 @@
-package miau.auau.amigosdequatropatas.modelReserva;
+package miau.auau.amigosdequatropatas.entities;
+
+import org.springframework.stereotype.Component;
 
 import java.io.RandomAccessFile;
 
+@Component
 public class Lancamento {
     private int cod;
-    private int codUsuario;
     private int codTpLanc;
+    private int codAnimal;
     private String data;
     private int debito;
     private int credito;
     private String descricao;
     private double valor;
-    private RandomAccessFile PDF;
+    private byte[] PDF;
 
-    // Construtores
-    public Lancamento(int cod, int codUsuario, int codTpLanc, String data, int debito, int credito, String descricao, double valor, RandomAccessFile PDF) {
-        this.cod = cod;
-        this.codUsuario = codUsuario;
+    //CONSTRUTORES
+    public Lancamento(int codTpLanc, int codAnimal, String data, int debito, int credito, String descricao, double valor, byte[] PDF) {
         this.codTpLanc = codTpLanc;
+        this.codAnimal = codAnimal;
         this.data = data;
         this.debito = debito;
         this.credito = credito;
@@ -25,11 +27,12 @@ public class Lancamento {
         this.valor = valor;
         this.PDF = PDF;
     }
+
     public Lancamento() {
-        this(0,0,0,"",0,0,"",0,null);
+        this(0,0,"",0,0,"",0,null);
     }
 
-    // Gets e Sets
+    //GETS E SETS
     public int getCod() {
         return cod;
     }
@@ -38,20 +41,20 @@ public class Lancamento {
         this.cod = cod;
     }
 
-    public int getCodUsuario() {
-        return codUsuario;
-    }
-
-    public void setCodUsuario(int codUsuario) {
-        this.codUsuario = codUsuario;
-    }
-
     public int getCodTpLanc() {
         return codTpLanc;
     }
 
     public void setCodTpLanc(int codTpLanc) {
         this.codTpLanc = codTpLanc;
+    }
+
+    public int getCodAnimal() {
+        return codAnimal;
+    }
+
+    public void setCodAnimal(int codAnimal) {
+        this.codAnimal = codAnimal;
     }
 
     public String getData() {
@@ -94,11 +97,12 @@ public class Lancamento {
         this.valor = valor;
     }
 
-    public RandomAccessFile getPDF() {
+    public byte[] getPDF() {
         return PDF;
     }
 
-    public void setPDF(RandomAccessFile PDF) {
+    public void setPDF(byte[] PDF) {
         this.PDF = PDF;
     }
+
 }
