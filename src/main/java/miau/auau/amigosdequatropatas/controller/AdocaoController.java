@@ -8,8 +8,6 @@ import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +16,6 @@ import java.util.Map;
 
 
 public class AdocaoController {
-
-
-    private static final Logger log = LoggerFactory.getLogger(AdocaoController.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean onGravar(Map<String, Object> json) {
         System.out.println(json);

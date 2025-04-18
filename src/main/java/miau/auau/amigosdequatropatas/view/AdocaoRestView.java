@@ -3,10 +3,6 @@ import miau.auau.amigosdequatropatas.controller.AdocaoController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
 
 import java.util.List;
