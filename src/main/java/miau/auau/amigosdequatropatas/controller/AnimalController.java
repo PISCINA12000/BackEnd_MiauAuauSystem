@@ -121,23 +121,32 @@ public class AnimalController {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
-
-        //Transferir o JSON recebido para a instância de modelo
-        animalModel.setCodAnimal((Integer)json.get("codAnimal"));
-        animalModel.setNome((String)json.get("nome"));
-        animalModel.setSexo((String)json.get("sexo"));
-        animalModel.setRaca((String)json.get("raca"));
-        animalModel.setIdade((Integer)json.get("idade"));
-        animalModel.setPeso((Double)json.get("peso"));
-        animalModel.setCastrado((String)json.get("castrado"));
-        animalModel.setAdotado((String)json.get("adotado"));
-        animalModel.setImagemBase64((String)json.get("imagemBase64"));
-
-        //velidar se deu certo ou não o alterar
         if (validarAlterar(json))
+        {
+            Animal animal = animalModel.consultarID((int) json.get("codAnimal"), conexao);
+
+            //Transferir o JSON recebido para a instância de modelo
+            animalModel.setCodAnimal((Integer)json.get("codAnimal"));
+            animalModel.setNome((String)json.get("nome"));
+            animalModel.setSexo((String)json.get("sexo"));
+            animalModel.setRaca((String)json.get("raca"));
+            animalModel.setIdade((Integer)json.get("idade"));
+            animalModel.setPeso((Double)json.get("peso"));
+            animalModel.setCastrado((String)json.get("castrado"));
+            animalModel.setAdotado((String)json.get("adotado"));
+
+            String imagemBase64 = json.get("imagemBase64").toString();
+            if (imagemBase64 == null || imagemBase64.isEmpty())
+            {
+                imagemBase64 = animal.getImagemBase64();
+            }
+            animalModel.setImagemBase64(imagemBase64);
+
             return animalModel.alterar(conexao);
+        }
         else
             return false;
+
     }
 
     public boolean validar(Map<String, Object> json) {
@@ -149,8 +158,7 @@ public class AnimalController {
                 json.containsKey("idade") &&
                 json.containsKey("peso") &&
                 json.containsKey("castrado") &&
-                json.containsKey("adotado") &&
-                json.containsKey("imagemBase64");
+                json.containsKey("adotado");
     }
 
     public boolean validarAlterar(Map<String, Object> json) {

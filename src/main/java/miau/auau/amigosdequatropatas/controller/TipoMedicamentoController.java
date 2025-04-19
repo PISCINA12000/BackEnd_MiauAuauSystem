@@ -73,7 +73,7 @@ public class TipoMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
         List<TipoMedicamento> lista = tipoMedicamentoModel.consultar(filtro, conexao);
 
-        if (!lista.isEmpty()) {
+        if (lista!=null) {
             //achou tipos de medicamentos
             List<Map<String, Object>> listaJson = new ArrayList<>();
             for (int i = 0; i < lista.size(); i++) {

@@ -4,7 +4,6 @@ import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-
 import javax.swing.*;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})

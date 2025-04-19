@@ -5,7 +5,7 @@ public class Adocao {
     private int codUsuario;
     private String data;
 
-    // Construtor
+    // Construtores
 
     public Adocao(int codAnimal, int codUsuario, String data) {
         this.codAnimal = codAnimal;

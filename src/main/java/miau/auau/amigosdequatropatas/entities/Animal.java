@@ -115,13 +115,13 @@ public class Animal {
     public void setImagemBase64(String imagemBase64) {
         this.imagemBase64 = imagemBase64;
     }
+
     // CRUD --------------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
         return animalDAL.gravar(this, conexao); // grava no banco
     }
 
     public boolean excluir(Conexao conexao) {
-
         AnimalDAO animalDAO = new AnimalDAO();
         return animalDAO.apagar(this, conexao);
     }
