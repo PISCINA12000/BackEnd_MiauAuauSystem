@@ -1,9 +1,8 @@
 package miau.auau.amigosdequatropatas.entities;
+
 import miau.auau.amigosdequatropatas.dao.AdocaoDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
-
 import java.util.List;
-
 
 public class Adocao {
 

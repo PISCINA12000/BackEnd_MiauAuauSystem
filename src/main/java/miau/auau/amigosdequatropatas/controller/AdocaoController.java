@@ -1,6 +1,5 @@
 package miau.auau.amigosdequatropatas.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
@@ -8,12 +7,10 @@ import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class AdocaoController {
 

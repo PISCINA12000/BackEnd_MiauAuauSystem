@@ -1,11 +1,18 @@
 package miau.auau.amigosdequatropatas.entities;
 
+import miau.auau.amigosdequatropatas.dao.AnimalDAO;
+import miau.auau.amigosdequatropatas.dao.LancamentoDAO;
+import miau.auau.amigosdequatropatas.util.Conexao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.RandomAccessFile;
+import java.util.List;
 
 @Component
 public class Lancamento {
+    @Autowired
+    private LancamentoDAO lancamentoDAO;
+
     private int cod;
     private int codTpLanc;
     private int codAnimal;
@@ -103,6 +110,29 @@ public class Lancamento {
 
     public void setPDF(byte[] PDF) {
         this.PDF = PDF;
+    }
+
+    //CRUD
+    public boolean incluir(Conexao conexao) {
+        return lancamentoDAO.gravar(this, conexao); // grava no banco
+    }
+
+    public boolean excluir(Conexao conexao) {
+        LancamentoDAO lancDAO = new LancamentoDAO();
+        return lancDAO.apagar(this, conexao);
+    }
+
+    public Lancamento consultarID(int id, Conexao conexao) {
+        return lancamentoDAO.get(id, conexao);
+    }
+
+    public List<Lancamento> consultar(String filtro, Conexao conexao) {
+
+        return lancamentoDAO.get(filtro, conexao);
+    }
+
+    public boolean alterar(Conexao conexao) {
+        return lancamentoDAO.alterar(this, conexao);
     }
 
 }

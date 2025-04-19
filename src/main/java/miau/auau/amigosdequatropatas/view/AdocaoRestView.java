@@ -1,10 +1,10 @@
 package miau.auau.amigosdequatropatas.view;
+
 import miau.auau.amigosdequatropatas.controller.AdocaoController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -77,8 +77,7 @@ public class AdocaoRestView {
             @RequestParam int cod_animal,
             @RequestParam String data,
             @RequestParam String status)
-             {
-
+    {
         Map<String, Object> json = new HashMap<>();
         json.put("codAdocao", codAdocao);
         json.put("animal", cod_animal);

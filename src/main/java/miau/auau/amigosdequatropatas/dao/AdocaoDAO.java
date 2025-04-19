@@ -1,4 +1,5 @@
 package miau.auau.amigosdequatropatas.dao;
+
 import miau.auau.amigosdequatropatas.entities.Adocao;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;

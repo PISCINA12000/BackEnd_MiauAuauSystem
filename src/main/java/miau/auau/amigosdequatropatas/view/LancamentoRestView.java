@@ -22,18 +22,18 @@ public class LancamentoRestView {
 
     @GetMapping("buscar/{filtro}")
     public ResponseEntity<Object> getLancamento(@PathVariable(value = "filtro") String filtro) {
-        List<Map<String, Object>> lista = new ArrayList<>();
+        List<Map<String, Object>> lista;
 
         //mando para a controller
         lista = lancController.onBuscar(filtro);
-        if(lista!=null)
+        if(lista!=null && !lista.isEmpty())
             return ResponseEntity.ok().body(lista);
         return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os lançamentos!!"));
     }
 
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getLancamento(@PathVariable(value = "id") int id) {
-        Map<String, Object> json = new HashMap<>();
+        Map<String, Object> json;
 
         json = lancController.onBuscarID(id);
         if(json!=null)
@@ -93,8 +93,7 @@ public class LancamentoRestView {
             @RequestParam int credito,
             @RequestParam String descricao,
             @RequestParam double valor,
-            @RequestParam MultipartFile pdf
-    )
+            @RequestParam MultipartFile pdf)
     {
         try {
             Map<String, Object> json = new HashMap<>();
