@@ -20,10 +20,8 @@ public class AdocaoRestView {
             @RequestParam int cod_usuario,
             @RequestParam String data,
             @RequestParam String status){
-        //criar o mapeamento do meu json ANIMAL
-        //Animal animal = objectMapper.readValue(animalJson, Animal.class);
-        //Usuario usuario = objectMapper.readValue(usuarioJson, Usuario.class);
 
+        //criar o mapeamento do meu json ADOCAO
         Map<String, Object> json = new HashMap<>();
         json.put("animal", cod_animal);
         json.put("usuario", cod_usuario);

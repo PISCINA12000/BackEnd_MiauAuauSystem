@@ -85,6 +85,13 @@ public class AdocaoController {
                 jsonUsuario.put("nome", a.getUsuario().getNome());
                 jsonUsuario.put("email", a.getUsuario().getEmail());
                 jsonUsuario.put("telefone", a.getUsuario().getTelefone());
+                jsonUsuario.put("cpf", a.getUsuario().getCpf());
+                jsonUsuario.put("sexo", a.getUsuario().getSexo());
+                jsonUsuario.put("privilegio", a.getUsuario().getPrivilegio());
+                jsonUsuario.put("cep", a.getUsuario().getCep());
+                jsonUsuario.put("bairro", a.getUsuario().getBairro());
+                jsonUsuario.put("numero", a.getUsuario().getNumero());
+                jsonUsuario.put("rua", a.getUsuario().getRua());
 
                 Map<String, Object> jsonAdocao = new HashMap<>();
                 jsonAdocao.put("codAdocao", a.getCodAdocao());
@@ -143,6 +150,14 @@ public class AdocaoController {
             jsonUsuario.put("nome", adocao.getUsuario().getNome());
             jsonUsuario.put("email", adocao.getUsuario().getEmail());
             jsonUsuario.put("telefone", adocao.getUsuario().getTelefone());
+            jsonUsuario.put("cpf", adocao.getUsuario().getCpf());
+            jsonUsuario.put("sexo", adocao.getUsuario().getSexo());
+            jsonUsuario.put("privilegio", adocao.getUsuario().getPrivilegio());
+            jsonUsuario.put("cep", adocao.getUsuario().getCep());
+            jsonUsuario.put("bairro", adocao.getUsuario().getBairro());
+            jsonUsuario.put("numero", adocao.getUsuario().getNumero());
+            jsonUsuario.put("rua", adocao.getUsuario().getRua());
+
 
             Map<String, Object> jsonAdocao = new HashMap<>();
             jsonAdocao.put("codAdocao", adocao.getCodAdocao());
