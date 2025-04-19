@@ -122,7 +122,6 @@ public class Animal {
     }
 
     public boolean excluir(Conexao conexao) {
-
         AnimalDAO animalDAO = new AnimalDAO();
         return animalDAO.apagar(this, conexao);
     }

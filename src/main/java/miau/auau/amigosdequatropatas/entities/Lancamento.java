@@ -114,25 +114,29 @@ public class Lancamento {
 
     //CRUD
     public boolean incluir(Conexao conexao) {
-        return lancamentoDAO.gravar(this, conexao); // grava no banco
+        //return lancamentoDAO.gravar(this, conexao); // grava no banco
+        return true; //temp
     }
 
     public boolean excluir(Conexao conexao) {
         LancamentoDAO lancDAO = new LancamentoDAO();
-        return lancDAO.apagar(this, conexao);
+        //return lancDAO.apagar(this, conexao);
+        return true; //temp
     }
 
     public Lancamento consultarID(int id, Conexao conexao) {
-        return lancamentoDAO.get(id, conexao);
+        //return lancamentoDAO.get(id, conexao);
+        return null; //temp
     }
 
     public List<Lancamento> consultar(String filtro, Conexao conexao) {
-
-        return lancamentoDAO.get(filtro, conexao);
+        //return lancamentoDAO.get(filtro, conexao);
+        return null; //temp
     }
 
     public boolean alterar(Conexao conexao) {
-        return lancamentoDAO.alterar(this, conexao);
+        //return lancamentoDAO.alterar(this, conexao);
+        return true; //temp
     }
 
 }
