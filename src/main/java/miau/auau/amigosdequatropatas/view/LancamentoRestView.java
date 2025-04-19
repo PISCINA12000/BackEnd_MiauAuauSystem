@@ -35,6 +35,7 @@ public class LancamentoRestView {
     public ResponseEntity<Object> getLancamento(@PathVariable(value = "id") int id) {
         Map<String, Object> json;
 
+        //mando para a controller
         json = lancController.onBuscarID(id);
         if(json!=null)
             return ResponseEntity.ok().body(json);
@@ -68,10 +69,10 @@ public class LancamentoRestView {
                 byte[] arquivo = pdf.getBytes();
                 json.put("arquivo", arquivo);
             }
-            else{
+            else
                 json.put("arquivo", null);
-            }
 
+            //mando para a controller
             if (lancController.onGravar(json))
                 return ResponseEntity.ok().body(json);
             return ResponseEntity.badRequest().body(new Erro("Não foi possível GRAVAR o Lançamento!!"));
@@ -112,10 +113,10 @@ public class LancamentoRestView {
                 byte[] arquivo = pdf.getBytes();
                 json.put("arquivo", arquivo);
             }
-            else{
+            else
                 json.put("arquivo", null);
-            }
 
+            //mando para a controller
             if (lancController.onAtualizar(json))
                 return ResponseEntity.ok().body(json);
             return ResponseEntity.badRequest().body(new Erro("Não foi possível ATUALIZAR o Lançamento!!"));
@@ -129,6 +130,7 @@ public class LancamentoRestView {
 
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<Object> deleteLancamento(@PathVariable(value="id") int id) {
+        //mandando para a controller
         if(lancController.onDelete(id))
             return ResponseEntity.ok().body(new Erro("Lançamento excluído com sucesso!"));
         return ResponseEntity.badRequest().body(new Erro("Não foi possível excluir o Lançamento!!"));

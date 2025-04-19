@@ -13,10 +13,11 @@ public class Lancamento {
     @Autowired
     private LancamentoDAO lancamentoDAO;
 
+    //campos da tabela no banco de dados
     private int cod;
+    private String data;
     private int codTpLanc;
     private int codAnimal;
-    private String data;
     private int debito;
     private int credito;
     private String descricao;
@@ -24,10 +25,13 @@ public class Lancamento {
     private byte[] PDF;
 
     //CONSTRUTORES
-    public Lancamento(int codTpLanc, int codAnimal, String data, int debito, int credito, String descricao, double valor, byte[] PDF) {
+
+
+    public Lancamento(int cod, String data, int codTpLanc, int codAnimal, int debito, int credito, String descricao, double valor, byte[] PDF) {
+        this.cod = cod;
+        this.data = data;
         this.codTpLanc = codTpLanc;
         this.codAnimal = codAnimal;
-        this.data = data;
         this.debito = debito;
         this.credito = credito;
         this.descricao = descricao;
@@ -36,7 +40,7 @@ public class Lancamento {
     }
 
     public Lancamento() {
-        this(0,0,"",0,0,"",0,null);
+        this(0,"",0,0,0,0,"",0,null);
     }
 
     //GETS E SETS
@@ -46,6 +50,14 @@ public class Lancamento {
 
     public void setCod(int cod) {
         this.cod = cod;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public int getCodTpLanc() {
@@ -62,14 +74,6 @@ public class Lancamento {
 
     public void setCodAnimal(int codAnimal) {
         this.codAnimal = codAnimal;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 
     public int getDebito() {
@@ -113,6 +117,16 @@ public class Lancamento {
     }
 
     //CRUD
+    public List<Lancamento> consultar(String filtro, Conexao conexao) {
+        //return lancamentoDAO.get(filtro, conexao);
+        return null; //temp
+    }
+
+    public Lancamento consultarID(int id, Conexao conexao) {
+        //return lancamentoDAO.get(id, conexao);
+        return null; //temp
+    }
+
     public boolean incluir(Conexao conexao) {
         //return lancamentoDAO.gravar(this, conexao); // grava no banco
         return true; //temp
@@ -124,19 +138,8 @@ public class Lancamento {
         return true; //temp
     }
 
-    public Lancamento consultarID(int id, Conexao conexao) {
-        //return lancamentoDAO.get(id, conexao);
-        return null; //temp
-    }
-
-    public List<Lancamento> consultar(String filtro, Conexao conexao) {
-        //return lancamentoDAO.get(filtro, conexao);
-        return null; //temp
-    }
-
     public boolean alterar(Conexao conexao) {
         //return lancamentoDAO.alterar(this, conexao);
         return true; //temp
     }
-
 }
