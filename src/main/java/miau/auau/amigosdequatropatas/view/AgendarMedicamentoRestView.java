@@ -17,17 +17,14 @@ public class AgendarMedicamentoRestView {
     @PostMapping("gravar")
     public ResponseEntity<Object> gravarAgendamento(
             @RequestParam int animal,
-            @RequestParam int tipo_medicamento,
-            @RequestParam int intervalo,
-            @RequestParam String formato,
-            @RequestParam int periodo) {
+            @RequestParam int medicamento,
+            @RequestParam String dataAplicacao) {
 
         Map<String, Object> json = new HashMap<>();
         json.put("animal", animal);
-        json.put("medicamento", tipo_medicamento);
-        json.put("intervalo", intervalo);
-        json.put("formato", formato);
-        json.put("periodo", periodo);
+        json.put("medicamento", medicamento);
+        json.put("dataAplicacao", dataAplicacao);
+
 
         AgendarMedicamentoController controller = new AgendarMedicamentoController();
         if (controller.onGravar(json)) {
@@ -84,17 +81,14 @@ public class AgendarMedicamentoRestView {
             @RequestParam int codAgendarMedicamento,
             @RequestParam int animal,
             @RequestParam int medicamento,
-            @RequestParam int intervalo,
-            @RequestParam String formato,
-            @RequestParam int periodo) {
+            @RequestParam String dataAplicacao) {
 
         Map<String, Object> json = new HashMap<>();
         json.put("codAgendarMedicamento", codAgendarMedicamento);
         json.put("animal", animal);
         json.put("medicamento", medicamento);
-        json.put("intervalo", intervalo);
-        json.put("formato", formato);
-        json.put("periodo", periodo);
+        json.put("dataAplicacao", dataAplicacao);
+
 
         AgendarMedicamentoController controller = new AgendarMedicamentoController();
         if (controller.onAlterar(json)) {

@@ -12,15 +12,13 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     @Override
     public boolean gravar(AgendarMedicamento entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO agendar_medicamento (agemed_medicamento_id, agemed_animal_id,
-                 agemed_intervalo, agemed_formato, agemed_periodo)
-                VALUES (#1, #2, '#3', '#4', '#5')
+                INSERT INTO agendar_medicamento (agemed_medicamento_id, agemed_animal_id, agemed_dataAplicacao)
+                VALUES (#1, #2, '#3')
                 """;
         sql = sql.replace("#1", "" + entidade.getMedicamento().getCod())
                 .replace("#2", "" + entidade.getAnimal().getCodAnimal())
-                .replace("#3", "" + entidade.getIntervalo())
-                .replace("#4", entidade.getFormato())
-                .replace("#5","" + entidade.getPeriodo());
+                .replace("#3", entidade.getDataAplicacao());
+
         return conexao.manipular(sql);
     }
 
@@ -28,15 +26,13 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     public boolean alterar(AgendarMedicamento entidade, Conexao conexao) {
         String sql = """
             UPDATE agendar_medicamento
-            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_intervalo = '#3', agemed_formato = '#4', agemed_periodo = '#5'
-            WHERE agemed_id = #6
+            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_dataAplicacao = '#3'
+            WHERE agemed_id = #4
             """;
         sql = sql.replace("#1","" + entidade.getMedicamento().getCod())
                 .replace("#2","" + entidade.getAnimal().getCodAnimal())
-                .replace("#3","" + entidade.getIntervalo())
-                .replace("#4",entidade.getFormato())
-                .replace("#5","" + entidade.getPeriodo())
-                .replace("#6",""+entidade.getCodAgendarMedicamento());
+                .replace("#3",entidade.getDataAplicacao())
+                .replace("#4",""+entidade.getCodAgendarMedicamento());
         return conexao.manipular(sql);
     }
 
@@ -57,9 +53,7 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                         resultSet.getInt("agemed_id"),
                         new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"), conexao),
                         new AnimalDAO().get(resultSet.getInt("agemed_animal_id"), conexao),
-                        resultSet.getInt("agemed_intervalo"),
-                        resultSet.getString("agemed_formato"),
-                        resultSet.getInt("agemed_periodo")
+                        resultSet.getString("agemed_dataAplicacao")
                 );
             }
         } catch (Exception e) {
@@ -87,10 +81,7 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                         resultSet.getInt("agemed_id"),
                         new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"), conexao),
                         new AnimalDAO().get(resultSet.getInt("agemed_animal_id"), conexao),
-                        resultSet.getInt("agemed_intervalo"),
-                        resultSet.getString("agemed_formato"),
-                        resultSet.getInt("agemed_periodo"))
-
+                        resultSet.getString("agemed_dataAplicacao"))
                 );
             }
         } catch (Exception e) {

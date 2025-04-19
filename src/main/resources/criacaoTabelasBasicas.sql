@@ -38,9 +38,7 @@ CREATE TABLE agendar_medicamento (
     agemed_id SERIAL PRIMARY KEY,
     agemed_medicamento_id INTEGER NOT NULL,
     agemed_animal_id INTEGER NOT NULL,
-    agemed_intervalo INTEGER NOT NULL, -- de quanto em quanto tempo
-    agemed_formato VARCHAR(10) NOT NULL,-- dia ou hora
-    agemed_periodo INTEGER NOT NULL, --durante quanto tempo
+    agemed_dataAplicacao DATE NOT NULL,
     FOREIGN KEY (agemed_medicamento_id) REFERENCES tipo_medicamento(tpm_id),
     FOREIGN KEY (agemed_animal_id) REFERENCES animal(ani_id)
 );

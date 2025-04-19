@@ -39,15 +39,13 @@ public class AgendarMedicamentoController {
             TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
             TipoMedicamento tipoMedicamento = tipoMedicamentoDAO.get((int) json.get("medicamento"), conexao);
 
-            int intervalo = (int) json.get("intervalo");
-            String formato = json.get("formato").toString();
-            int periodo = (int) json.get("periodo");
+            String dataAplicacao = json.get("dataAplicacao").toString();
+
 
             agendarMedicamento.setAnimal(animal);
             agendarMedicamento.setMedicamento(tipoMedicamento);
-            agendarMedicamento.setIntervalo(intervalo);
-            agendarMedicamento.setFormato(formato);
-            agendarMedicamento.setPeriodo(periodo);
+            agendarMedicamento.setDataAplicacao(dataAplicacao);
+
 
             if (agendarMedicamento.incluir(conexao)) {
                 return true;
@@ -96,11 +94,9 @@ public class AgendarMedicamentoController {
 
                 Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
                 jsonAgendarMedicamento.put("codAgendarMedicamento", am.getCodAgendarMedicamento());
-                jsonAgendarMedicamento.put("intervalo", am.getIntervalo());
-                jsonAgendarMedicamento.put("formato", am.getFormato());
-                jsonAgendarMedicamento.put("periodo", am.getPeriodo());
                 jsonAgendarMedicamento.put("animal", jsonAnimal);
                 jsonAgendarMedicamento.put("medicamento", jsonTipoMedicamento);
+                jsonAgendarMedicamento.put("dataAplicacao", am.getDataAplicacao());
 
                 listaJson.add(jsonAgendarMedicamento);
             }
@@ -155,11 +151,9 @@ public class AgendarMedicamentoController {
 
             Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
             jsonAgendarMedicamento.put("codAgendarMedicamento", agendarMedicamento.getCodAgendarMedicamento());
-            jsonAgendarMedicamento.put("intervalo", agendarMedicamento.getIntervalo());
-            jsonAgendarMedicamento.put("formato", agendarMedicamento.getFormato());
-            jsonAgendarMedicamento.put("periodo", agendarMedicamento.getPeriodo());
             jsonAgendarMedicamento.put("animal", jsonAnimal);
             jsonAgendarMedicamento.put("medicamento", jsonTipoMedicamento);
+            jsonAgendarMedicamento.put("dataAplicacao", agendarMedicamento.getDataAplicacao());
 
             return jsonAgendarMedicamento;
         }
@@ -184,9 +178,7 @@ public class AgendarMedicamentoController {
             agendarMedicamento.setCodAgendarMedicamento((int) json.get("codAgendarMedicamento"));
             agendarMedicamento.setAnimal(animal);
             agendarMedicamento.setMedicamento(tipoMedicamento);
-            agendarMedicamento.setIntervalo((int) json.get("intervalo"));
-            agendarMedicamento.setFormato(json.get("formato").toString());
-            agendarMedicamento.setPeriodo((int) json.get("periodo"));
+            agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
 
             return agendarMedicamento.alterar(conexao);
         }
@@ -195,7 +187,7 @@ public class AgendarMedicamentoController {
 
     private boolean validar(Map<String, Object> json) {
         //retorna verdade se todas as informações forem válidas
-        if (json != null && json.containsKey("intervalo") && json.containsKey("medicamento") && json.containsKey("animal") && json.containsKey("formato") && json.containsKey("periodo"))
+        if (json != null && json.containsKey("medicamento") && json.containsKey("animal") && json.containsKey("dataAplicacao"))
         {
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();

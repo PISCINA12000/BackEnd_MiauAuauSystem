@@ -11,25 +11,20 @@ public class AgendarMedicamento {
     private TipoMedicamento medicamento; //codigo do medicamento
     private Animal animal;
 
-    private int Intervalo; //de quanto em quanto tempo
-    private String Formato; //dia ou hora
-
-    private int Periodo; //durante quanto tempo
+    private String dataAplicacao;
 
     // Construtores
 
 
-    public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento medicamento, Animal animal, int intervalo, String formato, int periodo) {
+    public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento medicamento, Animal animal, String dataAplicacao) {
         this.codAgendarMedicamento = codAgendarMedicamento;
         this.medicamento = medicamento;
         this.animal = animal;
-        Intervalo = intervalo;
-        Formato = formato;
-        Periodo = periodo;
+        this.dataAplicacao = dataAplicacao;
     }
 
     public AgendarMedicamento() {
-        this(0,null,null,0,"",0);
+        this(0,null,null,"");
     }
 
     // Gets e Sets
@@ -59,28 +54,12 @@ public class AgendarMedicamento {
         this.animal = animal;
     }
 
-    public int getIntervalo() {
-        return Intervalo;
+    public String getDataAplicacao() {
+        return dataAplicacao;
     }
 
-    public void setIntervalo(int intervalo) {
-        Intervalo = intervalo;
-    }
-
-    public String getFormato() {
-        return Formato;
-    }
-
-    public void setFormato(String formato) {
-        Formato = formato;
-    }
-
-    public int getPeriodo() {
-        return Periodo;
-    }
-
-    public void setPeriodo(int periodo) {
-        Periodo = periodo;
+    public void setDataAplicacao(String dataAplicacao) {
+        this.dataAplicacao = dataAplicacao;
     }
 
     public boolean incluir(Conexao conexao) {
