@@ -69,7 +69,7 @@ public class AdocaoDAO implements IDAL<Adocao> {
         List<Adocao> lista = new ArrayList<>();
         String sql = "SELECT * FROM adocao";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            sql += " WHERE ado_data = '" + filtro + "'";
+            sql += " WHERE TO_CHAR(ado_data, 'YYYY') = '"+filtro+"'";
         }
         sql += " ORDER BY ado_data";
         System.out.println("SQL gerado: " + sql);
