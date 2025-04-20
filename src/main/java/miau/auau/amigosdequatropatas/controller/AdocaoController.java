@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
@@ -7,10 +8,9 @@ import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 
 public class AdocaoController {
 
@@ -37,9 +37,13 @@ public class AdocaoController {
             adocao.setAnimal(animal);
             adocao.setUsuario(usuario);
 
-            if (adocao.incluir(conexao)) {
+            if (adocao.incluir(conexao))
+            {
+
+                animal.setAdotado("Sim");
+                return animal.alterar(conexao);
                 // commit; finalizar transação e desconectar
-                return true;
+
             }
 
             //se chegou até aqui é porque algo deu errado
@@ -114,7 +118,15 @@ public class AdocaoController {
         adocao = adocao.consultarID(id, conexao);
         // Se a adocao for encontrada, exclui; caso contrário, retorna false
         if (adocao != null)
-            return adocao.excluir(conexao);
+        {
+            Animal animal = adocao.getAnimal();
+            animal.setAdotado("Não");
+            if(adocao.excluir(conexao))
+            {
+                return animal.alterar(conexao);
+            }
+
+        }
         return false;
     }
 

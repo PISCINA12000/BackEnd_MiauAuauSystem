@@ -4,6 +4,10 @@ import miau.auau.amigosdequatropatas.controller.AdocaoController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ public class AdocaoRestView {
         json.put("usuario", cod_usuario);
         json.put("data", data);
         json.put("status", status);
+
         AdocaoController adocaoController = new AdocaoController();
         if (adocaoController.onGravar(json))
             return ResponseEntity.ok(json);

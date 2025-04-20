@@ -118,6 +118,7 @@ public class Animal {
 
     // CRUD --------------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
+
         return animalDAL.gravar(this, conexao); // grava no banco
     }
 
@@ -136,7 +137,8 @@ public class Animal {
     }
 
     public boolean alterar(Conexao conexao) {
-        return animalDAL.alterar(this, conexao);
+        AnimalDAO animalDAO = new AnimalDAO();
+        return animalDAO.alterar(this, conexao);
     }
 
 
