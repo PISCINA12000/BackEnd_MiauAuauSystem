@@ -1,6 +1,5 @@
 package miau.auau.amigosdequatropatas.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
@@ -75,7 +74,7 @@ public class AdocaoController {
                 jsonAnimal.put("nome", a.getAnimal().getNome());
                 jsonAnimal.put("sexo", a.getAnimal().getSexo());
                 jsonAnimal.put("raca", a.getAnimal().getRaca());
-                jsonAnimal.put("idade", a.getAnimal().getIdade());
+                jsonAnimal.put("dataNascimento", a.getAnimal().getDataNascimento());
                 jsonAnimal.put("peso", a.getAnimal().getPeso());
                 jsonAnimal.put("castrado", a.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", a.getAnimal().getAdotado());
@@ -148,7 +147,7 @@ public class AdocaoController {
             jsonAnimal.put("nome", adocao.getAnimal().getNome());
             jsonAnimal.put("sexo", adocao.getAnimal().getSexo());
             jsonAnimal.put("raca", adocao.getAnimal().getRaca());
-            jsonAnimal.put("idade", adocao.getAnimal().getIdade());
+            jsonAnimal.put("dataNascimento", adocao.getAnimal().getDataNascimento());
             jsonAnimal.put("peso", adocao.getAnimal().getPeso());
             jsonAnimal.put("castrado", adocao.getAnimal().getCastrado());
             jsonAnimal.put("adotado", adocao.getAnimal().getAdotado());

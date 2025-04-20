@@ -26,12 +26,13 @@ public class AnimalController {
             animalModel.setNome(json.get("nome").toString());
             animalModel.setSexo(json.get("sexo").toString());
             animalModel.setRaca(json.get("raca").toString());
-            animalModel.setIdade(Integer.parseInt(json.get("idade").toString()));
+            animalModel.setDataNascimento(json.get("dataNascimento").toString());
             animalModel.setPeso(Double.parseDouble(json.get("peso").toString()));
             animalModel.setCastrado(json.get("castrado").toString());
             animalModel.setAdotado(json.get("adotado").toString());
             animalModel.setImagemBase64(json.get("imagemBase64").toString());
             System.out.println(json.get("imagemBase64").toString());
+            System.out.println(animalModel.getDataNascimento());
             if (animalModel.incluir(conexao)) {
                 // commit; finalizar transação e desconectar
                 return true;
@@ -73,7 +74,7 @@ public class AnimalController {
             json.put("nome", animal.getNome());
             json.put("sexo", animal.getSexo());
             json.put("raca", animal.getRaca());
-            json.put("idade", animal.getIdade());
+            json.put("dataNascimento", animal.getDataNascimento());
             json.put("peso", animal.getPeso());
             json.put("castrado", animal.getCastrado());
             json.put("adotado", animal.getAdotado());
@@ -104,7 +105,7 @@ public class AnimalController {
                 json.put("nome", lista.get(i).getNome());
                 json.put("sexo", lista.get(i).getSexo());
                 json.put("raca", lista.get(i).getRaca());
-                json.put("idade", lista.get(i).getIdade());
+                json.put("dataNascimento", lista.get(i).getDataNascimento());
                 json.put("peso", lista.get(i).getPeso());
                 json.put("castrado", lista.get(i).getCastrado());
                 json.put("adotado", lista.get(i).getAdotado());
@@ -130,7 +131,7 @@ public class AnimalController {
             animalModel.setNome((String)json.get("nome"));
             animalModel.setSexo((String)json.get("sexo"));
             animalModel.setRaca((String)json.get("raca"));
-            animalModel.setIdade((Integer)json.get("idade"));
+            animalModel.setDataNascimento((String) json.get("dataNascimento"));
             animalModel.setPeso((Double)json.get("peso"));
             animalModel.setCastrado((String)json.get("castrado"));
             animalModel.setAdotado((String)json.get("adotado"));
@@ -155,7 +156,7 @@ public class AnimalController {
                 json.containsKey("nome") &&
                 json.containsKey("sexo") &&
                 json.containsKey("raca") &&
-                json.containsKey("idade") &&
+                json.containsKey("dataNascimento") &&
                 json.containsKey("peso") &&
                 json.containsKey("castrado") &&
                 json.containsKey("adotado");
