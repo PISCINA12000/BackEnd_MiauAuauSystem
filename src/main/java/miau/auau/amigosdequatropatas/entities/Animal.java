@@ -36,7 +36,8 @@ public class Animal {
         this.castrado = castrado;
         this.adotado = adotado;
         this.imagemBase64 = imagemBase64;
-
+        if(animalDAL==null)
+            animalDAL = new AnimalDAO();
     }
 
     public Animal() {
@@ -118,13 +119,11 @@ public class Animal {
 
     // CRUD --------------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
-
         return animalDAL.gravar(this, conexao); // grava no banco
     }
 
     public boolean excluir(Conexao conexao) {
-        AnimalDAO animalDAO = new AnimalDAO();
-        return animalDAO.apagar(this, conexao);
+        return animalDAL.apagar(this, conexao);
     }
 
     public Animal consultarID(int id, Conexao conexao) {
@@ -132,14 +131,10 @@ public class Animal {
     }
 
     public List<Animal> consultar(String filtro, Conexao conexao) {
-
         return animalDAL.get(filtro, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
-        AnimalDAO animalDAO = new AnimalDAO();
-        return animalDAO.alterar(this, conexao);
+        return animalDAL.alterar(this, conexao);
     }
-
-
 }
