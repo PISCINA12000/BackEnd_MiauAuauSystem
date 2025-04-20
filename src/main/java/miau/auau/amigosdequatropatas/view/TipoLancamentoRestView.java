@@ -13,11 +13,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("apis/tipo-lancamento")
 public class TipoLancamentoRestView {
-    // DECLARAÇÕES
     @Autowired
     private TipoLancamentoController tipoLancamentoController;
 
-    // BUSCAR
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getTiposLancamento(@PathVariable(value = "filtro") String filtro) {
         //criar o json
@@ -27,8 +25,7 @@ public class TipoLancamentoRestView {
         listaJson = tipoLancamentoController.onBuscar(filtro);
         if (listaJson!=null)
             return ResponseEntity.ok().body(listaJson);
-        else
-            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado ou nenhum cadastrado!!"));
+        return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado ou nenhum cadastrado!!"));
     }
 
     @GetMapping("buscar-id/{id}")
@@ -38,13 +35,11 @@ public class TipoLancamentoRestView {
 
         //mandar para a controller
         json = tipoLancamentoController.onBuscarId(id);
-        if (json != null) {
+        if (json != null)
             return ResponseEntity.ok(json);
-        } else
-            return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado!!"));
+        return ResponseEntity.badRequest().body(new Erro("Tipo de lançamento não encontrado!!"));
     }
 
-    // GRAVAR
     @PostMapping("gravar")
     public ResponseEntity<Object> gravarTipoLancamento(@RequestParam String descricao) {
         //criar um JSON
@@ -54,20 +49,16 @@ public class TipoLancamentoRestView {
         //mandar para a controller
         if (tipoLancamentoController.onGravar(json))
             return ResponseEntity.ok(json);
-        else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de lançamento!!"));
+        return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de lançamento!!"));
     }
 
-    // DELETE
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<Object> excluirTipoLancamento(@PathVariable(value = "id") int id) {
-        if (tipoLancamentoController.onDelete(id)) {
+        if (tipoLancamentoController.onDelete(id))
             return ResponseEntity.ok(new Erro("Tipo de lançamento excluído com sucesso!"));
-        } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de lançamento!!"));
+        return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de lançamento!!"));
     }
 
-    // ATUALIZAR
     @PutMapping("atualizar")
     public ResponseEntity<Object> atualizarTipoLancamento(
             @RequestParam int cod,
@@ -78,9 +69,8 @@ public class TipoLancamentoRestView {
         json.put("descricao", descricao);
 
         //mandar para a controller
-        if (tipoLancamentoController.onAlterar(json)) {
+        if (tipoLancamentoController.onAlterar(json))
             return ResponseEntity.ok(json);
-        } else
-            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de lançamento!!"));
+        return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de lançamento!!"));
     }
 }

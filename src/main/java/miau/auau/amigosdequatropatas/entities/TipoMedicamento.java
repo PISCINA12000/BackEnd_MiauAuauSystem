@@ -11,7 +11,7 @@ import java.util.List;
 public class TipoMedicamento {
 
     @Autowired
-    private TipoMedicamentoDAO tipoMedicamentoDAL;
+    private TipoMedicamentoDAO tipoMedicamentoDAO;
 
     private int cod;
     private String nome;
@@ -24,6 +24,8 @@ public class TipoMedicamento {
         this.nome = nome;
         this.formaFarmaceutica = formaFarmaceutica;
         this.descricao = descricao;
+        if(tipoMedicamentoDAO==null)
+            tipoMedicamentoDAO = new TipoMedicamentoDAO();
     }
 
     public TipoMedicamento() {
@@ -64,24 +66,23 @@ public class TipoMedicamento {
     }
 
     //CRUD
-    public boolean incluir(Conexao conexao) {
-        return tipoMedicamentoDAL.gravar(this, conexao); // grava no banco
-    }
-
-    public boolean excluir(Conexao conexao) {
-        TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
-        return tipoMedicamentoDAO.apagar(this, conexao);
+    public List<TipoMedicamento> consultar(String filtro, Conexao conexao) {
+        return tipoMedicamentoDAO.get(filtro, conexao);
     }
 
     public TipoMedicamento consultarID(int id, Conexao conexao) {
-        return tipoMedicamentoDAL.get(id, conexao);
+        return tipoMedicamentoDAO.get(id, conexao);
     }
 
-    public List<TipoMedicamento> consultar(String filtro, Conexao conexao) {
-        return tipoMedicamentoDAL.get(filtro, conexao);
+    public boolean incluir(Conexao conexao) {
+        return tipoMedicamentoDAO.gravar(this, conexao); // grava no banco
+    }
+
+    public boolean excluir(Conexao conexao) {
+        return tipoMedicamentoDAO.apagar(this, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
-        return tipoMedicamentoDAL.alterar(this, conexao);
+        return tipoMedicamentoDAO.alterar(this, conexao);
     }
 }

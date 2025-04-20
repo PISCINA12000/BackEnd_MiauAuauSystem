@@ -25,8 +25,6 @@ public class Lancamento {
     private byte[] PDF;
 
     //CONSTRUTORES
-
-
     public Lancamento(int cod, String data, int codTpLanc, int codAnimal, int debito, int credito, String descricao, double valor, byte[] PDF) {
         this.cod = cod;
         this.data = data;
@@ -37,6 +35,8 @@ public class Lancamento {
         this.descricao = descricao;
         this.valor = valor;
         this.PDF = PDF;
+        if(lancamentoDAO == null)
+            lancamentoDAO = new LancamentoDAO();
     }
 
     public Lancamento() {
@@ -118,28 +118,22 @@ public class Lancamento {
 
     //CRUD
     public List<Lancamento> consultar(String filtro, Conexao conexao) {
-        //return lancamentoDAO.get(filtro, conexao);
-        return null; //temp
+        return lancamentoDAO.get(filtro, conexao);
     }
 
     public Lancamento consultarID(int id, Conexao conexao) {
-        //return lancamentoDAO.get(id, conexao);
-        return null; //temp
+        return lancamentoDAO.get(id, conexao);
     }
 
     public boolean incluir(Conexao conexao) {
-        //return lancamentoDAO.gravar(this, conexao); // grava no banco
-        return true; //temp
+        return lancamentoDAO.gravar(this, conexao); // grava no banco
     }
 
     public boolean excluir(Conexao conexao) {
-        LancamentoDAO lancDAO = new LancamentoDAO();
-        //return lancDAO.apagar(this, conexao);
-        return true; //temp
+        return lancamentoDAO.apagar(this, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
-        //return lancamentoDAO.alterar(this, conexao);
-        return true; //temp
+        return lancamentoDAO.alterar(this, conexao);
     }
 }

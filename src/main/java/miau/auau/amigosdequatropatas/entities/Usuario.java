@@ -39,6 +39,8 @@ public class Usuario {
         this.rua = rua;
         this.bairro = bairro;
         this.numero = numero;
+        if(usuarioDAL==null)
+            usuarioDAL = new UsuarioDAO();
     }
 
     public Usuario() {
@@ -142,21 +144,21 @@ public class Usuario {
         this.numero = numero;
     }
 
-    public boolean incluir(Conexao conexao) {
-        return usuarioDAL.gravar(this, conexao);
-    }
-
-    public boolean excluir(Conexao conexao) {
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        return usuarioDAO.apagar(this, conexao);
+    //CRUD
+    public List<Usuario> consultar(String filtro, Conexao conexao) {
+        return usuarioDAL.get(filtro, conexao);
     }
 
     public Usuario consultarID(int id, Conexao conexao) {
         return usuarioDAL.get(id, conexao);
     }
 
-    public List<Usuario> consultar(String filtro, Conexao conexao) {
-        return usuarioDAL.get(filtro, conexao);
+    public boolean incluir(Conexao conexao) {
+        return usuarioDAL.gravar(this, conexao);
+    }
+
+    public boolean excluir(Conexao conexao) {
+        return usuarioDAL.apagar(this, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
