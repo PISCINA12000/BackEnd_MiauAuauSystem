@@ -13,7 +13,6 @@ public class Adocao {
     private String status;
 
     // Construtores
-
     public Adocao(int codAdocao, Animal animal, Usuario usuario, String data, String status) {
         this.codAdocao = codAdocao;
         this.animal = animal;
@@ -23,6 +22,7 @@ public class Adocao {
     }
 
     public Adocao() {
+        this(0,null,null,"","");
     }
 
     public int getCodAdocao() {
@@ -65,20 +65,18 @@ public class Adocao {
         this.status = status;
     }
 
+    //CRUD
     public boolean incluir(Conexao conexao) {
-
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.gravar(this, conexao); // grava no banco
     }
 
     public List<Adocao> consultar(String filtro, Conexao conexao) {
-
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.get(filtro, conexao);
     }
 
-    public Adocao consultarID(int id, Conexao conexao)
-    {
+    public Adocao consultarID(int id, Conexao conexao) {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.get(id, conexao);
     }
@@ -87,6 +85,7 @@ public class Adocao {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.apagar(this, conexao);
     }
+
     public boolean alterar(Conexao conexao) {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.alterar(this, conexao);

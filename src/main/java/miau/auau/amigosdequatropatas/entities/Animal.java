@@ -5,7 +5,7 @@ import miau.auau.amigosdequatropatas.util.Conexao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Base64;
+
 import java.util.List;
 
 @Component
@@ -18,7 +18,7 @@ public class Animal {
     private String nome;
     private String sexo;
     private String raca;
-    private int idade;
+    private String dataNascimento;
     private double peso;
     private String castrado;
     private String adotado;
@@ -26,21 +26,22 @@ public class Animal {
     // tratar foto depois
 
     // Construtores
-    public Animal(int codAnimal, String nome, String sexo, String raca, int idade, double peso, String castrado, String adotado, String imagemBase64) {
+    public Animal(int codAnimal, String nome, String sexo, String raca, String dataNascimento, double peso, String castrado, String adotado, String imagemBase64) {
         this.codAnimal = codAnimal;
         this.nome = nome;
         this.sexo = sexo;
         this.raca = raca;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
         this.peso = peso;
         this.castrado = castrado;
         this.adotado = adotado;
         this.imagemBase64 = imagemBase64;
-
+        if(animalDAL==null)
+            animalDAL = new AnimalDAO();
     }
 
     public Animal() {
-        this(0, "", "", "", 0, 0, "", "", "");
+        this(0, "", "", "", "", 0, "", "", "");
     }
 
     // Gets e Sets --------------------------------------------------------------------
@@ -76,12 +77,12 @@ public class Animal {
         this.raca = raca;
     }
 
-    public int getIdade() {
-        return idade;
+    public String getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(int idade) {
-        this.idade = idade;
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public double getPeso() {
@@ -122,8 +123,7 @@ public class Animal {
     }
 
     public boolean excluir(Conexao conexao) {
-        AnimalDAO animalDAO = new AnimalDAO();
-        return animalDAO.apagar(this, conexao);
+        return animalDAL.apagar(this, conexao);
     }
 
     public Animal consultarID(int id, Conexao conexao) {
@@ -131,13 +131,10 @@ public class Animal {
     }
 
     public List<Animal> consultar(String filtro, Conexao conexao) {
-
         return animalDAL.get(filtro, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
         return animalDAL.alterar(this, conexao);
     }
-
-
 }

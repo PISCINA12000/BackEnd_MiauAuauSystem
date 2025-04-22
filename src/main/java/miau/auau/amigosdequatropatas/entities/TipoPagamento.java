@@ -20,6 +20,8 @@ public class TipoPagamento {
     public TipoPagamento(int cod, String descricao) {
         this.cod = cod;
         this.descricao = descricao;
+        if(tipoPagamentoDAO==null)
+            tipoPagamentoDAO = new TipoPagamentoDAO();
     }
 
     public TipoPagamento() {
@@ -57,8 +59,7 @@ public class TipoPagamento {
     }
 
     public boolean excluir(Conexao conexao) {
-        TipoPagamentoDAO tipoPagDAO = new TipoPagamentoDAO();
-        return tipoPagDAO.apagar(this, conexao);
+        return tipoPagamentoDAO.apagar(this, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
