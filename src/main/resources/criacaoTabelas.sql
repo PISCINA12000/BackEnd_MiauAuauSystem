@@ -43,6 +43,16 @@ CREATE TABLE usuario (
     usu_numero VARCHAR(10) NOT NULL
 );
 
+CREATE TABLE agendar_medicamento (
+    agemed_id SERIAL PRIMARY KEY,
+    agemed_medicamento_id INTEGER NOT NULL,
+    agemed_animal_id INTEGER NOT NULL,
+    agemed_dataAplicacao DATE NOT NULL,
+    FOREIGN KEY (agemed_medicamento_id) REFERENCES tipo_medicamento(tpm_id),
+    FOREIGN KEY (agemed_animal_id) REFERENCES animal(ani_id)
+);
+
+
 CREATE TABLE adocao (
     ado_id SERIAL PRIMARY KEY,
     ado_animal_id INTEGER NOT NULL,
