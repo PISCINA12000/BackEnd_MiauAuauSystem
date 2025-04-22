@@ -24,7 +24,7 @@ public class TipoMedicamento {
         this.nome = nome;
         this.formaFarmaceutica = formaFarmaceutica;
         this.descricao = descricao;
-        if(tipoMedicamentoDAO==null)
+        if (tipoMedicamentoDAO == null)
             tipoMedicamentoDAO = new TipoMedicamentoDAO();
     }
 
