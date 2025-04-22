@@ -1,14 +1,12 @@
 package miau.auau.amigosdequatropatas.view;
 
 import miau.auau.amigosdequatropatas.controller.LancamentoController;
-import miau.auau.amigosdequatropatas.entities.Lancamento;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +49,7 @@ public class LancamentoRestView {
             @RequestParam int credito,
             @RequestParam String descricao,
             @RequestParam double valor,
-            @RequestParam MultipartFile pdf)
+            @RequestParam (value="pdf", required = false) MultipartFile pdf)
     {
         try {
             Map<String, Object> json = new HashMap<>();
