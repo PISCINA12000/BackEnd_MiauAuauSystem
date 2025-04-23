@@ -85,7 +85,6 @@ public class AdocaoRestView {
         json.put("usuario", cod_usuario);
         json.put("data", data);
         json.put("status", status);
-
         AdocaoController adocaoController = new AdocaoController();
         if (adocaoController.onAlterar(json)) {
             return ResponseEntity.ok(json);
