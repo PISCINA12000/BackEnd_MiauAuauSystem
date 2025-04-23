@@ -103,6 +103,18 @@ public class LancamentoController {
         return null;
     }
 
+    public byte[] onBuscarPDF(int id) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        Lancamento lanc = lancamento.consultarID(id, conexao);
+        if (lanc != null) {
+            return lanc.getPDF();
+        }
+        return null;
+    }
+
     public boolean onGravar(Map<String, Object> json) {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -138,7 +150,7 @@ public class LancamentoController {
 
         Lancamento lanc = lancamento.consultarID(id, conexao);
         if (lanc != null)
-            return lancamento.excluir(conexao);
+            return lanc.excluir(conexao);
         return false;
     }
 
