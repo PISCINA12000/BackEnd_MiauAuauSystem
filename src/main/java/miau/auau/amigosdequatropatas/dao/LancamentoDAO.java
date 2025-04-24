@@ -137,8 +137,7 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         List<Lancamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM lancamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE lan_descricao = " + filtro;
+            sql += " WHERE lan_descricao ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY lan_descricao";
         System.out.println("SQL gerado: " + sql);
