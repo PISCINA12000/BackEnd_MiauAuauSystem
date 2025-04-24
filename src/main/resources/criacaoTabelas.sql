@@ -78,3 +78,11 @@ CREATE TABLE lancamento (
     FOREIGN KEY (lan_debito) REFERENCES tipo_pagamento(tpp_id),
     FOREIGN KEY (lan_credito) REFERENCES tipo_pagamento(tpp_id)
 );
+ CREATE TABLE doacao(
+     doa_id SERIAL PRIMARY KEY,
+     doa_usuario_id INTEGER NOT NULL,
+     doa_status VARCHAR(50) NOT NULL,
+     doa_valor INTEGER NOT NULL,
+     doa_data DATE NOT NULL,
+     FOREIGN KEY (doa_usuario_id) REFERENCES usuario(usu_id)
+ );
