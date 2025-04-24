@@ -5,9 +5,10 @@ import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import org.springframework.stereotype.Component;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,17 +25,33 @@ public class LancamentoDAO implements IDAL<Lancamento> {
             """;
 
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
-            stmt.setString(1, "" + entidade.getCodTpLanc());
-            stmt.setString(2, "" + entidade.getCodAnimal());
-            stmt.setString(3, entidade.getData());
-            stmt.setString(4, "" + entidade.getDebito());
-            stmt.setString(5, "" + entidade.getCredito());
+            stmt.setInt(1, entidade.getCodTpLanc());
+
+            //se o código recebido for 0, então eu seto nullo na minha base de dados
+            if(entidade.getCodAnimal()==0)
+                stmt.setNull(2, java.sql.Types.INTEGER);
+            else
+                stmt.setInt(2, entidade.getCodAnimal());
+
+            // Converte a String de data para o formato de Date do SQL
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date parsedDate = dateFormat.parse(entidade.getData());
+            stmt.setDate(3, new Date(parsedDate.getTime()));
+            //stmt.setDate(3, Date.valueOf(entidade.getData()));
+
+            stmt.setInt(4, entidade.getDebito());
+            stmt.setInt(5, entidade.getCredito());
             stmt.setString(6, entidade.getDescricao());
-            stmt.setString(7, "" + entidade.getValor());
-            stmt.setBytes(8, entidade.getPDF());
+            stmt.setDouble(7, entidade.getValor());
+
+            //para caso eu não envie pdf algum
+            if(entidade.getPDF()==null)
+                stmt.setNull(8, java.sql.Types.BINARY);
+            else
+                stmt.setBytes(8, entidade.getPDF());
 
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace(); // ou logue o erro
             return false;
         }
@@ -50,18 +67,35 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         """;
 
         try (PreparedStatement ps = conexao.getPreparedStatement(sql)) {
-            ps.setString(1, "" + entidade.getCodTpLanc());
-            ps.setString(2, "" + entidade.getCodAnimal());
-            ps.setString(3, entidade.getData());
-            ps.setString(4, "" + entidade.getDebito());
-            ps.setString(5, "" + entidade.getCredito());
+            ps.setInt(1, entidade.getCodTpLanc());
+
+            //se o código recebido for 0, então eu seto nullo na minha base de dados
+            if(entidade.getCodAnimal()==0)
+                ps.setNull(2, java.sql.Types.INTEGER);
+            else
+                ps.setInt(2, entidade.getCodAnimal());
+
+            // Converte a String de data para o formato de Date do SQL
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date parsedDate = dateFormat.parse(entidade.getData());
+            ps.setDate(3, new Date(parsedDate.getTime()));
+            //ps.setDate(3, Date.valueOf(entidade.getData()));
+
+            ps.setInt(4, entidade.getDebito());
+            ps.setInt(5, entidade.getCredito());
             ps.setString(6, entidade.getDescricao());
-            ps.setString(7, "" + entidade.getValor());
-            ps.setBytes(8, entidade.getPDF());
+            ps.setDouble(7, entidade.getValor());
+
+            //para caso eu não envie pdf algum
+            if(entidade.getPDF()==null)
+                ps.setNull(8, java.sql.Types.BINARY);
+            else
+                ps.setBytes(8, entidade.getPDF());
+
             ps.setInt(9, entidade.getCod());
 
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace(); // ou logue como preferir
             return false;
         }
@@ -82,14 +116,14 @@ public class LancamentoDAO implements IDAL<Lancamento> {
             if (resultSet.next()) {
                 lancamento = new Lancamento(
                         id,
-                        resultSet.getString("lan_data"),
-                        Integer.parseInt(resultSet.getString("lan_codTpLanc")),
-                        Integer.parseInt(resultSet.getString("lan_codAnimal")),
-                        Integer.parseInt(resultSet.getString("lan_debito")),
-                        Integer.parseInt(resultSet.getString("lan_credito")),
+                        resultSet.getDate("lan_data").toString(),
+                        resultSet.getInt("lan_codTpLanc"),
+                        resultSet.getInt("lan_codAnimal"),
+                        resultSet.getInt("lan_debito"),
+                        resultSet.getInt("lan_credito"),
                         resultSet.getString("lan_descricao"),
-                        Double.parseDouble(resultSet.getString("lan_valor")),
-                        resultSet.getString("lan_pdf").getBytes()
+                        resultSet.getDouble("lan_valor"),
+                        resultSet.getBytes("lan_pdf")
                 );
             }
         } catch (Exception e) {
@@ -104,16 +138,16 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         String sql = "SELECT * FROM lancamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
             filtro = "'" + filtro + "'";
-            sql += " WHERE lan_nome = " + filtro;
+            sql += " WHERE lan_descricao = " + filtro;
         }
-        sql += " ORDER BY lan_nome";
+        sql += " ORDER BY lan_descricao";
         System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
                 lista.add(new Lancamento(
                         resultSet.getInt("lan_id"),
-                        resultSet.getString("lan_data"),
+                        resultSet.getDate("lan_data").toString(),
                         resultSet.getInt("lan_codTpLanc"),
                         resultSet.getInt("lan_codAnimal"),
                         resultSet.getInt("lan_debito"),

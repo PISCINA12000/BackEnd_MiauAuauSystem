@@ -2,11 +2,13 @@ package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.AgendarMedicamento;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
 
     @Override

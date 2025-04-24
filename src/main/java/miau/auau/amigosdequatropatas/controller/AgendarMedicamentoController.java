@@ -1,27 +1,20 @@
 package miau.auau.amigosdequatropatas.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.TipoMedicamentoDAO;
-
 import miau.auau.amigosdequatropatas.entities.AgendarMedicamento;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.TipoMedicamento;
-
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class AgendarMedicamentoController {
-
-    private static final Logger log = LoggerFactory.getLogger(AgendarMedicamentoController.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean onGravar(Map<String, Object> json) {
         System.out.println(json);
@@ -69,9 +62,9 @@ public class AgendarMedicamentoController {
         if (lista != null) {
             //crio uma lista json contendo os animais que retornaram no meu consultar
             List<Map<String, Object>> listaJson = new ArrayList<>();
-            for (int i=0;i<lista.size();i++) {
+            for (int i = 0; i < lista.size(); i++) {
 
-                AgendarMedicamento am =lista.get(i);
+                AgendarMedicamento am = lista.get(i);
 
                 // dados animal
                 Map<String, Object> jsonAnimal = new HashMap<>();
@@ -79,7 +72,7 @@ public class AgendarMedicamentoController {
                 jsonAnimal.put("nome", am.getAnimal().getNome());
                 jsonAnimal.put("sexo", am.getAnimal().getSexo());
                 jsonAnimal.put("raca", am.getAnimal().getRaca());
-                jsonAnimal.put("idade", am.getAnimal().getIdade());
+                jsonAnimal.put("dataNascimento", am.getAnimal().getDataNascimento());
                 jsonAnimal.put("peso", am.getAnimal().getPeso());
                 jsonAnimal.put("castrado", am.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", am.getAnimal().getAdotado());
@@ -89,8 +82,8 @@ public class AgendarMedicamentoController {
                 Map<String, Object> jsonTipoMedicamento = new HashMap<>();
                 jsonTipoMedicamento.put("codTipoMedicamento", am.getMedicamento().getCod());
                 jsonTipoMedicamento.put("nome", am.getMedicamento().getNome());
-                jsonTipoMedicamento.put("forma",am.getMedicamento().getFormaFarmaceutica());
-                jsonTipoMedicamento.put("descricao",am.getMedicamento().getDescricao());
+                jsonTipoMedicamento.put("forma", am.getMedicamento().getFormaFarmaceutica());
+                jsonTipoMedicamento.put("descricao", am.getMedicamento().getDescricao());
 
                 Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
                 jsonAgendarMedicamento.put("codAgendarMedicamento", am.getCodAgendarMedicamento());
@@ -137,7 +130,7 @@ public class AgendarMedicamentoController {
             jsonAnimal.put("nome", agendarMedicamento.getAnimal().getNome());
             jsonAnimal.put("sexo", agendarMedicamento.getAnimal().getSexo());
             jsonAnimal.put("raca", agendarMedicamento.getAnimal().getRaca());
-            jsonAnimal.put("idade", agendarMedicamento.getAnimal().getIdade());
+            jsonAnimal.put("dataNascimento", agendarMedicamento.getAnimal().getDataNascimento());
             jsonAnimal.put("peso", agendarMedicamento.getAnimal().getPeso());
             jsonAnimal.put("castrado", agendarMedicamento.getAnimal().getCastrado());
             jsonAnimal.put("adotado", agendarMedicamento.getAnimal().getAdotado());
@@ -146,8 +139,8 @@ public class AgendarMedicamentoController {
             Map<String, Object> jsonTipoMedicamento = new HashMap<>();
             jsonTipoMedicamento.put("codTipoMedicamento", agendarMedicamento.getMedicamento().getCod());
             jsonTipoMedicamento.put("nome", agendarMedicamento.getMedicamento().getNome());
-            jsonTipoMedicamento.put("forma",agendarMedicamento.getMedicamento().getFormaFarmaceutica());
-            jsonTipoMedicamento.put("descricao",agendarMedicamento.getMedicamento().getDescricao());
+            jsonTipoMedicamento.put("forma", agendarMedicamento.getMedicamento().getFormaFarmaceutica());
+            jsonTipoMedicamento.put("descricao", agendarMedicamento.getMedicamento().getDescricao());
 
             Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
             jsonAgendarMedicamento.put("codAgendarMedicamento", agendarMedicamento.getCodAgendarMedicamento());
@@ -187,8 +180,7 @@ public class AgendarMedicamentoController {
 
     private boolean validar(Map<String, Object> json) {
         //retorna verdade se todas as informações forem válidas
-        if (json != null && json.containsKey("medicamento") && json.containsKey("animal") && json.containsKey("dataAplicacao"))
-        {
+        if (json != null && json.containsKey("medicamento") && json.containsKey("animal") && json.containsKey("dataAplicacao")) {
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 

@@ -16,15 +16,16 @@ CREATE TABLE tipo_pagamento (
 );
 
 CREATE TABLE animal (
-    ani_id SERIAL PRIMARY KEY,
+    ani_id SERIAL,
     ani_nome VARCHAR(255) NOT NULL,
     ani_sexo VARCHAR(10) NOT NULL,
     ani_raca VARCHAR(255) NOT NULL,
-    ani_idade INT NOT NULL CHECK (ani_idade > 0),
     ani_peso DECIMAL(5, 2) NOT NULL CHECK (ani_peso > 0),
     ani_castrado VARCHAR(10) NOT NULL,
     ani_adotado VARCHAR(10) NOT NULL,
-    ani_imagem TEXT NOT NULL
+    ani_imagem TEXT NOT NULL,
+    ani_dtnasc DATE NOT NULL,
+    CONSTRAINT pk_animal PRIMARY KEY (ani_id)
 );
 
 CREATE TABLE usuario (

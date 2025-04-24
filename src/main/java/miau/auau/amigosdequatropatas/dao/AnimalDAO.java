@@ -14,17 +14,17 @@ public class AnimalDAO implements IDAL<Animal> {
     @Override
     public boolean gravar(Animal entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO animal (ani_nome, ani_sexo, ani_raca, ani_idade, ani_peso, ani_castrado, ani_adotado, ani_imagem)
-                VALUES ('#1', '#2', '#3', #4, #5, '#6', '#7', '#8')
+                INSERT INTO animal (ani_nome, ani_sexo, ani_raca, ani_peso, ani_castrado, ani_adotado, ani_imagem, ani_dtnasc)
+                VALUES ('#1', '#2', '#3', #4, '#5', '#6', '#7', '#8')
                 """;
         sql = sql.replace("#1", entidade.getNome())
                 .replace("#2", entidade.getSexo())
                 .replace("#3", entidade.getRaca())
-                .replace("#4", "" + entidade.getIdade())
-                .replace("#5", "" + entidade.getPeso())
-                .replace("#6", entidade.getCastrado())
-                .replace("#7", entidade.getAdotado())
-                .replace("#8", entidade.getImagemBase64());
+                .replace("#4", "" + entidade.getPeso())
+                .replace("#5", entidade.getCastrado())
+                .replace("#6", entidade.getAdotado())
+                .replace("#7", entidade.getImagemBase64())
+                .replace("#8", entidade.getDataNascimento());
         return conexao.manipular(sql);
     }
 
@@ -32,18 +32,18 @@ public class AnimalDAO implements IDAL<Animal> {
     public boolean alterar(Animal entidade, Conexao conexao) {
         String sql = """
                 UPDATE animal
-                SET ani_nome = '#1', ani_sexo = '#2', ani_raca = '#3', ani_idade = #4, ani_peso = #5, 
-                    ani_castrado = '#6', ani_adotado = '#7', ani_imagem = '#8'
+                SET ani_nome = '#1', ani_sexo = '#2', ani_raca = '#3', ani_peso = #4, 
+                    ani_castrado = '#5', ani_adotado = '#6', ani_imagem = '#7', ani_dtnasc = '#8' 
                 WHERE ani_id = #9
                 """;
         sql = sql.replace("#1", entidade.getNome())
                 .replace("#2", entidade.getSexo())
                 .replace("#3", entidade.getRaca())
-                .replace("#4", "" + entidade.getIdade())
-                .replace("#5", "" + entidade.getPeso())
-                .replace("#6", entidade.getCastrado())
-                .replace("#7", entidade.getAdotado())
-                .replace("#8", entidade.getImagemBase64())
+                .replace("#4", "" + entidade.getPeso())
+                .replace("#5", entidade.getCastrado())
+                .replace("#6", entidade.getAdotado())
+                .replace("#7", entidade.getImagemBase64())
+                .replace("#8", entidade.getDataNascimento())
                 .replace("#9", "" + entidade.getCodAnimal());
         return conexao.manipular(sql);
     }
@@ -66,7 +66,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getString("ani_nome"),
                         resultSet.getString("ani_sexo"),
                         resultSet.getString("ani_raca"),
-                        resultSet.getInt("ani_idade"),
+                        resultSet.getString("ani_dtnasc"),
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),
@@ -97,7 +97,7 @@ public class AnimalDAO implements IDAL<Animal> {
                         resultSet.getString("ani_nome"),
                         resultSet.getString("ani_sexo"), // Pegando o char corretamente
                         resultSet.getString("ani_raca"),
-                        resultSet.getInt("ani_idade"),
+                        resultSet.getString("ani_dtnasc"),
                         resultSet.getDouble("ani_peso"),
                         resultSet.getString("ani_castrado"),
                         resultSet.getString("ani_adotado"),

@@ -1,10 +1,10 @@
 package miau.auau.amigosdequatropatas.view;
+
 import miau.auau.amigosdequatropatas.controller.AgendarMedicamentoController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -98,4 +98,3 @@ public class AgendarMedicamentoRestView {
         }
     }
 }
-

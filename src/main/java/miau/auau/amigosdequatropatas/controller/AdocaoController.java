@@ -7,10 +7,9 @@ import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 
 public class AdocaoController {
 
@@ -37,9 +36,13 @@ public class AdocaoController {
             adocao.setAnimal(animal);
             adocao.setUsuario(usuario);
 
-            if (adocao.incluir(conexao)) {
+            if (adocao.incluir(conexao))
+            {
+
+                animal.setAdotado("Sim");
+                return animal.alterar(conexao);
                 // commit; finalizar transação e desconectar
-                return true;
+
             }
 
             //se chegou até aqui é porque algo deu errado
@@ -71,7 +74,7 @@ public class AdocaoController {
                 jsonAnimal.put("nome", a.getAnimal().getNome());
                 jsonAnimal.put("sexo", a.getAnimal().getSexo());
                 jsonAnimal.put("raca", a.getAnimal().getRaca());
-                jsonAnimal.put("idade", a.getAnimal().getIdade());
+                jsonAnimal.put("dataNascimento", a.getAnimal().getDataNascimento());
                 jsonAnimal.put("peso", a.getAnimal().getPeso());
                 jsonAnimal.put("castrado", a.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", a.getAnimal().getAdotado());
@@ -114,7 +117,15 @@ public class AdocaoController {
         adocao = adocao.consultarID(id, conexao);
         // Se a adocao for encontrada, exclui; caso contrário, retorna false
         if (adocao != null)
-            return adocao.excluir(conexao);
+        {
+            Animal animal = adocao.getAnimal();
+            animal.setAdotado("Não");
+            if(adocao.excluir(conexao))
+            {
+                return animal.alterar(conexao);
+            }
+
+        }
         return false;
     }
 
@@ -136,7 +147,7 @@ public class AdocaoController {
             jsonAnimal.put("nome", adocao.getAnimal().getNome());
             jsonAnimal.put("sexo", adocao.getAnimal().getSexo());
             jsonAnimal.put("raca", adocao.getAnimal().getRaca());
-            jsonAnimal.put("idade", adocao.getAnimal().getIdade());
+            jsonAnimal.put("dataNascimento", adocao.getAnimal().getDataNascimento());
             jsonAnimal.put("peso", adocao.getAnimal().getPeso());
             jsonAnimal.put("castrado", adocao.getAnimal().getCastrado());
             jsonAnimal.put("adotado", adocao.getAnimal().getAdotado());
@@ -170,29 +181,51 @@ public class AdocaoController {
         return null;
     }
     public boolean onAlterar(Map<String, Object> json) {
-        //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
+
         if (validarAlterar(json))
         {
-            Adocao adocao = new Adocao();
             AnimalDAO animalDAO = new AnimalDAO();
             UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-            Animal animal;
-            Usuario usuario;
-            animal = animalDAO.get((int) json.get("animal"), conexao);
-            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
-            adocao.setCodAdocao((int)json.get("codAdocao"));
-            adocao.setAnimal(animal);
-            adocao.setUsuario(usuario);
-            adocao.setData(json.get("data").toString());
-            adocao.setStatus(json.get("status").toString());
+            Adocao adocaoNovo = new Adocao();
+            Adocao adocao = new Adocao();
 
-            return adocao.alterar(conexao);
+            Adocao adocaoAntigo;
+            Animal animalAntigo = new Animal();
+            Animal animalNovo;
+            Usuario usuario;
+
+            // Recupera os dados antigos e novos
+            adocaoAntigo = adocao.consultarID((int) json.get("codAdocao"), conexao);
+            animalNovo = animalDAO.get((int) json.get("animal"), conexao);
+            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+
+            // Preenche o novo objeto de adoção
+            adocaoNovo.setCodAdocao((int) json.get("codAdocao"));
+            adocaoNovo.setUsuario(usuario);
+            adocaoNovo.setAnimal(animalNovo);
+            adocaoNovo.setData(json.get("data").toString());
+            adocaoNovo.setStatus(json.get("status").toString());
+
+            if (adocaoNovo.alterar(conexao))
+            {
+                // Se o animal foi trocado na alteração
+                if (adocaoAntigo.getAnimal().getCodAnimal() != animalNovo.getCodAnimal())
+                {
+                    animalAntigo = animalAntigo.consultarID(adocaoAntigo.getAnimal().getCodAnimal(), conexao);
+                    animalAntigo.setAdotado("Não");
+                    animalAntigo.alterar(conexao);
+
+                    animalNovo.setAdotado("Sim");
+                    animalNovo.alterar(conexao);
+                }
+                return true;
+            }
         }
-        else
-            return false;
+
+        return false;
     }
 
     public boolean validar(Map<String, Object> json) {
@@ -216,11 +249,30 @@ public class AdocaoController {
 
         return false;
     }
+    public boolean validarAlterar(Map<String, Object> json)
+    {
 
-    public boolean validarAlterar(Map<String, Object> json) {
-        //retorna verdade se todas as informações forem válidas
-        return validar(json) && json.containsKey("codAdocao");
+        if (json != null && json.containsKey("data") && json.containsKey("usuario") && json.containsKey("animal") && json.containsKey("codAdocao"))
+        {
+
+            SingletonDB singletonDB = SingletonDB.getInstance();
+            Conexao conexao = singletonDB.getConexao();
+            Adocao adocao = new Adocao().consultarID((int) json.get("codAdocao"), conexao);
+
+            if (adocao != null)
+            {
+                AnimalDAO animalDAO = new AnimalDAO();
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+                Animal animal = animalDAO.get((int) json.get("animal"), conexao);
+                Usuario usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+                if (usuario != null && animal != null)
+                    return true;
+
+            }
+        }
+
+        return false;
     }
-
 
 }

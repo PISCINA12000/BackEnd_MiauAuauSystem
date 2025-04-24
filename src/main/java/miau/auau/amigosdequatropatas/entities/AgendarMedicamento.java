@@ -2,20 +2,19 @@ package miau.auau.amigosdequatropatas.entities;
 
 import miau.auau.amigosdequatropatas.dao.AgendarMedicamentoDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class AgendarMedicamento {
-    private int codAgendarMedicamento;
 
+    private int codAgendarMedicamento;
     private TipoMedicamento medicamento; //codigo do medicamento
     private Animal animal;
-
     private String dataAplicacao;
 
     // Construtores
-
-
     public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento medicamento, Animal animal, String dataAplicacao) {
         this.codAgendarMedicamento = codAgendarMedicamento;
         this.medicamento = medicamento;
@@ -24,12 +23,10 @@ public class AgendarMedicamento {
     }
 
     public AgendarMedicamento() {
-        this(0,null,null,"");
+        this(0, null, null, "");
     }
 
     // Gets e Sets
-
-
     public int getCodAgendarMedicamento() {
         return codAgendarMedicamento;
     }
@@ -74,8 +71,7 @@ public class AgendarMedicamento {
         return agendarMedicamentoDAO.get(filtro, conexao);
     }
 
-    public AgendarMedicamento consultarID(int id, Conexao conexao)
-    {
+    public AgendarMedicamento consultarID(int id, Conexao conexao) {
         AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.get(id, conexao);
     }
@@ -84,6 +80,7 @@ public class AgendarMedicamento {
         AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.apagar(this, conexao);
     }
+
     public boolean alterar(Conexao conexao) {
         AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.alterar(this, conexao);

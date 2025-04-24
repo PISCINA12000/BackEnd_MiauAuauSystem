@@ -53,23 +53,24 @@ public class AnimalRestView {
             @RequestParam String nome,
             @RequestParam String sexo,
             @RequestParam String raca,
-            @RequestParam int idade,
+            @RequestParam String dataNascimento,
             @RequestParam double peso,
             @RequestParam String castrado,
             @RequestParam String adotado,
             @RequestParam MultipartFile imagemBase64) throws IOException
     {
         //criar o mapeamento do meu json ANIMAL
+
         Map<String, Object> json = new HashMap<>();
         json.put("nome", nome);
         json.put("sexo", sexo);
         json.put("raca", raca);
-        json.put("idade", idade);
+        json.put("dataNascimento", dataNascimento);
         json.put("peso", peso);
         json.put("castrado", castrado);
         json.put("adotado", adotado);
         String imagemBase64Encoded = Base64.getEncoder().encodeToString(imagemBase64.getBytes());
-        System.out.println(imagemBase64Encoded);
+        System.out.println(json);
         json.put("imagemBase64", imagemBase64Encoded);
         //System.out.println("JSON recebido: " + json);
         if (animalController.onGravar(json)) //json -> enviar
@@ -93,7 +94,7 @@ public class AnimalRestView {
             @RequestParam String nome,
             @RequestParam String sexo,
             @RequestParam String raca,
-            @RequestParam int idade,
+            @RequestParam String dataNascimento,
             @RequestParam double peso,
             @RequestParam String castrado,
             @RequestParam String adotado,
@@ -104,7 +105,7 @@ public class AnimalRestView {
         json.put("nome", nome);
         json.put("sexo", sexo);
         json.put("raca", raca);
-        json.put("idade", idade);
+        json.put("dataNascimento", dataNascimento);
         json.put("peso", peso);
         json.put("castrado", castrado);
         json.put("adotado", adotado);

@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Component
 public class TipoMedicamentoController {
-
     @Autowired
     private TipoMedicamento tipoMedicamentoModel;
 

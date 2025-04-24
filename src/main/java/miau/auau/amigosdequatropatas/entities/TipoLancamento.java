@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class TipoLancamento {
     @Autowired
-    private TipoLancamentoDAO tipoLancamentoDAL;
+    private TipoLancamentoDAO tipoLancamentoDAO;
 
     private int cod;
     private String descricao;
@@ -19,6 +19,8 @@ public class TipoLancamento {
     public TipoLancamento(int cod, String descricao) {
         this.cod = cod;
         this.descricao = descricao;
+        if(tipoLancamentoDAO == null)
+            tipoLancamentoDAO = new TipoLancamentoDAO();
     }
 
     public TipoLancamento() {
@@ -44,23 +46,22 @@ public class TipoLancamento {
 
     // CRUD ------------------------------------------------------------------
     public boolean incluir(Conexao conexao) {
-        return tipoLancamentoDAL.gravar(this, conexao); // grava no banco
+        return tipoLancamentoDAO.gravar(this, conexao); // grava no banco
     }
 
     public boolean excluir(Conexao conexao) {
-        TipoLancamentoDAO tipoLancamentoDAO = new TipoLancamentoDAO();
         return tipoLancamentoDAO.apagar(this,conexao);
     }
 
     public TipoLancamento consultarID(int id, Conexao conexao) {
-        return tipoLancamentoDAL.get(id, conexao);
+        return tipoLancamentoDAO.get(id, conexao);
     }
 
     public List<TipoLancamento> consultar(String filtro, Conexao conexao) {
-        return tipoLancamentoDAL.get(filtro, conexao);
+        return tipoLancamentoDAO.get(filtro, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
-        return tipoLancamentoDAL.alterar(this, conexao);
+        return tipoLancamentoDAO.alterar(this, conexao);
     }
 }

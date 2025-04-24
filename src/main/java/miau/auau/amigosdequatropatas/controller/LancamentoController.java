@@ -31,10 +31,28 @@ public class LancamentoController {
                 Map<String, Object> json = new HashMap<>();
                 json.put("cod", lancamentos.get(i).getCod());
                 json.put("data", lancamentos.get(i).getData());
-                json.put("codTpLanc", lancamentos.get(i).getCodTpLanc());
-                json.put("codAnimal", lancamentos.get(i).getCodAnimal());
-                json.put("debito", lancamentos.get(i).getDebito());
-                json.put("credito", lancamentos.get(i).getCredito());
+
+                //tratar do tipoLançamento
+                TipoLancamento tipoLancamento = new TipoLancamento();
+                tipoLancamento = tipoLancamento.consultarID(lancamentos.get(i).getCodTpLanc(), conexao);
+                json.put("TpLanc", tipoLancamento);
+
+                //tratar do animal
+                if(lancamentos.get(i).getCodAnimal()==0)
+                    json.put("animal", null);
+                else {
+                    Animal animal = new Animal();
+                    animal = animal.consultarID(lancamentos.get(i).getCodAnimal(), conexao);
+                    json.put("animal", animal);
+                }
+
+                //tratar débito e crédito
+                TipoPagamento tipoPagamento = new TipoPagamento();
+                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", tipoPagamento);
+                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", tipoPagamento);
+
                 json.put("descricao", lancamentos.get(i).getDescricao());
                 json.put("valor", lancamentos.get(i).getValor());
                 json.put("arquivo", lancamentos.get(i).getPDF());
@@ -55,14 +73,44 @@ public class LancamentoController {
             Map<String, Object> json = new HashMap<>();
             json.put("cod", lanc.getCod());
             json.put("data", lanc.getData());
-            json.put("codTpLanc", lanc.getCodTpLanc());
-            json.put("codAnimal", lanc.getCodAnimal());
-            json.put("debito", lanc.getDebito());
-            json.put("credito", lanc.getCredito());
+
+            //tratar do tipoLançamento
+            TipoLancamento tipoLancamento = new TipoLancamento();
+            tipoLancamento = tipoLancamento.consultarID(lanc.getCodTpLanc(), conexao);
+            json.put("TpLanc", tipoLancamento);
+
+            //tratar o animal
+            if(lanc.getCodAnimal()==0)
+                json.put("animal", null);
+            else {
+                Animal animal = new Animal();
+                animal = animal.consultarID(lanc.getCodAnimal(), conexao);
+                json.put("animal", animal);
+            }
+
+            //tratar débito e crédito
+            TipoPagamento tipoPagamento = new TipoPagamento();
+            tipoPagamento = tipoPagamento.consultarID(lanc.getDebito(), conexao);
+            json.put("debito", tipoPagamento);
+            tipoPagamento = tipoPagamento.consultarID(lanc.getCredito(), conexao);
+            json.put("credito", tipoPagamento);
+
             json.put("descricao", lanc.getDescricao());
             json.put("valor", lanc.getValor());
             json.put("arquivo", lanc.getPDF());
             return json;
+        }
+        return null;
+    }
+
+    public byte[] onBuscarPDF(int id) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        Lancamento lanc = lancamento.consultarID(id, conexao);
+        if (lanc != null) {
+            return lanc.getPDF();
         }
         return null;
     }
@@ -84,7 +132,7 @@ public class LancamentoController {
             lancamento.setCredito(Integer.parseInt(json.get("credito").toString()));
             lancamento.setDescricao(json.get("descricao").toString());
             lancamento.setValor(Double.parseDouble(json.get("valor").toString()));
-            lancamento.setPDF((byte[]) json.get("pdf"));
+            lancamento.setPDF((byte[]) json.get("arquivo"));
         }
         else
             return false;
@@ -101,9 +149,8 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         Lancamento lanc = lancamento.consultarID(id, conexao);
-        // Se o animal for encontrado, exclui; caso contrário, retorna false
         if (lanc != null)
-            return lancamento.excluir(conexao);
+            return lanc.excluir(conexao);
         return false;
     }
 
@@ -125,7 +172,7 @@ public class LancamentoController {
             lancamento.setCredito(Integer.parseInt(json.get("credito").toString()));
             lancamento.setDescricao(json.get("descricao").toString());
             lancamento.setValor(Double.parseDouble(json.get("valor").toString()));
-            lancamento.setPDF((byte[]) json.get("pdf"));
+            lancamento.setPDF((byte[]) json.get("arquivo"));
         }
         else
             return false;

@@ -1,14 +1,12 @@
 package miau.auau.amigosdequatropatas.view;
 
 import miau.auau.amigosdequatropatas.controller.LancamentoController;
-import miau.auau.amigosdequatropatas.entities.Lancamento;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +40,23 @@ public class LancamentoRestView {
         return ResponseEntity.badRequest().body(new Erro("Não encontrado lançamento com esse ID!!"));
     }
 
+    @GetMapping("arquivo/{id}")
+    public ResponseEntity<byte[]> getArquivoPDF(@PathVariable(value = "id") int id) {
+        byte[] pdfBytes = lancController.onBuscarPDF(id); // view chama controller
+
+        if (pdfBytes != null && pdfBytes.length > 0) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.inline()
+                    .filename("lancamento_" + id + ".pdf")
+                    .build());
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
     @PostMapping("gravar")
     public ResponseEntity<Object> postLancamento(
             @RequestParam String data,
@@ -51,7 +66,7 @@ public class LancamentoRestView {
             @RequestParam int credito,
             @RequestParam String descricao,
             @RequestParam double valor,
-            @RequestParam MultipartFile pdf)
+            @RequestParam (value="pdf", required = false) MultipartFile pdf)
     {
         try {
             Map<String, Object> json = new HashMap<>();
@@ -94,7 +109,7 @@ public class LancamentoRestView {
             @RequestParam int credito,
             @RequestParam String descricao,
             @RequestParam double valor,
-            @RequestParam MultipartFile pdf)
+            @RequestParam (value="pdf", required = false) MultipartFile pdf)
     {
         try {
             Map<String, Object> json = new HashMap<>();
