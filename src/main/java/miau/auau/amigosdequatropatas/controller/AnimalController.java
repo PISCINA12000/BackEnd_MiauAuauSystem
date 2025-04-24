@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import miau.auau.amigosdequatropatas.entities.Adocao;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
@@ -164,6 +165,28 @@ public class AnimalController {
 
     public boolean validarAlterar(Map<String, Object> json) {
         //retorna verdade se todas as informações forem válidas
-        return validar(json) && json.containsKey("codAnimal");
+        if (validar(json) && json.containsKey("codAnimal"))
+        {
+
+            SingletonDB singletonDB = SingletonDB.getInstance();
+            Conexao conexao = singletonDB.getConexao();
+
+            List<Adocao> adocaoList = new Adocao().consultar("", conexao);
+            if (adocaoList.size() > 0) // se houver adoções
+            {
+                int i = 0;
+                while(i < adocaoList.size() && adocaoList.get(i).getAnimal().getCodAnimal() != (int) json.get("codAnimal"))
+                    i++;
+                if (i < adocaoList.size()) // se eu encontrar uma adoção com esse animal
+                {
+                    if (!adocaoList.get(i).getAnimal().getAdotado().equals(json.get("adotado")))
+                        return false;
+
+                }
+            }
+            return true;
+
+        }
+        return false;
     }
 }
