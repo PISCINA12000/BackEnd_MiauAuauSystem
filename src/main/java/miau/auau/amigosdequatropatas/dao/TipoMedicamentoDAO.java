@@ -69,8 +69,7 @@ public class TipoMedicamentoDAO implements IDAL<TipoMedicamento> {
         List<TipoMedicamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_medicamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE tpm_nome = " + filtro;
+            sql += " WHERE tpm_nome ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY tpm_nome";
         System.out.println("SQL gerado: " + sql);
