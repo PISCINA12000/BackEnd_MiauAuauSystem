@@ -67,6 +67,11 @@ public class Doacao
         this.valor = valor;
     }
 
+    public boolean incluir(Conexao conexao) {
+        AdocaoDAO adocaoDAO = new AdocaoDAO();
+        return adocaoDAO.gravar(this, conexao); // grava no banco
+    }
+    
     public List<Doacao> consultar(String filtro, Conexao conexao) {
         DoacaoDAO doacaoDAO = new DoacaoDAO();
         return doacaoDAO.get(filtro, conexao);
