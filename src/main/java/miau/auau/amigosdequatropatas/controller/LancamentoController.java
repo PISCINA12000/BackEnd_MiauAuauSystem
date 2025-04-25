@@ -197,7 +197,6 @@ public class LancamentoController {
                 !json.get("data").toString().isEmpty() &&
                 tipoPagamento.consultarID(Integer.parseInt(json.get("debito").toString()),conexao) != null &&
                 tipoPagamento.consultarID(Integer.parseInt(json.get("credito").toString()),conexao) != null &&
-                !json.get("descricao").toString().isEmpty() &&
                 Double.parseDouble(json.get("valor").toString()) > 0;
     }
 
