@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -317,7 +316,8 @@ public class AdocaoController {
             form.getField("ENDERECO").setValue(adocao.getUsuario().getRua());
             form.getField("NUMERO").setValue(adocao.getUsuario().getNumero());
             form.getField("BAIRRO").setValue(adocao.getUsuario().getBairro());
-            form.getField("CIDADE").setValue("Regente Feijó");
+            form.getField("CIDADE").setValue("Regente Feijó"); // ainda não implementado em usuario
+            form.getField("ESTADO").setValue("SP"); // ainda não implementando em usuario
             form.getField("CEP").setValue(adocao.getUsuario().getCep());
             form.getField("TELEFONE").setValue(adocao.getUsuario().getTelefone());
             form.getField("EMAIL").setValue(adocao.getUsuario().getEmail());
@@ -325,6 +325,8 @@ public class AdocaoController {
             form.getField("RACA").setValue(adocao.getAnimal().getRaca());
             form.getField("DATANASC").setValue(dataNascimentoFormatada);
             form.getField("SEXO").setValue(adocao.getAnimal().getSexo());
+            form.getField("ESPECIE").setValue(adocao.getAnimal().getEspecie());
+            form.getField("COR").setValue(adocao.getAnimal().getCor());
             form.getField("ID").setValue(""+adocao.getAnimal().getCodAnimal());
 
             form.flattenFields(); // torna somente leitura
