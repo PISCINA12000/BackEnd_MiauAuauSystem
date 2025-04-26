@@ -25,6 +25,8 @@ CREATE TABLE animal (
     ani_adotado VARCHAR(10) NOT NULL,
     ani_imagem TEXT NOT NULL,
     ani_dtnasc DATE NOT NULL,
+    ani_cor VARCHAR(255) NOT NULL,
+    ani_especie VARCHAR(255) NOT NULL,
     CONSTRAINT pk_animal PRIMARY KEY (ani_id)
 );
 

@@ -88,6 +88,8 @@ public class AdocaoController {
                 jsonAnimal.put("peso", a.getAnimal().getPeso());
                 jsonAnimal.put("castrado", a.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", a.getAnimal().getAdotado());
+                jsonAnimal.put("especie", a.getAnimal().getEspecie());
+                jsonAnimal.put("cor", a.getAnimal().getCor());
                 jsonAnimal.put("imagemBase64", a.getAnimal().getImagemBase64());
 
                 Map<String, Object> jsonUsuario = new HashMap<>();
@@ -161,6 +163,8 @@ public class AdocaoController {
             jsonAnimal.put("peso", adocao.getAnimal().getPeso());
             jsonAnimal.put("castrado", adocao.getAnimal().getCastrado());
             jsonAnimal.put("adotado", adocao.getAnimal().getAdotado());
+            jsonAnimal.put("especie", adocao.getAnimal().getEspecie());
+            jsonAnimal.put("cor", adocao.getAnimal().getCor());
             jsonAnimal.put("imagemBase64", adocao.getAnimal().getImagemBase64());
 
             Map<String, Object> jsonUsuario = new HashMap<>();

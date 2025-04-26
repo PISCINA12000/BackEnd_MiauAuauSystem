@@ -32,6 +32,8 @@ public class AnimalController {
             animalModel.setCastrado(json.get("castrado").toString());
             animalModel.setAdotado(json.get("adotado").toString());
             animalModel.setImagemBase64(json.get("imagemBase64").toString());
+            animalModel.setCor(json.get("cor").toString());
+            animalModel.setEspecie(json.get("especie").toString());
             System.out.println(json.get("imagemBase64").toString());
             System.out.println(animalModel.getDataNascimento());
             if (animalModel.incluir(conexao)) {
@@ -80,6 +82,8 @@ public class AnimalController {
             json.put("castrado", animal.getCastrado());
             json.put("adotado", animal.getAdotado());
             json.put("imagemBase64", animal.getImagemBase64());
+            json.put("cor", animal.getCor());
+            json.put("especie", animal.getEspecie());
             return json;
         }
 
@@ -111,6 +115,8 @@ public class AnimalController {
                 json.put("castrado", lista.get(i).getCastrado());
                 json.put("adotado", lista.get(i).getAdotado());
                 json.put("imagemBase64", lista.get(i).getImagemBase64());
+                json.put("cor", lista.get(i).getCor());
+                json.put("especie", lista.get(i).getEspecie());
                 listaJson.add(json);
             }
             return listaJson;
@@ -136,7 +142,8 @@ public class AnimalController {
             animalModel.setPeso((Double)json.get("peso"));
             animalModel.setCastrado((String)json.get("castrado"));
             animalModel.setAdotado((String)json.get("adotado"));
-
+            animalModel.setCor((String)json.get("cor"));
+            animalModel.setEspecie((String)json.get("especie"));
             String imagemBase64 = json.get("imagemBase64").toString();
             if (imagemBase64 == null || imagemBase64.isEmpty())
             {
@@ -160,7 +167,9 @@ public class AnimalController {
                 json.containsKey("dataNascimento") &&
                 json.containsKey("peso") &&
                 json.containsKey("castrado") &&
-                json.containsKey("adotado");
+                json.containsKey("adotado") &&
+                json.containsKey("cor") &&
+                json.containsKey("especie");
     }
 
     public boolean validarAlterar(Map<String, Object> json) {

@@ -23,10 +23,12 @@ public class Animal {
     private String castrado;
     private String adotado;
     private String imagemBase64;
+    private String cor;
+    private String especie;
     // tratar foto depois
 
     // Construtores
-    public Animal(int codAnimal, String nome, String sexo, String raca, String dataNascimento, double peso, String castrado, String adotado, String imagemBase64) {
+    public Animal(int codAnimal, String nome, String sexo, String raca, String dataNascimento, double peso, String castrado, String adotado, String imagemBase64, String cor, String especie) {
         this.codAnimal = codAnimal;
         this.nome = nome;
         this.sexo = sexo;
@@ -38,10 +40,12 @@ public class Animal {
         this.imagemBase64 = imagemBase64;
         if(animalDAL==null)
             animalDAL = new AnimalDAO();
+        this.cor = cor;
+        this.especie = especie;
     }
 
     public Animal() {
-        this(0, "", "", "", "", 0, "", "", "");
+        this(0, "", "", "", "", 0, "", "", "", "", "");
     }
 
     // Gets e Sets --------------------------------------------------------------------
@@ -115,6 +119,22 @@ public class Animal {
 
     public void setImagemBase64(String imagemBase64) {
         this.imagemBase64 = imagemBase64;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    public String getEspecie() {
+        return especie;
+    }
+
+    public void setEspecie(String especie) {
+        this.especie = especie;
     }
 
     // CRUD --------------------------------------------------------------------------
