@@ -1,9 +1,15 @@
 package miau.auau.amigosdequatropatas.view;
 
+import com.itextpdf.kernel.pdf.PdfWriter;
 import miau.auau.amigosdequatropatas.controller.AdocaoController;
 import miau.auau.amigosdequatropatas.util.Erro;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,5 +97,20 @@ public class AdocaoRestView {
         } else
             return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar adoção!!"));
     }
+    @GetMapping("download-pdf/{id}")
+    public ResponseEntity<Object> downloadPdf(@PathVariable (value = "id") int codAdocao) throws IOException
+    {
+        Map<String, Object> json = new HashMap<>();
+        json.put("codAdocao", codAdocao);
+        AdocaoController adocaoController = new AdocaoController();
 
+        byte[] pdf = adocaoController.onGerarPdf(json);
+        if (pdf != null && pdf.length > 0)
+        {
+            return ResponseEntity.ok().body(pdf);
+        }
+        else
+            return ResponseEntity.badRequest().body(new Erro("Erro ao gerar PDF!!"));
+
+    }
 }
