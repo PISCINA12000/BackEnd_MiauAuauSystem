@@ -68,13 +68,28 @@ public class Doacao
     }
 
     public boolean incluir(Conexao conexao) {
-        AdocaoDAO adocaoDAO = new AdocaoDAO();
-        return adocaoDAO.gravar(this, conexao); // grava no banco
+        DoacaoDAO doacaoDAO = new DoacaoDAO();
+        return doacaoDAO.gravar(this, conexao); // grava no banco
     }
-    
+
     public List<Doacao> consultar(String filtro, Conexao conexao) {
         DoacaoDAO doacaoDAO = new DoacaoDAO();
         return doacaoDAO.get(filtro, conexao);
+    }
+
+    public Doacao consultarID(int id, Conexao conexao) {
+        DoacaoDAO doacaoDAO = new DoacaoDAO();
+        return doacaoDAO.get(id, conexao);
+    }
+
+    public boolean excluir(Conexao conexao) {
+        DoacaoDAO doacaoDAO = new DoacaoDAO();
+        return doacaoDAO.apagar(this, conexao);
+    }
+
+    public boolean alterar(Conexao conexao) {
+        DoacaoDAO doacaoDAO = new DoacaoDAO();
+        return doacaoDAO.alterar(this, conexao);
     }
 
 
