@@ -10,23 +10,25 @@ import java.util.List;
 public class AgendarMedicamento {
 
     private int codAgendarMedicamento;
-    private TipoMedicamento medicamento; //codigo do medicamento
+    private TipoMedicamento medicamento; // código do medicamento
     private Animal animal;
     private String dataAplicacao;
+    private Boolean status; // Campo de status (lido ou não)
 
     // Construtores
-    public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento medicamento, Animal animal, String dataAplicacao) {
+    public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento medicamento, Animal animal, String dataAplicacao, Boolean status) {
         this.codAgendarMedicamento = codAgendarMedicamento;
         this.medicamento = medicamento;
         this.animal = animal;
         this.dataAplicacao = dataAplicacao;
+        this.status = status;
     }
 
     public AgendarMedicamento() {
-        this(0, null, null, "");
+        this(0, null, null, "", false); // Inicializa com status false (não lido)
     }
 
-    // Gets e Sets
+    // Getters e Setters
     public int getCodAgendarMedicamento() {
         return codAgendarMedicamento;
     }
@@ -59,14 +61,20 @@ public class AgendarMedicamento {
         this.dataAplicacao = dataAplicacao;
     }
 
-    public boolean incluir(Conexao conexao) {
+    public Boolean getStatus() {
+        return status;
+    }
 
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public boolean incluir(Conexao conexao) {
         AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
-        return agendarMedicamentoDAO.gravar(this, conexao); // grava no banco
+        return agendarMedicamentoDAO.gravar(this, conexao); // Grava no banco
     }
 
     public List<AgendarMedicamento> consultar(String filtro, Conexao conexao) {
-
         AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.get(filtro, conexao);
     }

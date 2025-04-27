@@ -14,12 +14,13 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     @Override
     public boolean gravar(AgendarMedicamento entidade, Conexao conexao) {
         String sql = """
-                INSERT INTO agendar_medicamento (agemed_medicamento_id, agemed_animal_id, agemed_dataAplicacao)
-                VALUES (#1, #2, '#3')
+                INSERT INTO agendar_medicamento (agemed_medicamento_id, agemed_animal_id, agemed_dataAplicacao, agemed_status)
+                VALUES (#1, #2, '#3', #4)
                 """;
         sql = sql.replace("#1", "" + entidade.getMedicamento().getCod())
                 .replace("#2", "" + entidade.getAnimal().getCodAnimal())
-                .replace("#3", entidade.getDataAplicacao());
+                .replace("#3", entidade.getDataAplicacao())
+                .replace("#4", entidade.getStatus().toString()); // Adiciona o status
 
         return conexao.manipular(sql);
     }
@@ -28,13 +29,15 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     public boolean alterar(AgendarMedicamento entidade, Conexao conexao) {
         String sql = """
             UPDATE agendar_medicamento
-            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_dataAplicacao = '#3'
+            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_dataAplicacao = '#3', agemed_status = #5
             WHERE agemed_id = #4
             """;
         sql = sql.replace("#1","" + entidade.getMedicamento().getCod())
                 .replace("#2","" + entidade.getAnimal().getCodAnimal())
-                .replace("#3",entidade.getDataAplicacao())
-                .replace("#4",""+entidade.getCodAgendarMedicamento());
+                .replace("#3", entidade.getDataAplicacao())
+                .replace("#4", "" + entidade.getCodAgendarMedicamento())
+                .replace("#5", entidade.getStatus().toString()); // Adiciona o status na atualização
+
         return conexao.manipular(sql);
     }
 
@@ -55,7 +58,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                         resultSet.getInt("agemed_id"),
                         new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"), conexao),
                         new AnimalDAO().get(resultSet.getInt("agemed_animal_id"), conexao),
-                        resultSet.getString("agemed_dataAplicacao")
+                        resultSet.getString("agemed_dataAplicacao"),
+                        resultSet.getBoolean("agemed_status") // Recupera o status do banco
                 );
             }
         } catch (Exception e) {
@@ -64,9 +68,6 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
         return agendarMedicamento;
     }
 
-
-
-    //busca pelo id do animal todas os agendamentos de medicamento do animal
     @Override
     public List<AgendarMedicamento> get(String filtro, Conexao conexao) {
         List<AgendarMedicamento> lista = new ArrayList<>();
@@ -74,7 +75,6 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
             sql += " WHERE agemed_animal_id = '" + filtro + "'";
         }
-        //sql += " ORDER BY ado_data";
         System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);
         try {
@@ -83,8 +83,9 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                         resultSet.getInt("agemed_id"),
                         new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"), conexao),
                         new AnimalDAO().get(resultSet.getInt("agemed_animal_id"), conexao),
-                        resultSet.getString("agemed_dataAplicacao"))
-                );
+                        resultSet.getString("agemed_dataAplicacao"),
+                        resultSet.getBoolean("agemed_status") // Recupera o status do banco
+                ));
             }
         } catch (Exception e) {
             e.printStackTrace();
