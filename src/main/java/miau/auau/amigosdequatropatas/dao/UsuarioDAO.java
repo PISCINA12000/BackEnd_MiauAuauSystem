@@ -18,8 +18,8 @@ public class UsuarioDAO implements IDAL<Usuario> {
         String sql = """
             INSERT INTO usuario (
                 usu_nome, usu_email, usu_senha, usu_telefone, usu_cpf, 
-                usu_privilegio, usu_sexo, usu_cep, usu_rua, usu_bairro, usu_numero
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                usu_privilegio, usu_sexo, usu_cep, usu_rua, usu_bairro, usu_numero, usu_cidade, usu_estado
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
@@ -34,7 +34,8 @@ public class UsuarioDAO implements IDAL<Usuario> {
             stmt.setString(9, entidade.getRua());
             stmt.setString(10, entidade.getBairro());
             stmt.setString(11, entidade.getNumero());
-
+            stmt.setString(12, entidade.getCidade());
+            stmt.setString(13, entidade.getEstado());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace(); // ou logue o erro
@@ -47,7 +48,8 @@ public class UsuarioDAO implements IDAL<Usuario> {
         String sql = """
             UPDATE usuario
             SET usu_nome = ?, usu_email = ?, usu_senha = ?, usu_telefone = ?, usu_cpf = ?, 
-                usu_privilegio = ?, usu_sexo = ?, usu_cep = ?, usu_rua = ?, usu_bairro = ?, usu_numero = ?
+                usu_privilegio = ?, usu_sexo = ?, usu_cep = ?, usu_rua = ?, usu_bairro = ?, usu_numero = ?,
+                usu_cidade = ?, usu_estado = ?
             WHERE usu_id = ?
         """;
 
@@ -63,7 +65,9 @@ public class UsuarioDAO implements IDAL<Usuario> {
             ps.setString(9, entidade.getRua());
             ps.setString(10, entidade.getBairro());
             ps.setString(11, entidade.getNumero());
-            ps.setInt(12, entidade.getCod());
+            ps.setString(12, entidade.getCidade());
+            ps.setString(13, entidade.getEstado());
+            ps.setInt(14, entidade.getCod());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -97,7 +101,9 @@ public class UsuarioDAO implements IDAL<Usuario> {
                         resultSet.getString("usu_cep"),
                         resultSet.getString("usu_rua"),
                         resultSet.getString("usu_bairro"),
-                        resultSet.getString("usu_numero")
+                        resultSet.getString("usu_numero"),
+                        resultSet.getString("usu_cidade"),
+                        resultSet.getString("usu_estado")
                 );
             }
         } catch (Exception e) {
@@ -131,7 +137,9 @@ public class UsuarioDAO implements IDAL<Usuario> {
                         resultSet.getString("usu_cep"),
                         resultSet.getString("usu_rua"),
                         resultSet.getString("usu_bairro"),
-                        resultSet.getString("usu_numero")
+                        resultSet.getString("usu_numero"),
+                        resultSet.getString("usu_cidade"),
+                        resultSet.getString("usu_estado")
                 ));
             }
         } catch (Exception e) {

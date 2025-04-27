@@ -35,7 +35,8 @@ public class UsuarioController {
             usuarioModel.setRua(json.get("rua").toString());
             usuarioModel.setBairro(json.get("bairro").toString());
             usuarioModel.setNumero(json.get("numero").toString());
-
+            usuarioModel.setCidade(json.get("cidade").toString());
+            usuarioModel.setEstado(json.get("estado").toString());
             return usuarioModel.incluir(conexao);
         }
         return false;
@@ -74,7 +75,8 @@ public class UsuarioController {
             json.put("rua", usuario.getRua());
             json.put("bairro", usuario.getBairro());
             json.put("numero", usuario.getNumero());
-
+            json.put("cidade", usuario.getCidade());
+            json.put("estado", usuario.getEstado());
             return json;
         }
         return null;
@@ -104,6 +106,8 @@ public class UsuarioController {
                 json.put("rua", listaUsers.get(i).getRua());
                 json.put("bairro", listaUsers.get(i).getBairro());
                 json.put("numero", listaUsers.get(i).getNumero());
+                json.put("cidade", listaUsers.get(i).getCidade());
+                json.put("estado", listaUsers.get(i).getEstado());
                 listaJson.add(json);
             }
             return listaJson; //para retornar um json corretamente para a "rest-view"
@@ -130,7 +134,8 @@ public class UsuarioController {
             usuarioModel.setRua(json.get("rua").toString());
             usuarioModel.setBairro(json.get("bairro").toString());
             usuarioModel.setNumero(json.get("numero").toString());
-
+            usuarioModel.setCidade(json.get("cidade").toString());
+            usuarioModel.setEstado(json.get("estado").toString());
             return usuarioModel.alterar(conexao);
         }
         return false;
@@ -148,7 +153,9 @@ public class UsuarioController {
                 !json.get("cep").toString().isEmpty() &&
                 !json.get("rua").toString().isEmpty() &&
                 !json.get("bairro").toString().isEmpty() &&
-                !json.get("numero").toString().isEmpty();
+                !json.get("numero").toString().isEmpty() &&
+                !json.get("cidade").toString().isEmpty() &&
+                !json.get("estado").toString().isEmpty();
     }
 
     public boolean validarAlterar(Map<String, Object> json) {
