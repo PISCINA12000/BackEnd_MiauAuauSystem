@@ -1,9 +1,13 @@
 package miau.auau.amigosdequatropatas.view;
 
+import jakarta.servlet.http.HttpServletRequest;
 import miau.auau.amigosdequatropatas.controller.AdocaoController;
+import miau.auau.amigosdequatropatas.security.JWTTokenProvider;
 import miau.auau.amigosdequatropatas.util.Erro;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,9 @@ import java.util.Map;
 public class AdocaoRestView {
     // DECLARAÇÕES
     // GRAVAR
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     @PostMapping("gravar")
     public ResponseEntity<Object> gravarAnimal(
             @RequestParam int cod_animal,
@@ -34,6 +41,36 @@ public class AdocaoRestView {
         else
             return ResponseEntity.badRequest().body(new Erro("Erro ao gravar adocao!!"));
     }
+
+    @PostMapping("solicitar")
+    public ResponseEntity<Object> solicitarAnimal(
+            @RequestParam int cod_animal,
+            @RequestParam int cod_usuario,
+            @RequestParam String data,
+            @RequestParam String status){
+
+        String token = httpServletRequest.getHeader("Authorization");
+        if (JWTTokenProvider.verifyToken(token))
+        {
+            Map<String, Object> json = new HashMap<>();
+            json.put("animal", cod_animal);
+            json.put("usuario", cod_usuario);
+            json.put("data", data);
+            json.put("status", status);
+
+            AdocaoController adocaoController = new AdocaoController();
+            if (adocaoController.onGravar(json))
+                return ResponseEntity.ok(json);
+            else
+                return ResponseEntity.badRequest().body(new Erro("Erro ao gravar adocao!!"));
+        }
+        else
+            return ResponseEntity.badRequest().body(new Erro("Acesso não permitido"));
+
+    }
+
+
+
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getAdocao(@PathVariable(value = "filtro") String filtro) {
         List<Map<String, Object>> listaJson;
@@ -91,5 +128,20 @@ public class AdocaoRestView {
         } else
             return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar adoção!!"));
     }
+    @GetMapping("download-pdf/{id}")
+    public ResponseEntity<Object> downloadPdf(@PathVariable (value = "id") int codAdocao) throws IOException
+    {
+        Map<String, Object> json = new HashMap<>();
+        json.put("codAdocao", codAdocao);
+        AdocaoController adocaoController = new AdocaoController();
 
+        byte[] pdf = adocaoController.onGerarPdf(json);
+        if (pdf != null && pdf.length > 0)
+        {
+            return ResponseEntity.ok().body(pdf);
+        }
+        else
+            return ResponseEntity.badRequest().body(new Erro("Erro ao gerar PDF!!"));
+
+    }
 }

@@ -25,6 +25,8 @@ CREATE TABLE animal (
     ani_adotado VARCHAR(10) NOT NULL,
     ani_imagem TEXT NOT NULL,
     ani_dtnasc DATE NOT NULL,
+    ani_cor VARCHAR(255) NOT NULL,
+    ani_especie VARCHAR(255) NOT NULL,
     CONSTRAINT pk_animal PRIMARY KEY (ani_id)
 );
 
@@ -40,7 +42,9 @@ CREATE TABLE usuario (
     usu_cep VARCHAR(10) NOT NULL,
     usu_rua VARCHAR(255) NOT NULL,
     usu_bairro VARCHAR(255) NOT NULL,
-    usu_numero VARCHAR(10) NOT NULL
+    usu_numero VARCHAR(10) NOT NULL,
+    usu_cidade VARCHAR(20) NOT NULL,
+    usu_estado VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE agendar_medicamento (

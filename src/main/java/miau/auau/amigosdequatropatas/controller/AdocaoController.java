@@ -1,5 +1,9 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import miau.auau.amigosdequatropatas.dao.AnimalDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
@@ -8,6 +12,11 @@ import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -78,6 +87,8 @@ public class AdocaoController {
                 jsonAnimal.put("peso", a.getAnimal().getPeso());
                 jsonAnimal.put("castrado", a.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", a.getAnimal().getAdotado());
+                jsonAnimal.put("especie", a.getAnimal().getEspecie());
+                jsonAnimal.put("cor", a.getAnimal().getCor());
                 jsonAnimal.put("imagemBase64", a.getAnimal().getImagemBase64());
 
                 Map<String, Object> jsonUsuario = new HashMap<>();
@@ -151,6 +162,8 @@ public class AdocaoController {
             jsonAnimal.put("peso", adocao.getAnimal().getPeso());
             jsonAnimal.put("castrado", adocao.getAnimal().getCastrado());
             jsonAnimal.put("adotado", adocao.getAnimal().getAdotado());
+            jsonAnimal.put("especie", adocao.getAnimal().getEspecie());
+            jsonAnimal.put("cor", adocao.getAnimal().getCor());
             jsonAnimal.put("imagemBase64", adocao.getAnimal().getImagemBase64());
 
             Map<String, Object> jsonUsuario = new HashMap<>();
@@ -275,4 +288,51 @@ public class AdocaoController {
         return false;
     }
 
+    public byte[] onGerarPdf(Map<String, Object> json) throws IOException
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+        Adocao adocao = new Adocao();
+
+        adocao = adocao.consultarID((int) json.get("codAdocao"), conexao);
+        InputStream template = getClass().getResourceAsStream("/termo_de_adocao.pdf");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        if (adocao != null)
+        {
+            PdfReader reader = new PdfReader(template);
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
+
+            LocalDate dataAtual = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String dataFormatada = dataAtual.format(formatter);
+
+            LocalDate dataNascimento = LocalDate.parse(adocao.getAnimal().getDataNascimento());
+            String dataNascimentoFormatada = dataNascimento.format(formatter);
+
+            form.getField("NOME").setValue(adocao.getUsuario().getNome());
+            form.getField("CPF").setValue(adocao.getUsuario().getCpf());
+            form.getField("ENDERECO").setValue(adocao.getUsuario().getRua());
+            form.getField("NUMERO").setValue(adocao.getUsuario().getNumero());
+            form.getField("BAIRRO").setValue(adocao.getUsuario().getBairro());
+            form.getField("CIDADE").setValue("Regente Feijó"); // ainda não implementado em usuario
+            form.getField("ESTADO").setValue("SP"); // ainda não implementando em usuario
+            form.getField("CEP").setValue(adocao.getUsuario().getCep());
+            form.getField("TELEFONE").setValue(adocao.getUsuario().getTelefone());
+            form.getField("EMAIL").setValue(adocao.getUsuario().getEmail());
+            form.getField("DATA").setValue(dataFormatada);
+            form.getField("RACA").setValue(adocao.getAnimal().getRaca());
+            form.getField("DATANASC").setValue(dataNascimentoFormatada);
+            form.getField("SEXO").setValue(adocao.getAnimal().getSexo());
+            form.getField("ESPECIE").setValue(adocao.getAnimal().getEspecie());
+            form.getField("COR").setValue(adocao.getAnimal().getCor());
+            form.getField("ID").setValue(""+adocao.getAnimal().getCodAnimal());
+
+            form.flattenFields(); // torna somente leitura
+            pdfDoc.close();
+
+        }
+        return baos.toByteArray();
+    }
 }

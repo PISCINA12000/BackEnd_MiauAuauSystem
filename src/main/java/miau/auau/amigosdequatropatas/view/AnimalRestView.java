@@ -57,6 +57,8 @@ public class AnimalRestView {
             @RequestParam double peso,
             @RequestParam String castrado,
             @RequestParam String adotado,
+            @RequestParam String cor,
+            @RequestParam String especie,
             @RequestParam MultipartFile imagemBase64) throws IOException
     {
         //criar o mapeamento do meu json ANIMAL
@@ -69,6 +71,8 @@ public class AnimalRestView {
         json.put("peso", peso);
         json.put("castrado", castrado);
         json.put("adotado", adotado);
+        json.put("cor", cor);
+        json.put("especie", especie);
         String imagemBase64Encoded = Base64.getEncoder().encodeToString(imagemBase64.getBytes());
         System.out.println(json);
         json.put("imagemBase64", imagemBase64Encoded);
@@ -98,6 +102,8 @@ public class AnimalRestView {
             @RequestParam double peso,
             @RequestParam String castrado,
             @RequestParam String adotado,
+            @RequestParam String cor,
+            @RequestParam String especie,
             @RequestParam MultipartFile imagemBase64) throws IOException {
         //criar o mapeamento do meu json ANIMAL
         Map<String, Object> json = new HashMap<>();
@@ -109,6 +115,8 @@ public class AnimalRestView {
         json.put("peso", peso);
         json.put("castrado", castrado);
         json.put("adotado", adotado);
+        json.put("cor", cor);
+        json.put("especie", especie);
         String imagemBase64Encoded = Base64.getEncoder().encodeToString(imagemBase64.getBytes());
         json.put("imagemBase64", imagemBase64Encoded);
 
