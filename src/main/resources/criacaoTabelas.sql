@@ -48,6 +48,7 @@ CREATE TABLE agendar_medicamento (
     agemed_medicamento_id INTEGER NOT NULL,
     agemed_animal_id INTEGER NOT NULL,
     agemed_dataAplicacao DATE NOT NULL,
+    agemed_status BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (agemed_medicamento_id) REFERENCES tipo_medicamento(tpm_id),
     FOREIGN KEY (agemed_animal_id) REFERENCES animal(ani_id)
 );

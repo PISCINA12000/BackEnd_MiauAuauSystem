@@ -29,7 +29,7 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     public boolean alterar(AgendarMedicamento entidade, Conexao conexao) {
         String sql = """
             UPDATE agendar_medicamento
-            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_dataAplicacao = '#3', agemed_status = #5
+            SET agemed_medicamento_id = #1, agemed_animal_id = #2, agemed_dataAplicacao = '#3', agemed_status = '#5'
             WHERE agemed_id = #4
             """;
         sql = sql.replace("#1","" + entidade.getMedicamento().getCod())
