@@ -24,9 +24,11 @@ public class Usuario {
     private String rua;
     private String bairro;
     private String numero;
+    private String cidade;
+    private String estado;
 
     // Construtores
-    public Usuario(int cod, String nome, String email, String senha, String telefone, String cpf, String privilegio, String sexo, String cep, String rua, String bairro, String numero) {
+    public Usuario(int cod, String nome, String email, String senha, String telefone, String cpf, String privilegio, String sexo, String cep, String rua, String bairro, String numero, String cidade, String estado) {
         this.cod = cod;
         this.nome = nome;
         this.email = email;
@@ -39,12 +41,14 @@ public class Usuario {
         this.rua = rua;
         this.bairro = bairro;
         this.numero = numero;
+        this.cidade = cidade;
+        this.estado = estado;
         if(usuarioDAL==null)
             usuarioDAL = new UsuarioDAO();
     }
 
     public Usuario() {
-        this(0, "", "", "", "", "", "", "", "", "", "", "");
+        this(0, "", "", "", "", "", "", "", "", "", "", "", "", "");
     }
 
     // Gets e Sets
@@ -142,6 +146,22 @@ public class Usuario {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     //CRUD

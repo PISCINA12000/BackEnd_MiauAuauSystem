@@ -73,6 +73,8 @@ public class AgendarMedicamentoController {
                 jsonAnimal.put("peso", am.getAnimal().getPeso());
                 jsonAnimal.put("castrado", am.getAnimal().getCastrado());
                 jsonAnimal.put("adotado", am.getAnimal().getAdotado());
+                jsonAnimal.put("especie", am.getAnimal().getEspecie());
+                jsonAnimal.put("cor", am.getAnimal().getCor());
                 jsonAnimal.put("imagemBase64", am.getAnimal().getImagemBase64());
 
                 Map<String, Object> jsonTipoMedicamento = new HashMap<>();
@@ -131,6 +133,8 @@ public class AgendarMedicamentoController {
             jsonAnimal.put("peso", agendarMedicamento.getAnimal().getPeso());
             jsonAnimal.put("castrado", agendarMedicamento.getAnimal().getCastrado());
             jsonAnimal.put("adotado", agendarMedicamento.getAnimal().getAdotado());
+            jsonAnimal.put("especie", agendarMedicamento.getAnimal().getEspecie());
+            jsonAnimal.put("cor", agendarMedicamento.getAnimal().getCor());
             jsonAnimal.put("imagemBase64", agendarMedicamento.getAnimal().getImagemBase64());
 
             Map<String, Object> jsonTipoMedicamento = new HashMap<>();

@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import miau.auau.amigosdequatropatas.entities.Adocao;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
@@ -31,6 +32,8 @@ public class AnimalController {
             animalModel.setCastrado(json.get("castrado").toString());
             animalModel.setAdotado(json.get("adotado").toString());
             animalModel.setImagemBase64(json.get("imagemBase64").toString());
+            animalModel.setCor(json.get("cor").toString());
+            animalModel.setEspecie(json.get("especie").toString());
             System.out.println(json.get("imagemBase64").toString());
             System.out.println(animalModel.getDataNascimento());
             if (animalModel.incluir(conexao)) {
@@ -79,6 +82,8 @@ public class AnimalController {
             json.put("castrado", animal.getCastrado());
             json.put("adotado", animal.getAdotado());
             json.put("imagemBase64", animal.getImagemBase64());
+            json.put("cor", animal.getCor());
+            json.put("especie", animal.getEspecie());
             return json;
         }
 
@@ -110,6 +115,8 @@ public class AnimalController {
                 json.put("castrado", lista.get(i).getCastrado());
                 json.put("adotado", lista.get(i).getAdotado());
                 json.put("imagemBase64", lista.get(i).getImagemBase64());
+                json.put("cor", lista.get(i).getCor());
+                json.put("especie", lista.get(i).getEspecie());
                 listaJson.add(json);
             }
             return listaJson;
@@ -135,7 +142,8 @@ public class AnimalController {
             animalModel.setPeso((Double)json.get("peso"));
             animalModel.setCastrado((String)json.get("castrado"));
             animalModel.setAdotado((String)json.get("adotado"));
-
+            animalModel.setCor((String)json.get("cor"));
+            animalModel.setEspecie((String)json.get("especie"));
             String imagemBase64 = json.get("imagemBase64").toString();
             if (imagemBase64 == null || imagemBase64.isEmpty())
             {
@@ -159,11 +167,35 @@ public class AnimalController {
                 json.containsKey("dataNascimento") &&
                 json.containsKey("peso") &&
                 json.containsKey("castrado") &&
-                json.containsKey("adotado");
+                json.containsKey("adotado") &&
+                json.containsKey("cor") &&
+                json.containsKey("especie");
     }
 
     public boolean validarAlterar(Map<String, Object> json) {
         //retorna verdade se todas as informações forem válidas
-        return validar(json) && json.containsKey("codAnimal");
+        if (validar(json) && json.containsKey("codAnimal"))
+        {
+
+            SingletonDB singletonDB = SingletonDB.getInstance();
+            Conexao conexao = singletonDB.getConexao();
+
+            List<Adocao> adocaoList = new Adocao().consultar("", conexao);
+            if (adocaoList.size() > 0) // se houver adoções
+            {
+                int i = 0;
+                while(i < adocaoList.size() && adocaoList.get(i).getAnimal().getCodAnimal() != (int) json.get("codAnimal"))
+                    i++;
+                if (i < adocaoList.size()) // se eu encontrar uma adoção com esse animal
+                {
+                    if (!adocaoList.get(i).getAnimal().getAdotado().equals(json.get("adotado")))
+                        return false;
+
+                }
+            }
+            return true;
+
+        }
+        return false;
     }
 }

@@ -46,7 +46,9 @@ public class UsuarioRestView {
             @RequestParam String cep,
             @RequestParam String rua,
             @RequestParam String bairro,
-            @RequestParam String numero)
+            @RequestParam String numero,
+            @RequestParam String cidade,
+            @RequestParam String estado)
     {
         Map<String, Object> json = new HashMap<>();
         json.put("nome", nome);
@@ -60,6 +62,8 @@ public class UsuarioRestView {
         json.put("rua", rua);
         json.put("bairro", bairro);
         json.put("numero", numero);
+        json.put("cidade", cidade);
+        json.put("estado", estado);
 
         //mandar para a controller
         if (usuarioController.onGravar(json))
@@ -88,7 +92,9 @@ public class UsuarioRestView {
             @RequestParam String cep,
             @RequestParam String rua,
             @RequestParam String bairro,
-            @RequestParam String numero)
+            @RequestParam String numero,
+            @RequestParam String cidade,
+            @RequestParam String estado)
     {
         //criar o json
         Map<String, Object> json = new HashMap<>();
@@ -104,6 +110,8 @@ public class UsuarioRestView {
         json.put("rua", rua);
         json.put("bairro", bairro);
         json.put("numero", numero);
+        json.put("cidade", cidade);
+        json.put("estado", estado);
 
         //mandar para a controller
         if(usuarioController.onAlterar(json))
