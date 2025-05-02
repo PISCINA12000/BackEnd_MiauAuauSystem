@@ -142,7 +142,21 @@ public class AdocaoController {
         return false;
     }
 
+    public List<String> onBuscarAno()
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
+        Adocao adocao = new Adocao();
+        List<String> lista = adocao.consultarAnos(conexao);
+
+        if (lista!=null) {
+
+            return lista;
+        }
+        else
+            return null;
+    }
     public Map<String, Object> onBuscarId(int id) {
         // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -227,6 +241,7 @@ public class AdocaoController {
 
             if (adocaoNovo.alterar(conexao))
             {
+                int flag = 1;
                 // Se o animal foi trocado na alteração
                 if (adocaoAntigo.getAnimal().getCodAnimal() != animalNovo.getCodAnimal())
                 {
@@ -235,8 +250,24 @@ public class AdocaoController {
                     animalAntigo.alterar(conexao);
 
                     animalNovo.setAdotado("Sim");
-                    animalNovo.alterar(conexao);
+
                 }
+                else
+                if (adocaoNovo.getStatus().equals("Cancelada"))
+                {
+                    animalNovo.setAdotado("Não");
+
+                }
+                else
+                if (adocaoAntigo.getStatus().equals("Cancelada") && adocaoNovo.getStatus().equals("Pendente"))
+                {
+                    if (!adocao.getAnimal().getAdotado().equals("Sim"))
+                        animalNovo.setAdotado("Sim");
+                    else
+                        flag = 0;
+                }
+                if (flag == 1)
+                    animalNovo.alterar(conexao);
                 return true;
             }
         }
@@ -338,4 +369,6 @@ public class AdocaoController {
         }
         return baos.toByteArray();
     }
+
+
 }

@@ -70,6 +70,17 @@ public class AdocaoRestView {
     }
 
 
+    @GetMapping("buscarAno")
+    public ResponseEntity<Object> getAnos()
+    {
+        List <String> listAnos;
+        AdocaoController adocaoController = new AdocaoController();
+        listAnos = adocaoController.onBuscarAno();
+        if(listAnos != null)
+            return ResponseEntity.ok().body(listAnos);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Nenhuma adoção cadastrada!!"));
+    }
 
     @GetMapping("buscar/{filtro}") // vazio, retorna todos
     public ResponseEntity<Object> getAdocao(@PathVariable(value = "filtro") String filtro) {

@@ -67,10 +67,45 @@ public class AdocaoDAO implements IDAL<Adocao> {
     @Override
     public List<Adocao> get(String filtro, Conexao conexao) {
         List<Adocao> lista = new ArrayList<>();
+        String filtroAno = "";
+        String filtroStatus = "";
         String sql = "SELECT * FROM adocao";
-        if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            sql += " WHERE TO_CHAR(ado_data, 'YYYY') = '"+filtro+"'";
+        System.out.println("filtro recebido"+filtro);
+        if (!filtro.isEmpty() && !filtro.equals(" "))
+        {
+            int i = 0;
+            while (i < filtro.length() && filtro.charAt(i) != ' ')
+            {
+                filtroAno += filtro.charAt(i);
+                i++;
+            }
+            i++;
+            while (i < filtro.length())
+            {
+                System.out.println("entrei");
+                System.out.println(filtro.charAt(i));
+                filtroStatus += filtro.charAt(i);
+                i++;
+            }
+
+            if (filtroAno.isEmpty() && !filtroStatus.isEmpty())
+            {
+                System.out.println(filtroStatus);
+                sql += " WHERE ado_status = '"+filtroStatus+"'";
+            }
+            else
+            if (!filtroAno.isEmpty() && filtroStatus.isEmpty())
+            {
+                System.out.println(filtroAno);
+                sql += " WHERE TO_CHAR(ado_data, 'YYYY') = '"+filtroAno+"'";
+            }
+            else
+            if (!filtroAno.isEmpty() && !filtroStatus.isEmpty())
+            {
+                sql += " WHERE TO_CHAR(ado_data, 'YYYY') = '"+filtroAno+"'" + " AND ado_status = '"+filtroStatus+"'";
+            }
         }
+
         sql += " ORDER BY ado_data";
         System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);
@@ -84,6 +119,21 @@ public class AdocaoDAO implements IDAL<Adocao> {
                         resultSet.getString("ado_status")
 
                 ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public List<String > getAnos(Conexao conexao) {
+        List<String> lista = new ArrayList<>();
+        String sql;
+        sql = "SELECT DISTINCT TO_CHAR(ado_data, 'YYYY') FROM adocao ORDER BY TO_CHAR(ado_data, 'YYYY')";
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                lista.add(resultSet.getString(1));
             }
         } catch (Exception e) {
             e.printStackTrace();
