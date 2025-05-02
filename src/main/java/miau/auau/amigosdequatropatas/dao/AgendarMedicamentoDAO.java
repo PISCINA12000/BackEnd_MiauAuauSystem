@@ -71,10 +71,16 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
     @Override
     public List<AgendarMedicamento> get(String filtro, Conexao conexao) {
         List<AgendarMedicamento> lista = new ArrayList<>();
-        String sql = "SELECT * FROM agendar_medicamento";
+
+        // Começo da query com JOIN
+        String sql = "SELECT am.* FROM agendar_medicamento am " +
+                "JOIN animal a ON a.ani_id = am.agemed_animal_id";
+
+        // Se tiver filtro, filtra pelo nome do animal
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            sql += " WHERE agemed_animal_id = '" + filtro + "'";
+            sql += " WHERE LOWER(a.ani_nome) LIKE LOWER('%" + filtro + "%')";
         }
+
         System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);
         try {
@@ -84,12 +90,14 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                         new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"), conexao),
                         new AnimalDAO().get(resultSet.getInt("agemed_animal_id"), conexao),
                         resultSet.getString("agemed_dataAplicacao"),
-                        resultSet.getBoolean("agemed_status") // Recupera o status do banco
+                        resultSet.getBoolean("agemed_status")
                 ));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return lista;
     }
+
 }
