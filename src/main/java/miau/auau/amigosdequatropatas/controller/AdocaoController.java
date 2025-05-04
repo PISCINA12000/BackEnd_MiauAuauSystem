@@ -256,12 +256,11 @@ public class AdocaoController {
                 if (adocaoNovo.getStatus().equals("Cancelada"))
                 {
                     animalNovo.setAdotado("Não");
-
                 }
                 else
                 if (adocaoAntigo.getStatus().equals("Cancelada") && adocaoNovo.getStatus().equals("Pendente"))
                 {
-                    if (!adocao.getAnimal().getAdotado().equals("Sim"))
+                    if (!animalNovo.getAdotado().equals("Sim"))
                         animalNovo.setAdotado("Sim");
                     else
                         flag = 0;

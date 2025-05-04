@@ -90,8 +90,62 @@ public class AnimalController {
         // Retorna null se o animal não for encontrado
         return null;
     }
+    public List<Map<String, Object>> onBuscarFiltro(String filtro)
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
+        //criando a lista que conterá os JSON's
+        List<Animal> lista = animalModel.consultarFiltro(filtro, conexao);
 
+        //verificação de a minha lista JSON está vazia ou não
+        if (lista!=null) {
+            //crio uma lista json contendo os animais que retornaram no meu consultar
+            List<Map<String, Object>> listaJson = new ArrayList<>();
+            for (int i=0; i<lista.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
+                json.put("codAnimal", lista.get(i).getCodAnimal());
+                json.put("nome", lista.get(i).getNome());
+                json.put("sexo", lista.get(i).getSexo());
+                json.put("raca", lista.get(i).getRaca());
+                json.put("dataNascimento", lista.get(i).getDataNascimento());
+                json.put("peso", lista.get(i).getPeso());
+                json.put("castrado", lista.get(i).getCastrado());
+                json.put("adotado", lista.get(i).getAdotado());
+                json.put("imagemBase64", lista.get(i).getImagemBase64());
+                json.put("cor", lista.get(i).getCor());
+                json.put("especie", lista.get(i).getEspecie());
+                listaJson.add(json);
+            }
+            return listaJson;
+        }
+        else
+            return null;
+    }
+    public List<String> onBuscarCor()
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+        List<String> listaCor = animalModel.consultarCor(conexao);
+        if (listaCor != null)
+        {
+            return listaCor;
+        }
+        else
+            return null;
+    }
+    public List<String> onBuscarRaca()
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+        List<String> listaRaca = animalModel.consultarRaca(conexao);
+        if (listaRaca != null)
+        {
+            return listaRaca;
+        }
+        else
+            return null;
+    }
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -198,4 +252,7 @@ public class AnimalController {
         }
         return false;
     }
+
+
+
 }

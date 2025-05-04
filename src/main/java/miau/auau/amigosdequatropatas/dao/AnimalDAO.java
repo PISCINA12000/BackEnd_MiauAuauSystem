@@ -119,4 +119,144 @@ public class AnimalDAO implements IDAL<Animal> {
         }
         return lista;
     }
+    public List<Animal> getFiltro(String filtro, Conexao conexao)
+    {
+        List<Animal> lista = new ArrayList<>();
+        String aux = "";
+        String sql = "SELECT * FROM animal";
+        String filtroEspecie = "";
+        String filtroRaca = "";
+        String filtroCor = "";
+        String filtroSexo = "";
+        if (!filtro.isEmpty() && !filtro.equals(" "))
+        {
+            int i = 0;
+            while(i < filtro.length() && filtro.charAt(i) != ' ')
+            {
+                filtroCor += filtro.charAt(i);
+                i++;
+            }
+            i++;
+            while (i < filtro.length() && filtro.charAt(i) != ' ')
+            {
+                filtroEspecie += filtro.charAt(i);
+                i++;
+            }
+            i++;
+            while (i < filtro.length() && filtro.charAt(i) != ' ')
+            {
+                filtroSexo += filtro.charAt(i);
+                i++;
+            }
+            i++;
+            while (i < filtro.length())
+            {
+                filtroRaca += filtro.charAt(i);
+                i++;
+            }
+            if (!filtroCor.isEmpty())
+            {
+                aux = aux + " ani_cor = '"+filtroCor+"'";
+            }
+
+            if (!filtroEspecie.isEmpty())
+            {
+                if (!aux.isEmpty())
+                {
+                    aux = aux + " AND " + "ani_especie = '"+filtroEspecie+"'";
+                }
+                else
+                {
+                    aux = aux + " ani_especie = '"+filtroEspecie+"'";
+                }
+            }
+
+            if (!filtroSexo.isEmpty())
+            {
+                if (!aux.isEmpty())
+                {
+                    aux = aux + " AND " + "ani_sexo = '"+filtroSexo+"'";
+                }
+                else
+                {
+                    aux = aux + " ani_sexo = '"+filtroSexo+"'";
+                }
+            }
+            if (!filtroRaca.isEmpty())
+            {
+                if (!aux.isEmpty())
+                {
+                    aux = aux + " AND " + "ani_raca = '"+filtroRaca+"'";
+                }
+                else
+                {
+                    aux = aux + " ani_raca = '"+filtroRaca+"'";
+                }
+            }
+
+            sql = sql + " WHERE" + aux;
+        }
+        sql += " ORDER BY ani_nome";
+        System.out.println("SQL gerado: " + sql);
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            if (resultSet != null)
+            {
+                while (resultSet.next()) {
+                lista.add(new Animal(
+                        resultSet.getInt("ani_id"),
+                        resultSet.getString("ani_nome"),
+                        resultSet.getString("ani_sexo"),
+                        resultSet.getString("ani_raca"),
+                        resultSet.getString("ani_dtnasc"),
+                        resultSet.getDouble("ani_peso"),
+                        resultSet.getString("ani_castrado"),
+                        resultSet.getString("ani_adotado"),
+                        resultSet.getString("ani_imagem"),
+                        resultSet.getString("ani_cor"),
+                        resultSet.getString("ani_especie")
+                    ));
+                }
+            }
+            else
+            {
+                lista = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+
+    }
+    public List<String> getCor(Conexao conexao)
+    {
+        List<String> lista = new ArrayList<>();
+        String sql;
+        sql = "SELECT DISTINCT ani_cor FROM animal ORDER BY ani_cor";
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                lista.add(resultSet.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public List<String> getRaca(Conexao conexao)
+    {
+        List<String> lista = new ArrayList<>();
+        String sql;
+        sql = "SELECT DISTINCT ani_raca FROM animal ORDER BY ani_raca";
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                lista.add(resultSet.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 }
