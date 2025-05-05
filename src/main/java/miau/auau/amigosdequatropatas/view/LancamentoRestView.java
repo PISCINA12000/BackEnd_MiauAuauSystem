@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,17 @@ public class LancamentoRestView {
         if(lista!=null && !lista.isEmpty())
             return ResponseEntity.ok().body(lista);
         return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os lançamentos!!"));
+    }
+
+    @GetMapping("buscar")
+    public ResponseEntity<Object> getLancamento(@RequestParam String dataIni, @RequestParam String dataFim) {
+        List<Map<String, Object>> lista;
+
+        //mando para a controller
+        lista = lancController.onBuscarData(dataIni, dataFim);
+        if(lista!=null && !lista.isEmpty())
+            return ResponseEntity.ok().body(lista);
+        return ResponseEntity.badRequest().body(new Erro("Não existe lançamentos dentro desse período!!"));
     }
 
     @GetMapping("buscar-id/{id}")

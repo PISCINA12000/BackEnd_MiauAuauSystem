@@ -18,12 +18,14 @@ public class AgendarMedicamentoRestView {
     public ResponseEntity<Object> gravarAgendamento(
             @RequestParam int animal,
             @RequestParam int medicamento,
-            @RequestParam String dataAplicacao) {
+            @RequestParam String dataAplicacao,
+            @RequestParam boolean status) {
 
         Map<String, Object> json = new HashMap<>();
         json.put("animal", animal);
         json.put("medicamento", medicamento);
         json.put("dataAplicacao", dataAplicacao);
+        json.put("status", status);
 
 
         AgendarMedicamentoController controller = new AgendarMedicamentoController();
@@ -38,7 +40,7 @@ public class AgendarMedicamentoRestView {
     @GetMapping("buscar/{filtro}")
     public ResponseEntity<Object> getAgendamentos(@PathVariable(value = "filtro") String filtro) {
 
-        //mando para a controller
+        // mando para a controller
         AgendarMedicamentoController controller = new AgendarMedicamentoController();
         List<Map<String, Object>> listaJson = controller.onBuscar(filtro);
 
@@ -52,7 +54,7 @@ public class AgendarMedicamentoRestView {
     // BUSCAR POR ID
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getAgendamentoById(@PathVariable(value = "id") int codAgendarMedicamento) {
-        //mando para a controller
+        // mando para a controller
         AgendarMedicamentoController controller = new AgendarMedicamentoController();
         Map<String, Object> json = controller.onBuscarId(codAgendarMedicamento);
 
@@ -62,7 +64,6 @@ public class AgendarMedicamentoRestView {
             return ResponseEntity.badRequest().body(new Erro("Agendamento não encontrado!!"));
         }
     }
-
 
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<Object> excluirAgendamento(@PathVariable(value = "id") int codAgendarMedicamento) {
@@ -81,13 +82,15 @@ public class AgendarMedicamentoRestView {
             @RequestParam int codAgendarMedicamento,
             @RequestParam int animal,
             @RequestParam int medicamento,
-            @RequestParam String dataAplicacao) {
+            @RequestParam String dataAplicacao,
+            @RequestParam boolean status) {
 
         Map<String, Object> json = new HashMap<>();
         json.put("codAgendarMedicamento", codAgendarMedicamento);
         json.put("animal", animal);
         json.put("medicamento", medicamento);
         json.put("dataAplicacao", dataAplicacao);
+        json.put("status", status);
 
 
         AgendarMedicamentoController controller = new AgendarMedicamentoController();

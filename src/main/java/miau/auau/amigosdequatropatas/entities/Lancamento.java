@@ -121,6 +121,10 @@ public class Lancamento {
         return lancamentoDAO.get(filtro, conexao);
     }
 
+    public List<Lancamento> consultarPorData(String dataIni, String dataFim, Conexao conexao) {
+        return lancamentoDAO.getByData(dataIni, dataFim, conexao);
+    }
+
     public Lancamento consultarID(int id, Conexao conexao) {
         return lancamentoDAO.get(id, conexao);
     }
