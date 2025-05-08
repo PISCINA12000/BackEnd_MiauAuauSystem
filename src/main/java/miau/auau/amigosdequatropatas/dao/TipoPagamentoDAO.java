@@ -16,8 +16,9 @@ public class TipoPagamentoDAO implements IDAL<TipoPagamento> {
         List<TipoPagamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_pagamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE tpp_descricao = " + filtro;
+            //filtro = "'" + filtro + "'";
+            //sql += " WHERE tpp_descricao = " + filtro;
+            sql += " WHERE tpp_descricao ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY tpp_descricao";
         System.out.println("SQL gerado: " + sql);

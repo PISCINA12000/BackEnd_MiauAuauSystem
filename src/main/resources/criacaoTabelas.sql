@@ -52,10 +52,10 @@ CREATE TABLE agendar_medicamento (
     agemed_medicamento_id INTEGER NOT NULL,
     agemed_animal_id INTEGER NOT NULL,
     agemed_dataAplicacao DATE NOT NULL,
+    agemed_status BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (agemed_medicamento_id) REFERENCES tipo_medicamento(tpm_id),
     FOREIGN KEY (agemed_animal_id) REFERENCES animal(ani_id)
 );
-
 
 CREATE TABLE adocao (
     ado_id SERIAL PRIMARY KEY,
@@ -81,4 +81,13 @@ CREATE TABLE lancamento (
     FOREIGN KEY (lan_codAnimal) REFERENCES animal(ani_id),
     FOREIGN KEY (lan_debito) REFERENCES tipo_pagamento(tpp_id),
     FOREIGN KEY (lan_credito) REFERENCES tipo_pagamento(tpp_id)
+);
+
+CREATE TABLE doacao(
+   doa_id SERIAL PRIMARY KEY,
+   doa_usuario_id INTEGER NOT NULL,
+   doa_status VARCHAR(50) NOT NULL,
+   doa_valor INTEGER NOT NULL,
+   doa_data DATE NOT NULL,
+   FOREIGN KEY (doa_usuario_id) REFERENCES usuario(usu_id)
 );

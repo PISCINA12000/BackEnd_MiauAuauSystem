@@ -117,8 +117,9 @@ public class UsuarioDAO implements IDAL<Usuario> {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuario";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE usu_nome = " + filtro;
+            //filtro = "'" + filtro + "'";
+            //sql += " WHERE usu_nome = " + filtro;
+            sql += " WHERE usu_nome ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY usu_nome";
         System.out.println("SQL gerado: " + sql);
