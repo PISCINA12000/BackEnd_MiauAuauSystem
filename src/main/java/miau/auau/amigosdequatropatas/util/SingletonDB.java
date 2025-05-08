@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class SingletonDB {
     private static SingletonDB instance;
     private static Conexao conexao;
-    private static final String URL = "jdbc:postgresql://localhost/";
+    private static final String URL = "jdbc:postgresql://auaumiaudb.cv8k8mi28ibu.sa-east-1.rds.amazonaws.com/";
     private static final String BASE_NAME = "auaumiaudb";
     private static final String USER = "postgres";
     private static final String SENHA = "postgres123";
