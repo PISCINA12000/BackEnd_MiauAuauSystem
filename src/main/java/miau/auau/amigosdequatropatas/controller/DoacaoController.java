@@ -23,6 +23,8 @@ public class DoacaoController {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             Usuario usuario;
 
+            //usuario = usuario.consultarID(Integer.parseInt(json.get("usuario").toString()),conexao);
+
             usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
             String status = json.get("status").toString();
             String data = json.get("data").toString();
@@ -33,18 +35,10 @@ public class DoacaoController {
             doacao.setValor(valor);
             doacao.setUsuario(usuario);
 
-            if (doacao.incluir(conexao)) {
-
-                doacao.setStatus("Pendente");
-                return doacao.alterar(conexao);
-                // commit; finalizar transação e desconectar
-
-            }
-
-            //se chegou até aqui é porque algo deu errado
+            return doacao.incluir(conexao);
             // rollback; finalizar t. desconecta;
-            return false;
         }
+        //se chegou até aqui é porque algo deu errado
         return false;
     }
 

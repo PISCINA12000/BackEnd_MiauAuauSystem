@@ -24,7 +24,7 @@ public class DoacaoDAO implements IDAL<Doacao> {
             stmt.setString(2, entidade.getStatus());
 
             // Convertendo data (String -> Date)
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date dataFormatada = sdf.parse(entidade.getData());
             stmt.setDate(3, new Date(dataFormatada.getTime()));
 
@@ -48,7 +48,7 @@ public class DoacaoDAO implements IDAL<Doacao> {
             stmt.setInt(1, entidade.getUsuario().getCod());
             stmt.setString(2, entidade.getStatus());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date dataFormatada = sdf.parse(entidade.getData());
             stmt.setDate(3, new Date(dataFormatada.getTime()));
 
