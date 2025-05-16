@@ -103,6 +103,8 @@ public class AdocaoController {
                 jsonUsuario.put("bairro", a.getUsuario().getBairro());
                 jsonUsuario.put("numero", a.getUsuario().getNumero());
                 jsonUsuario.put("rua", a.getUsuario().getRua());
+                jsonUsuario.put("cidade", a.getUsuario().getCidade());
+                jsonUsuario.put("estado", a.getUsuario().getEstado());
 
                 Map<String, Object> jsonAdocao = new HashMap<>();
                 jsonAdocao.put("codAdocao", a.getCodAdocao());
@@ -140,7 +142,21 @@ public class AdocaoController {
         return false;
     }
 
+    public List<String> onBuscarAno()
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
+        Adocao adocao = new Adocao();
+        List<String> lista = adocao.consultarAnos(conexao);
+
+        if (lista!=null) {
+
+            return lista;
+        }
+        else
+            return null;
+    }
     public Map<String, Object> onBuscarId(int id) {
         // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -178,7 +194,8 @@ public class AdocaoController {
             jsonUsuario.put("bairro", adocao.getUsuario().getBairro());
             jsonUsuario.put("numero", adocao.getUsuario().getNumero());
             jsonUsuario.put("rua", adocao.getUsuario().getRua());
-
+            jsonUsuario.put("cidade", adocao.getUsuario().getCidade());
+            jsonUsuario.put("estado", adocao.getUsuario().getEstado());
 
             Map<String, Object> jsonAdocao = new HashMap<>();
             jsonAdocao.put("codAdocao", adocao.getCodAdocao());
@@ -224,6 +241,7 @@ public class AdocaoController {
 
             if (adocaoNovo.alterar(conexao))
             {
+                int flag = 1;
                 // Se o animal foi trocado na alteração
                 if (adocaoAntigo.getAnimal().getCodAnimal() != animalNovo.getCodAnimal())
                 {
@@ -232,8 +250,23 @@ public class AdocaoController {
                     animalAntigo.alterar(conexao);
 
                     animalNovo.setAdotado("Sim");
-                    animalNovo.alterar(conexao);
+
                 }
+                else
+                if (adocaoNovo.getStatus().equals("Cancelada"))
+                {
+                    animalNovo.setAdotado("Não");
+                }
+                else
+                if (adocaoAntigo.getStatus().equals("Cancelada") && adocaoNovo.getStatus().equals("Pendente"))
+                {
+                    if (!animalNovo.getAdotado().equals("Sim"))
+                        animalNovo.setAdotado("Sim");
+                    else
+                        flag = 0;
+                }
+                if (flag == 1)
+                    animalNovo.alterar(conexao);
                 return true;
             }
         }
@@ -316,8 +349,8 @@ public class AdocaoController {
             form.getField("ENDERECO").setValue(adocao.getUsuario().getRua());
             form.getField("NUMERO").setValue(adocao.getUsuario().getNumero());
             form.getField("BAIRRO").setValue(adocao.getUsuario().getBairro());
-            form.getField("CIDADE").setValue("Regente Feijó"); // ainda não implementado em usuario
-            form.getField("ESTADO").setValue("SP"); // ainda não implementando em usuario
+            form.getField("CIDADE").setValue(adocao.getUsuario().getCidade()); // ainda não implementado em usuario
+            form.getField("ESTADO").setValue(adocao.getUsuario().getEstado()); // ainda não implementando em usuario
             form.getField("CEP").setValue(adocao.getUsuario().getCep());
             form.getField("TELEFONE").setValue(adocao.getUsuario().getTelefone());
             form.getField("EMAIL").setValue(adocao.getUsuario().getEmail());
@@ -335,4 +368,6 @@ public class AdocaoController {
         }
         return baos.toByteArray();
     }
+
+
 }

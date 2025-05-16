@@ -65,8 +65,9 @@ public class TipoLancamentoDAO implements IDAL<TipoLancamento> {
         List<TipoLancamento> lista = new ArrayList<>();
         String sql = "SELECT * FROM tipo_lancamento";
         if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            filtro = "'" + filtro + "'";
-            sql += " WHERE tpl_descricao = " + filtro;
+            //filtro = "'" + filtro + "'";
+            //sql += " WHERE tpl_descricao = " + filtro;
+            sql += " WHERE tpl_descricao ILIKE '%" + filtro + "%'";
         }
         sql += " ORDER BY tpl_descricao";
         System.out.println("SQL gerado: " + sql);

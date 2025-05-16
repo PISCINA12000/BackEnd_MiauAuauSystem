@@ -3,7 +3,7 @@ package miau.auau.amigosdequatropatas.controller;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Lancamento;
 import miau.auau.amigosdequatropatas.entities.TipoLancamento;
-import miau.auau.amigosdequatropatas.entities.TipoPagamento;
+import miau.auau.amigosdequatropatas.entities.PlanoContasGerencial;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,9 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         List<Lancamento> lancamentos = lancamento.consultar(filtro, conexao);
-        if(lancamentos!=null && !lancamentos.isEmpty()) {
+        if (lancamentos != null && !lancamentos.isEmpty()) {
             List<Map<String, Object>> lista = new ArrayList<>();
-            for(int i=0; i<lancamentos.size(); i++) {
+            for (int i = 0; i < lancamentos.size(); i++) {
                 Map<String, Object> json = new HashMap<>();
                 json.put("cod", lancamentos.get(i).getCod());
                 json.put("data", lancamentos.get(i).getData());
@@ -38,7 +38,7 @@ public class LancamentoController {
                 json.put("TpLanc", tipoLancamento);
 
                 //tratar do animal
-                if(lancamentos.get(i).getCodAnimal()==0)
+                if (lancamentos.get(i).getCodAnimal() == 0)
                     json.put("animal", null);
                 else {
                     Animal animal = new Animal();
@@ -47,11 +47,55 @@ public class LancamentoController {
                 }
 
                 //tratar débito e crédito
-                TipoPagamento tipoPagamento = new TipoPagamento();
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getDebito(), conexao);
-                json.put("debito", tipoPagamento);
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getCredito(), conexao);
-                json.put("credito", tipoPagamento);
+                PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", planoContasGerencial);
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", planoContasGerencial);
+
+                json.put("descricao", lancamentos.get(i).getDescricao());
+                json.put("valor", lancamentos.get(i).getValor());
+                json.put("arquivo", lancamentos.get(i).getPDF());
+                lista.add(json);
+            }
+            return lista;
+        }
+        return null;
+    }
+
+    public List<Map<String, Object>> onBuscarData(String dataIni, String dataFim) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        List<Lancamento> lancamentos = lancamento.consultarPorData(dataIni, dataFim, conexao);
+        if (lancamentos != null && !lancamentos.isEmpty()) {
+            List<Map<String, Object>> lista = new ArrayList<>();
+            for (int i = 0; i < lancamentos.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
+                json.put("cod", lancamentos.get(i).getCod());
+                json.put("data", lancamentos.get(i).getData());
+
+                //tratar do tipoLançamento
+                TipoLancamento tipoLancamento = new TipoLancamento();
+                tipoLancamento = tipoLancamento.consultarID(lancamentos.get(i).getCodTpLanc(), conexao);
+                json.put("TpLanc", tipoLancamento);
+
+                //tratar do animal
+                if (lancamentos.get(i).getCodAnimal() == 0)
+                    json.put("animal", null);
+                else {
+                    Animal animal = new Animal();
+                    animal = animal.consultarID(lancamentos.get(i).getCodAnimal(), conexao);
+                    json.put("animal", animal);
+                }
+
+                //tratar débito e crédito
+                PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", planoContasGerencial);
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", planoContasGerencial);
 
                 json.put("descricao", lancamentos.get(i).getDescricao());
                 json.put("valor", lancamentos.get(i).getValor());
@@ -69,7 +113,7 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         Lancamento lanc = lancamento.consultarID(id, conexao);
-        if(lanc!=null) {
+        if (lanc != null) {
             Map<String, Object> json = new HashMap<>();
             json.put("cod", lanc.getCod());
             json.put("data", lanc.getData());
@@ -80,7 +124,7 @@ public class LancamentoController {
             json.put("TpLanc", tipoLancamento);
 
             //tratar o animal
-            if(lanc.getCodAnimal()==0)
+            if (lanc.getCodAnimal() == 0)
                 json.put("animal", null);
             else {
                 Animal animal = new Animal();
@@ -89,11 +133,11 @@ public class LancamentoController {
             }
 
             //tratar débito e crédito
-            TipoPagamento tipoPagamento = new TipoPagamento();
-            tipoPagamento = tipoPagamento.consultarID(lanc.getDebito(), conexao);
-            json.put("debito", tipoPagamento);
-            tipoPagamento = tipoPagamento.consultarID(lanc.getCredito(), conexao);
-            json.put("credito", tipoPagamento);
+            PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+            planoContasGerencial = planoContasGerencial.consultarID(lanc.getDebito(), conexao);
+            json.put("debito", planoContasGerencial);
+            planoContasGerencial = planoContasGerencial.consultarID(lanc.getCredito(), conexao);
+            json.put("credito", planoContasGerencial);
 
             json.put("descricao", lanc.getDescricao());
             json.put("valor", lanc.getValor());
@@ -121,9 +165,9 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         //onde vou setar minhas informações seguindo as regras de negócios
-        if(validar(json)){
+        if (validar(json)) {
             lancamento.setCodTpLanc(Integer.parseInt(json.get("codTpLanc").toString()));
-            if(validarAnimal(json)) //se o animal existir então eu seto no meu objeto
+            if (validarAnimal(json)) //se o animal existir então eu seto no meu objeto
                 lancamento.setCodAnimal(Integer.parseInt(json.get("codAnimal").toString()));
             else //se não existir ele vai 0 como default
                 lancamento.setCodAnimal(0);
@@ -133,12 +177,11 @@ public class LancamentoController {
             lancamento.setDescricao(json.get("descricao").toString());
             lancamento.setValor(Double.parseDouble(json.get("valor").toString()));
             lancamento.setPDF((byte[]) json.get("arquivo"));
-        }
-        else
+        } else
             return false;
 
         //se chegou até aqui está tudo certo
-        if(lancamento.incluir(conexao))
+        if (lancamento.incluir(conexao))
             return true;
         return false;
     }
@@ -160,10 +203,10 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         //onde vou setar minhas informações seguindo as regras de negócios
-        if(validarAtualizar(json)){
+        if (validarAtualizar(json)) {
             lancamento.setCod(Integer.parseInt(json.get("id").toString()));
             lancamento.setCodTpLanc(Integer.parseInt(json.get("codTpLanc").toString()));
-            if(validarAnimal(json)) //se o animal existir então eu seto no meu objeto
+            if (validarAnimal(json)) //se o animal existir então eu seto no meu objeto
                 lancamento.setCodAnimal(Integer.parseInt(json.get("codAnimal").toString()));
             else //se não existir ele vai 0 como default
                 lancamento.setCodAnimal(0);
@@ -173,12 +216,11 @@ public class LancamentoController {
             lancamento.setDescricao(json.get("descricao").toString());
             lancamento.setValor(Double.parseDouble(json.get("valor").toString()));
             lancamento.setPDF((byte[]) json.get("arquivo"));
-        }
-        else
+        } else
             return false;
 
         //se chegou até aqui está tudo certo
-        if(lancamento.alterar(conexao))
+        if (lancamento.alterar(conexao))
             return true;
         return false;
     }
@@ -189,15 +231,15 @@ public class LancamentoController {
 
         //instanciar modelo de TipoLancamento e Animal
         TipoLancamento tipoLancamento = new TipoLancamento();
-        TipoPagamento tipoPagamento = new TipoPagamento();
+        PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
 
         //nesse return eu realizo 4 consultas para saber se de fato todos os códigos são válidos
         return
-                tipoLancamento.consultarID(Integer.parseInt(json.get("codTpLanc").toString()),conexao) != null &&
-                !json.get("data").toString().isEmpty() &&
-                tipoPagamento.consultarID(Integer.parseInt(json.get("debito").toString()),conexao) != null &&
-                tipoPagamento.consultarID(Integer.parseInt(json.get("credito").toString()),conexao) != null &&
-                Double.parseDouble(json.get("valor").toString()) > 0;
+                tipoLancamento.consultarID(Integer.parseInt(json.get("codTpLanc").toString()), conexao) != null &&
+                        !json.get("data").toString().isEmpty() &&
+                        planoContasGerencial.consultarID(Integer.parseInt(json.get("debito").toString()), conexao) != null &&
+                        planoContasGerencial.consultarID(Integer.parseInt(json.get("credito").toString()), conexao) != null &&
+                        Double.parseDouble(json.get("valor").toString()) > 0;
     }
 
     public boolean validarAtualizar(Map<String, Object> json) {
@@ -211,6 +253,6 @@ public class LancamentoController {
         //instanciar um animal para consultar se o mesmo recebido existe
         Animal animal = new Animal();
 
-        return animal.consultarID(Integer.parseInt(json.get("codAnimal").toString()),conexao) != null;
+        return animal.consultarID(Integer.parseInt(json.get("codAnimal").toString()), conexao) != null;
     }
 }

@@ -1,6 +1,6 @@
 package miau.auau.amigosdequatropatas.view;
 
-import miau.auau.amigosdequatropatas.controller.TipoPagamentoController;
+import miau.auau.amigosdequatropatas.controller.PlanoContasGerencialController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +12,16 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping("apis/tipo-pagamento")
-public class TipoPagamentoRestView {
+@RequestMapping("apis/plano-contas-gerencial")
+public class PlanoContasGerencialRestView {
     @Autowired
-    private TipoPagamentoController tipoPagamentoController;
+    private PlanoContasGerencialController planoContasGerencialController;
 
     @GetMapping("buscar/{filtro}")
     public ResponseEntity<Object> getFiltro(@PathVariable(value = "filtro") String filtro) {
         List<Map<String, Object>> listaJson;
 
-        listaJson = tipoPagamentoController.onBuscar(filtro);
+        listaJson = planoContasGerencialController.onBuscar(filtro);
         if (listaJson != null)
             return ResponseEntity.ok().body(listaJson);
         return ResponseEntity.badRequest().body(new Erro("Tipo de pagamento não encontrado ou nenhum cadastrado!!"));
@@ -31,25 +31,28 @@ public class TipoPagamentoRestView {
     public ResponseEntity<Object> getID(@PathVariable(value = "id") int id) {
         Map<String, Object> json;
 
-        json = tipoPagamentoController.onBuscarId(id);
+        json = planoContasGerencialController.onBuscarId(id);
         if (json != null)
             return ResponseEntity.ok(json);
         return ResponseEntity.badRequest().body(new Erro("Tipo de pagamento não encontrado!!"));
     }
 
     @PostMapping("gravar")
-    public ResponseEntity<Object> gravarTipoLancamento(@RequestParam String descricao) {
+    public ResponseEntity<Object> gravarTipoLancamento(
+            @RequestParam String descricao,
+            @RequestParam int codPcr) {
         Map<String, Object> json = new HashMap<>();
         json.put("descricao", descricao);
+        json.put("codPcr", codPcr);
 
-        if (tipoPagamentoController.onGravar(json))
+        if (planoContasGerencialController.onGravar(json))
             return ResponseEntity.ok(json);
         return ResponseEntity.badRequest().body(new Erro("Erro ao gravar tipo de pagamento!!"));
     }
 
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<Object> excluirTipoLancamento(@PathVariable(value = "id") int id) {
-        if (tipoPagamentoController.onDelete(id))
+        if (planoContasGerencialController.onDelete(id))
             return ResponseEntity.ok(new Erro("Tipo de pagamento excluído com sucesso!"));
         return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de pagamento!!"));
     }
@@ -57,12 +60,14 @@ public class TipoPagamentoRestView {
     @PutMapping("atualizar")
     public ResponseEntity<Object> atualizarTipoLancamento(
             @RequestParam int cod,
-            @RequestParam String descricao) {
+            @RequestParam String descricao,
+            @RequestParam int codPcr) {
         Map<String, Object> json = new HashMap<>();
         json.put("cod", cod);
         json.put("descricao", descricao);
+        json.put("codPcr", codPcr);
 
-        if (tipoPagamentoController.onAlterar(json))
+        if (planoContasGerencialController.onAlterar(json))
             return ResponseEntity.ok(json);
         return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar tipo de pagamento!!"));
     }

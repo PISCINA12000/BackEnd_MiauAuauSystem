@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class Lancamento {
@@ -121,8 +122,16 @@ public class Lancamento {
         return lancamentoDAO.get(filtro, conexao);
     }
 
+    public List<Lancamento> consultarPorData(String dataIni, String dataFim, Conexao conexao) {
+        return lancamentoDAO.getByData(dataIni, dataFim, conexao);
+    }
+
     public Lancamento consultarID(int id, Conexao conexao) {
         return lancamentoDAO.get(id, conexao);
+    }
+
+    public Map<String, Object> somaTipoPag(String debCred, int cod, int ano, Conexao conexao) {
+        return lancamentoDAO.somatorioTipoPag(debCred, cod, ano, conexao);
     }
 
     public boolean incluir(Conexao conexao) {

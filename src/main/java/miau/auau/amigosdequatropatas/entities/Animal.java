@@ -150,11 +150,23 @@ public class Animal {
         return animalDAL.get(id, conexao);
     }
 
+    public List<String> consultarCor(Conexao conexao) {
+        return animalDAL.getCor(conexao);
+    }
+    public List<String> consultarRaca(Conexao conexao) {
+        return animalDAL.getRaca(conexao);
+    }
+
     public List<Animal> consultar(String filtro, Conexao conexao) {
         return animalDAL.get(filtro, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
         return animalDAL.alterar(this, conexao);
+    }
+
+    public List<Animal> consultarFiltro(String filtro, Conexao conexao)
+    {
+        return animalDAL.getFiltro(filtro, conexao);
     }
 }

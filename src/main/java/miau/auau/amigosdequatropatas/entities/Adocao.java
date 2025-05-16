@@ -75,7 +75,11 @@ public class Adocao {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.get(filtro, conexao);
     }
-
+    public List<String> consultarAnos(Conexao conexao)
+    {
+        AdocaoDAO adocaoDAO = new AdocaoDAO();
+        return adocaoDAO.getAnos(conexao);
+    }
     public Adocao consultarID(int id, Conexao conexao) {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.get(id, conexao);

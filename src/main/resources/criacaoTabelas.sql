@@ -10,9 +10,18 @@ CREATE TABLE tipo_lancamento (
     tpl_descricao VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE tipo_pagamento (
-    tpp_id SERIAL PRIMARY KEY,
-    tpp_descricao VARCHAR(255) NOT NULL
+CREATE TABLE plano_contas_referencial (
+    pcr_id SERIAL PRIMARY KEY,
+    pcr_descricao VARCHAR(255) NOT NULL,
+    pcr_natureza VARCHAR(10),
+    pcr_classificacao VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE plano_contas_gerencial (
+    pcg_id SERIAL PRIMARY KEY,
+    pcg_descricao VARCHAR(255) NOT NULL,
+    pcr_id INTEGER NOT NULL,
+    FOREIGN KEY (pcr_id) REFERENCES plano_contas_referencial(pcr_id)
 );
 
 CREATE TABLE animal (
@@ -57,7 +66,6 @@ CREATE TABLE agendar_medicamento (
     FOREIGN KEY (agemed_animal_id) REFERENCES animal(ani_id)
 );
 
-
 CREATE TABLE adocao (
     ado_id SERIAL PRIMARY KEY,
     ado_animal_id INTEGER NOT NULL,
@@ -80,6 +88,15 @@ CREATE TABLE lancamento (
     lan_pdf BYTEA,
     FOREIGN KEY (lan_codTpLanc) REFERENCES tipo_lancamento(tpl_id),
     FOREIGN KEY (lan_codAnimal) REFERENCES animal(ani_id),
-    FOREIGN KEY (lan_debito) REFERENCES tipo_pagamento(tpp_id),
-    FOREIGN KEY (lan_credito) REFERENCES tipo_pagamento(tpp_id)
+    FOREIGN KEY (lan_debito) REFERENCES plano_contas_gerencial(pcg_id),
+    FOREIGN KEY (lan_credito) REFERENCES plano_contas_gerencial(pcg_id)
+);
+
+CREATE TABLE doacao(
+   doa_id SERIAL PRIMARY KEY,
+   doa_usuario_id INTEGER NOT NULL,
+   doa_status VARCHAR(50) NOT NULL,
+   doa_valor INTEGER NOT NULL,
+   doa_data DATE NOT NULL,
+   FOREIGN KEY (doa_usuario_id) REFERENCES usuario(usu_id)
 );

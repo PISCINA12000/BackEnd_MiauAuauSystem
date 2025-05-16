@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -33,7 +30,16 @@ public class AnimalRestView {
         else
             return ResponseEntity.badRequest().body(new Erro("Animal não encontrado ou nenhum animal cadastrado!!"));
     }
-
+    @GetMapping("buscar-filtro/{filtro}")
+    public ResponseEntity<Object> getAnimaisFiltro(@PathVariable(value = "filtro") String filtro)
+    {
+        List<Map<String, Object>> listaJson;
+        listaJson = animalController.onBuscarFiltro(filtro);
+        if (listaJson != null)
+            return ResponseEntity.ok().body(listaJson);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado ou nenhum animal cadastrado!!"));
+    }
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getAnimais(@PathVariable(value = "id") int id) {
         Map<String, Object> json;
@@ -46,7 +52,26 @@ public class AnimalRestView {
         else
             return ResponseEntity.badRequest().body(new Erro("Animal não encontrado!!"));
     }
-
+    @GetMapping("buscar-cor")
+    public ResponseEntity<Object> getAnimaisCor()
+    {
+        List<String> listaCor;
+        listaCor = animalController.onBuscarCor();
+        if (listaCor != null)
+            return ResponseEntity.ok().body(listaCor);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Nenhum animal cadastrado!!"));
+    }
+    @GetMapping("buscar-raca")
+    public ResponseEntity<Object> getAnimaisRaca()
+    {
+        List<String> listaRaca;
+        listaRaca = animalController.onBuscarRaca();
+        if (listaRaca != null)
+            return ResponseEntity.ok().body(listaRaca);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Nenhum animal cadastrado!!"));
+    }
     // GRAVAR
     @PostMapping("gravar")
     public ResponseEntity<Object> gravarAnimal(
