@@ -66,7 +66,7 @@ public class TipoMedicamentoRestView {
     // DELETE
     @DeleteMapping("excluir/{id}")
     public ResponseEntity<Object> excluirTipoMedicamento(@PathVariable(value = "id") int id) {
-        if (tipoMedicamentoController.onDelete(id)) {
+        if (tipoMedicamentoController.onDelete(id)){
             return ResponseEntity.ok(new Erro("Tipo de medicamento excluído com sucesso!"));
         } else
             return ResponseEntity.badRequest().body(new Erro("Erro ao excluir tipo de medicamento!!"));
