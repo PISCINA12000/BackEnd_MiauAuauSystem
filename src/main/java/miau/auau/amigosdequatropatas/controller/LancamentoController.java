@@ -3,14 +3,12 @@ package miau.auau.amigosdequatropatas.controller;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Lancamento;
 import miau.auau.amigosdequatropatas.entities.TipoLancamento;
-import miau.auau.amigosdequatropatas.entities.TipoPagamento;
+import miau.auau.amigosdequatropatas.entities.PlanoContasGerencial;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,11 +47,11 @@ public class LancamentoController {
                 }
 
                 //tratar débito e crédito
-                TipoPagamento tipoPagamento = new TipoPagamento();
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getDebito(), conexao);
-                json.put("debito", tipoPagamento);
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getCredito(), conexao);
-                json.put("credito", tipoPagamento);
+                PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", planoContasGerencial);
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", planoContasGerencial);
 
                 json.put("descricao", lancamentos.get(i).getDescricao());
                 json.put("valor", lancamentos.get(i).getValor());
@@ -93,11 +91,11 @@ public class LancamentoController {
                 }
 
                 //tratar débito e crédito
-                TipoPagamento tipoPagamento = new TipoPagamento();
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getDebito(), conexao);
-                json.put("debito", tipoPagamento);
-                tipoPagamento = tipoPagamento.consultarID(lancamentos.get(i).getCredito(), conexao);
-                json.put("credito", tipoPagamento);
+                PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", planoContasGerencial);
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", planoContasGerencial);
 
                 json.put("descricao", lancamentos.get(i).getDescricao());
                 json.put("valor", lancamentos.get(i).getValor());
@@ -135,11 +133,11 @@ public class LancamentoController {
             }
 
             //tratar débito e crédito
-            TipoPagamento tipoPagamento = new TipoPagamento();
-            tipoPagamento = tipoPagamento.consultarID(lanc.getDebito(), conexao);
-            json.put("debito", tipoPagamento);
-            tipoPagamento = tipoPagamento.consultarID(lanc.getCredito(), conexao);
-            json.put("credito", tipoPagamento);
+            PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+            planoContasGerencial = planoContasGerencial.consultarID(lanc.getDebito(), conexao);
+            json.put("debito", planoContasGerencial);
+            planoContasGerencial = planoContasGerencial.consultarID(lanc.getCredito(), conexao);
+            json.put("credito", planoContasGerencial);
 
             json.put("descricao", lanc.getDescricao());
             json.put("valor", lanc.getValor());
@@ -233,14 +231,14 @@ public class LancamentoController {
 
         //instanciar modelo de TipoLancamento e Animal
         TipoLancamento tipoLancamento = new TipoLancamento();
-        TipoPagamento tipoPagamento = new TipoPagamento();
+        PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
 
         //nesse return eu realizo 4 consultas para saber se de fato todos os códigos são válidos
         return
                 tipoLancamento.consultarID(Integer.parseInt(json.get("codTpLanc").toString()), conexao) != null &&
                         !json.get("data").toString().isEmpty() &&
-                        tipoPagamento.consultarID(Integer.parseInt(json.get("debito").toString()), conexao) != null &&
-                        tipoPagamento.consultarID(Integer.parseInt(json.get("credito").toString()), conexao) != null &&
+                        planoContasGerencial.consultarID(Integer.parseInt(json.get("debito").toString()), conexao) != null &&
+                        planoContasGerencial.consultarID(Integer.parseInt(json.get("credito").toString()), conexao) != null &&
                         Double.parseDouble(json.get("valor").toString()) > 0;
     }
 

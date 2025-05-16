@@ -1,6 +1,7 @@
 package miau.auau.amigosdequatropatas.controller;
 
-import miau.auau.amigosdequatropatas.entities.TipoPagamento;
+import miau.auau.amigosdequatropatas.entities.PlanoContasGerencial;
+import miau.auau.amigosdequatropatas.entities.PlanoContasReferencial;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TipoPagamentoController {
+public class PlanoContasGerencialController {
     @Autowired
-    private TipoPagamento tipoPagamentoModel;
+    private PlanoContasGerencial planoContasGerencialModel;
 
     public boolean onGravar(Map<String, Object> json) {
         if (validar(json)) {
             SingletonDB singletonDB = SingletonDB.getInstance();
             Conexao conexao = singletonDB.getConexao();
 
-            tipoPagamentoModel.setDescricao((String) json.get("descricao"));
-            if (tipoPagamentoModel.incluir(conexao))
+            planoContasGerencialModel.setDescricao(json.get("descricao").toString());
+            planoContasGerencialModel.setCodPcr(Integer.parseInt(json.get("codPcr").toString()));
+            if (planoContasGerencialModel.incluir(conexao))
                 return true;
             return false;
         } else
@@ -33,9 +35,9 @@ public class TipoPagamentoController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        TipoPagamento tipoPagamento = tipoPagamentoModel.consultarID(id, conexao);
-        if (tipoPagamento != null) {
-            return tipoPagamento.excluir(conexao);
+        PlanoContasGerencial planoContasGerencial = planoContasGerencialModel.consultarID(id, conexao);
+        if (planoContasGerencial != null) {
+            return planoContasGerencial.excluir(conexao);
         }
         return false;
     }
@@ -45,10 +47,14 @@ public class TipoPagamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         Map<String, Object> json = new HashMap<>();
-        TipoPagamento tipoPagamento = tipoPagamentoModel.consultarID(id, conexao);
-        if (tipoPagamento != null) {
-            json.put("cod", tipoPagamento.getCod());
-            json.put("descricao", tipoPagamento.getDescricao());
+        PlanoContasGerencial planoContasGerencial = planoContasGerencialModel.consultarID(id, conexao);
+        if (planoContasGerencial != null) {
+            PlanoContasReferencial planoReferencial = new PlanoContasReferencial();
+            planoReferencial = planoReferencial.consultarID(planoContasGerencial.getCodPcr(), conexao);
+
+            json.put("cod", planoContasGerencial.getCod());
+            json.put("descricao", planoContasGerencial.getDescricao());
+            json.put("referencial", planoReferencial);
             return json;
         }
         return null;
@@ -58,14 +64,17 @@ public class TipoPagamentoController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        List<TipoPagamento> lista = tipoPagamentoModel.consultar(filtro, conexao);
+        List<PlanoContasGerencial> lista = planoContasGerencialModel.consultar(filtro, conexao);
 
         if (lista != null && !lista.isEmpty()) {
             List<Map<String, Object>> listaJson = new ArrayList<>();
             for (int i = 0; i < lista.size(); i++) {
+                PlanoContasReferencial planoReferencial = new PlanoContasReferencial();
+                planoReferencial = planoReferencial.consultarID(lista.get(i).getCodPcr(), conexao);
                 Map<String, Object> json = new HashMap<>();
                 json.put("cod", lista.get(i).getCod());
                 json.put("descricao", lista.get(i).getDescricao());
+                json.put("referencial", planoReferencial);
                 listaJson.add(json);
             }
             return listaJson;
@@ -78,15 +87,18 @@ public class TipoPagamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         if (validarAlterar(json)) {
-            tipoPagamentoModel.setCod(Integer.parseInt(json.get("cod").toString()));
-            tipoPagamentoModel.setDescricao((String) json.get("descricao"));
-            return tipoPagamentoModel.alterar(conexao);
+            planoContasGerencialModel.setCod(Integer.parseInt(json.get("cod").toString()));
+            planoContasGerencialModel.setDescricao(json.get("descricao").toString());
+            planoContasGerencialModel.setCodPcr(Integer.parseInt(json.get("codPcr").toString()));
+            return planoContasGerencialModel.alterar(conexao);
         }
         return false;
     }
 
     public boolean validar(Map<String, Object> json) {
-        return !json.isEmpty() && !json.get("descricao").toString().isEmpty();
+        return !json.isEmpty() &&
+                !json.get("descricao").toString().isEmpty() &&
+                Integer.parseInt(json.get("codPcr").toString()) > 0;
     }
 
     public boolean validarAlterar(Map<String, Object> json) {

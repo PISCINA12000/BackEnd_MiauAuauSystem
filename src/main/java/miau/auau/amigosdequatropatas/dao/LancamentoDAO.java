@@ -9,7 +9,9 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class LancamentoDAO implements IDAL<Lancamento> {
@@ -159,6 +161,49 @@ public class LancamentoDAO implements IDAL<Lancamento> {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public Map<String, Object> somatorioTipoPag(String debCred, int codTpPag, int ano, Conexao conexao) {
+        Map<String, Object> soma = new HashMap<>();
+        if(debCred.equalsIgnoreCase("credito")) {
+            //faço o somatório do crédito==codTpPag
+            String sql = """
+                    SELECT SUM(lan_valor) AS soma_valores
+                    FROM lancamento
+                    WHERE lan_credito = #1
+                    AND EXTRACT(YEAR FROM lan_data) = #2
+                    """;
+            sql = sql.replace("#1", "" + codTpPag)
+                    .replace("#2", "" + ano);
+            ResultSet resultSet = conexao.consultar(sql);
+            try{
+                resultSet.next();
+                soma.put("soma",resultSet.getDouble("soma_valores"));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            //faço o somatório do débito==codTpPag
+            String sql = """
+                    SELECT SUM(lan_valor) AS soma_valores
+                    FROM lancamento
+                    WHERE lan_debito = #1
+                    AND EXTRACT(YEAR FROM lan_data) = #2
+                    """;
+            sql = sql.replace("#1", "" + codTpPag)
+                    .replace("#2", "" + ano);
+            ResultSet resultSet = conexao.consultar(sql);
+            try{
+                resultSet.next();
+                soma.put("soma",resultSet.getDouble("soma_valores"));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return soma;
     }
 
     public List<Lancamento> getByData(String dataInicial, String dataFinal, Conexao conexao) {
