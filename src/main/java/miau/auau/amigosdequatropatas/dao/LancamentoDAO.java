@@ -168,9 +168,10 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         if(debCred.equalsIgnoreCase("credito")) {
             //faço o somatório do crédito==codTpPag
             String sql = """
-                    SELECT SUM(lan_valor) AS soma_valores
-                    FROM lancamento
-                    WHERE lan_credito = #1
+                    SELECT SUM(lancamento.lan_valor) AS soma_valores
+                    FROM lancamento inner join plano_contas_gerencial
+                        ON lancamento.lan_credito = plano_contas_gerencial.pcg_id
+                    WHERE plano_contas_gerencial.pcr_id = #1
                     AND EXTRACT(YEAR FROM lan_data) = #2
                     """;
             sql = sql.replace("#1", "" + codTpPag)
@@ -187,9 +188,10 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         else {
             //faço o somatório do débito==codTpPag
             String sql = """
-                    SELECT SUM(lan_valor) AS soma_valores
-                    FROM lancamento
-                    WHERE lan_debito = #1
+                    SELECT SUM(lancamento.lan_valor) AS soma_valores
+                    FROM lancamento inner join plano_contas_gerencial
+                        ON lancamento.lan_debito = plano_contas_gerencial.pcg_id
+                    WHERE plano_contas_gerencial.pcr_id = #1
                     AND EXTRACT(YEAR FROM lan_data) = #2
                     """;
             sql = sql.replace("#1", "" + codTpPag)
