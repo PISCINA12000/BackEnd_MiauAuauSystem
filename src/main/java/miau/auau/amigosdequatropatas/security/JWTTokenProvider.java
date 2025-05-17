@@ -19,6 +19,7 @@ public class JWTTokenProvider {
         String jwtToken = Jwts.builder()
         .setSubject("usuario")
         .setIssuer("localhost:8080")
+        .claim("usuario", usuario)
         .claim("privilegio", privilegio)
         .claim("cod_usuario", cod_usuario)
         .setIssuedAt(new Date())

@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.*;
 public class AcessoRestView
 {
     @PostMapping
-    public ResponseEntity<Object> autenticar (@RequestParam String nome, @RequestParam String senha)
+    public ResponseEntity<Object> autenticar (@RequestParam String email, @RequestParam String senha)
     {
         String token;
         AcessoController acessoController = new AcessoController();
-        token = acessoController.autenticar(nome, senha);
+        token = acessoController.autenticar(email, senha);
         if (token != null)
         {
             return ResponseEntity.ok(token);
         }
         else
         {
-            return ResponseEntity.badRequest().body(new Erro("Nome e/ou Senha Incorreto(s)"));
+            return ResponseEntity.badRequest().body(new Erro("Email e/ou Senha Incorreto(s)"));
         }
     }
 }

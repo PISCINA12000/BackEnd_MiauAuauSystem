@@ -148,4 +148,65 @@ public class UsuarioDAO implements IDAL<Usuario> {
         }
         return lista;
     }
+
+    public Usuario getEmail(String filtro, Conexao conexao)
+    {
+        Usuario usuario = null;
+        String sql;
+        sql = "SELECT * FROM usuario WHERE usu_email = '" + filtro + "'";
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            if (resultSet.next()) {
+                usuario = new Usuario(
+                        resultSet.getInt("usu_id"),
+                        resultSet.getString("usu_nome"),
+                        resultSet.getString("usu_email"),
+                        resultSet.getString("usu_senha"),
+                        resultSet.getString("usu_telefone"),
+                        resultSet.getString("usu_cpf"),
+                        resultSet.getString("usu_privilegio"),
+                        resultSet.getString("usu_sexo"),
+                        resultSet.getString("usu_cep"),
+                        resultSet.getString("usu_rua"),
+                        resultSet.getString("usu_bairro"),
+                        resultSet.getString("usu_numero"),
+                        resultSet.getString("usu_cidade"),
+                        resultSet.getString("usu_estado")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+    public Usuario getCPF(String filtro, Conexao conexao)
+    {
+        Usuario usuario = null;
+        String sql;
+        sql = "SELECT * FROM usuario WHERE usu_cpf = '" + filtro + "'";
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            if (resultSet.next()) {
+                usuario = new Usuario(
+                        resultSet.getInt("usu_id"),
+                        resultSet.getString("usu_nome"),
+                        resultSet.getString("usu_email"),
+                        resultSet.getString("usu_senha"),
+                        resultSet.getString("usu_telefone"),
+                        resultSet.getString("usu_cpf"),
+                        resultSet.getString("usu_privilegio"),
+                        resultSet.getString("usu_sexo"),
+                        resultSet.getString("usu_cep"),
+                        resultSet.getString("usu_rua"),
+                        resultSet.getString("usu_bairro"),
+                        resultSet.getString("usu_numero"),
+                        resultSet.getString("usu_cidade"),
+                        resultSet.getString("usu_estado")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return usuario;
+    }
 }

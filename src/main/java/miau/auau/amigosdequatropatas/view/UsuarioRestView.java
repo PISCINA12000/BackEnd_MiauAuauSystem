@@ -33,7 +33,22 @@ public class UsuarioRestView {
             return ResponseEntity.ok(json);
         return ResponseEntity.badRequest().body(new Erro("Usuario não encontrado!!"));
     }
-
+    @GetMapping("buscar-cpf/{filtro}")
+    public ResponseEntity<Object> getUsuariosCPF(@PathVariable(value = "filtro") String filtro) {
+        Map<String, Object> json = usuarioController.onBuscarCPF(filtro);
+        if(json != null)
+            return ResponseEntity.ok(json);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Usuario não encontrado!!"));
+    }
+    @GetMapping("buscar-email/{filtro}")
+    public ResponseEntity<Object> getUsuariosEmail(@PathVariable(value = "filtro") String filtro) {
+        Map<String, Object> json = usuarioController.onBuscarEmail(filtro);
+        if(json != null)
+            return ResponseEntity.ok(json);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Usuario não encontrado!!"));
+    }
     @PostMapping("gravar")
     public ResponseEntity<Object> gravarUsuario(
             @RequestParam String nome,

@@ -169,6 +169,14 @@ public class Usuario {
         return usuarioDAL.get(filtro, conexao);
     }
 
+    public Usuario consultarEmail(String filtro, Conexao conexao)
+    {
+        return usuarioDAL.getEmail(filtro, conexao);
+    }
+    public Usuario consultarCPF(String filtro, Conexao conexao)
+    {
+        return usuarioDAL.getCPF(filtro, conexao);
+    }
     public Usuario consultarID(int id, Conexao conexao) {
         return usuarioDAL.get(id, conexao);
     }

@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.security.JWTTokenProvider;
 import miau.auau.amigosdequatropatas.util.Conexao;
@@ -9,18 +10,19 @@ import java.util.List;
 
 public class AcessoController
 {
-    public String autenticar(String nome, String senha)
+    public String autenticar(String email, String senha)
     {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
         Usuario usuario = new Usuario();
-        List<Usuario> usuarioList = usuario.consultar(nome, conexao);
+        Usuario novoUsuario;
+        novoUsuario = usuario.consultarEmail(email, conexao);
+        System.out.println(novoUsuario);
         String token = null;
-        if (usuarioList.size() > 0)
+        if (novoUsuario != null)
         {
-            usuario = usuarioList.get(0);
-            if (usuario.getSenha().equals(senha))
-                token = JWTTokenProvider.getToken(nome, usuario.getPrivilegio(), usuario.getCod());
+            if (novoUsuario.getSenha().equals(senha))
+                token = JWTTokenProvider.getToken(novoUsuario.getNome(), novoUsuario.getPrivilegio(), novoUsuario.getCod());
         }
 
         return token;

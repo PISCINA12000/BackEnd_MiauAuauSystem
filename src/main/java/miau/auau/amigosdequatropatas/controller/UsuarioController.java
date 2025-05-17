@@ -81,7 +81,60 @@ public class UsuarioController {
         }
         return null;
     }
+    public Map<String, Object> onBuscarCPF(String filtro)
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
+        //mandar para a modelo
+        Usuario usuario = usuarioModel.consultarCPF(filtro, conexao);
+        if (usuario != null) {
+            Map<String, Object> json = new HashMap<>();
+            json.put("cod", usuario.getCod());
+            json.put("nome", usuario.getNome());
+            json.put("email", usuario.getEmail());
+            json.put("senha", usuario.getSenha());
+            json.put("telefone", usuario.getTelefone());
+            json.put("cpf", usuario.getCpf());
+            json.put("privilegio", usuario.getPrivilegio());
+            json.put("sexo", usuario.getSexo());
+            json.put("cep", usuario.getCep());
+            json.put("rua", usuario.getRua());
+            json.put("bairro", usuario.getBairro());
+            json.put("numero", usuario.getNumero());
+            json.put("cidade", usuario.getCidade());
+            json.put("estado", usuario.getEstado());
+            return json;
+        }
+        return null;
+    }
+    public Map<String, Object> onBuscarEmail(String filtro)
+    {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        //mandar para a modelo
+        Usuario usuario = usuarioModel.consultarEmail(filtro, conexao);
+        if (usuario != null) {
+            Map<String, Object> json = new HashMap<>();
+            json.put("cod", usuario.getCod());
+            json.put("nome", usuario.getNome());
+            json.put("email", usuario.getEmail());
+            json.put("senha", usuario.getSenha());
+            json.put("telefone", usuario.getTelefone());
+            json.put("cpf", usuario.getCpf());
+            json.put("privilegio", usuario.getPrivilegio());
+            json.put("sexo", usuario.getSexo());
+            json.put("cep", usuario.getCep());
+            json.put("rua", usuario.getRua());
+            json.put("bairro", usuario.getBairro());
+            json.put("numero", usuario.getNumero());
+            json.put("cidade", usuario.getCidade());
+            json.put("estado", usuario.getEstado());
+            return json;
+        }
+        return null;
+    }
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criar a conexao
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -161,4 +214,7 @@ public class UsuarioController {
     public boolean validarAlterar(Map<String, Object> json) {
         return validar(json) && Integer.parseInt(json.get("cod").toString()) > 0;
     }
+
+
+
 }
