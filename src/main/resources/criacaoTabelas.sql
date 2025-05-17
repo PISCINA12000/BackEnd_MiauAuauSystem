@@ -100,3 +100,13 @@ CREATE TABLE doacao(
    doa_data DATE NOT NULL,
    FOREIGN KEY (doa_usuario_id) REFERENCES usuario(usu_id)
 );
+
+CREATE TABLE prontuario(
+    pron_id SERIAL PRIMARY KEY,
+    pron_animal_id INTEGER NOT NULL,
+    pron_data DATE NOT NULL,
+    pron_tipoRegistro VARCHAR(50) NOT NULL,
+    pron_observacao VARCHAR(255),
+    pron_documento BYTEA,
+    FOREIGN KEY (pron_animal_id) REFERENCES animal(ani_id)
+);
