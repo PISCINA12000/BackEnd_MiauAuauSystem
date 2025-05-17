@@ -1,6 +1,6 @@
 package miau.auau.amigosdequatropatas.dao;
 
-import miau.auau.amigosdequatropatas.entities.Lancamento;
+
 import miau.auau.amigosdequatropatas.entities.Prontuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
@@ -13,9 +13,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Component
 public class ProntuarioDAO implements IDAL<Prontuario> {
@@ -127,12 +126,16 @@ public class ProntuarioDAO implements IDAL<Prontuario> {
         return prontuario;
     }
 
-
-    //busca pelo ID do animal(pode ser varias linhas)
+    //filtrar registro pelo tipo do registro ou nao e ordena pela data com filtro ou n
     @Override
-    public List<Prontuario> getIdAnimal(int id, Conexao conexao) {
+    public List<Prontuario> get(String filtro, Conexao conexao) {
         List<Prontuario> lista = new ArrayList<>();
-        String sql = "SELECT * FROM prontuario WHERE pron_animal_id = " + id;
+        String sql = "SELECT * FROM prontuario";
+        if (!filtro.isEmpty() && !filtro.equals(" ")) {
+            sql += " WHERE pron_tipoRegistro ILIKE '%" + filtro + "%'";
+        }
+        sql += " ORDER BY pron_data";
+        System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
@@ -151,19 +154,11 @@ public class ProntuarioDAO implements IDAL<Prontuario> {
         return lista;
     }
 
-    //pron_id, pron_animal_id, pron_data, pron_tipoRegistro, pron_observacao,
-    //pron_documento
 
-    //filtrar registro pelo tipo do registro ou nao e ordena pela data com filtro ou n
-    @Override
-    public List<Prontuario> get(String filtro, Conexao conexao) {
+    //busca pelo ID do animal(pode ser varias linhas)
+    public List<Prontuario> getIdAnimal(int id, Conexao conexao) {
         List<Prontuario> lista = new ArrayList<>();
-        String sql = "SELECT * FROM prontuario";
-        if (!filtro.isEmpty() && !filtro.equals(" ")) {
-            sql += " WHERE pron_tipoRegistro ILIKE '%" + filtro + "%'";
-        }
-        sql += " ORDER BY pron_data";
-        System.out.println("SQL gerado: " + sql);
+        String sql = "SELECT * FROM prontuario WHERE pron_animal_id = " + id;
         ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {
