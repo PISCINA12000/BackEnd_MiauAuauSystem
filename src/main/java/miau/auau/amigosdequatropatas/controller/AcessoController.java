@@ -17,7 +17,6 @@ public class AcessoController
         Usuario usuario = new Usuario();
         Usuario novoUsuario;
         novoUsuario = usuario.consultarEmail(email, conexao);
-        System.out.println(novoUsuario);
         String token = null;
         if (novoUsuario != null)
         {

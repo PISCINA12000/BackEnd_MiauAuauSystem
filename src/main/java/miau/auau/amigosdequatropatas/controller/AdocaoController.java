@@ -4,8 +4,6 @@ import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import miau.auau.amigosdequatropatas.dao.AnimalDAO;
-import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Adocao;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.Usuario;
@@ -30,13 +28,11 @@ public class AdocaoController {
             Conexao conexao = singletonDB.getConexao();
 
             Adocao adocao = new Adocao();
-            AnimalDAO animalDAO = new AnimalDAO();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            Animal animal;
-            Usuario usuario;
+            Animal animal = new Animal();
+            Usuario usuario = new Usuario();
+            animal = animal.consultarID((int) json.get("animal"),conexao);
+            usuario = usuario.consultarID((int) json.get("usuario"),conexao);
 
-            animal = animalDAO.get((int) json.get("animal"), conexao);
-            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
             String data = json.get("data").toString();
             String status = json.get("status").toString();
 
@@ -47,7 +43,6 @@ public class AdocaoController {
 
             if (adocao.incluir(conexao))
             {
-
                 animal.setAdotado("Sim");
                 return animal.alterar(conexao);
                 // commit; finalizar transação e desconectar
@@ -216,21 +211,20 @@ public class AdocaoController {
 
         if (validarAlterar(json))
         {
-            AnimalDAO animalDAO = new AnimalDAO();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
 
             Adocao adocaoNovo = new Adocao();
             Adocao adocao = new Adocao();
-
+            Animal animal = new Animal();
             Adocao adocaoAntigo;
+
             Animal animalAntigo = new Animal();
             Animal animalNovo;
-            Usuario usuario;
+            Usuario usuario = new Usuario();
 
             // Recupera os dados antigos e novos
             adocaoAntigo = adocao.consultarID((int) json.get("codAdocao"), conexao);
-            animalNovo = animalDAO.get((int) json.get("animal"), conexao);
-            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+            animalNovo = animal.consultarID((int) json.get("animal"), conexao);
+            usuario = usuario.consultarID((int) json.get("usuario"), conexao);
 
             // Preenche o novo objeto de adoção
             adocaoNovo.setCodAdocao((int) json.get("codAdocao"));
@@ -282,15 +276,30 @@ public class AdocaoController {
             Conexao conexao = singletonDB.getConexao();
 
             // Verificar se os objetos existem no banco
-            AnimalDAO animalDAO = new AnimalDAO();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            Adocao adocao = new Adocao();
+            Animal animal = new Animal();
+            Usuario usuario = new Usuario();
+            List<Adocao> adocaoList;
+            adocaoList = adocao.consultar("", conexao);
 
-            Animal animal;
-            Usuario usuario;
-            animal = animalDAO.get((int) json.get("animal"), conexao);
-            usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+
+            animal = animal.consultarID((int) json.get("animal"), conexao);
+            usuario = usuario.consultarID((int) json.get("usuario"), conexao);
+
             if (usuario != null && animal != null && animal.getAdotado().equals("Não"))
+            {
+                if (adocaoList.size() > 0)
+                {
+                    int i = 0;
+                    while (i < adocaoList.size() && (adocaoList.get(i).getUsuario().getCod() != usuario.getCod() || !adocaoList.get(i).getStatus().equals("Pendente")))
+                        i++;
+
+                    if (i < adocaoList.size())
+                        return false;
+                }
                 return true;
+            }
+
         }
 
         return false;
@@ -307,11 +316,11 @@ public class AdocaoController {
 
             if (adocao != null)
             {
-                AnimalDAO animalDAO = new AnimalDAO();
-                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                Animal animal = new Animal();
+                Usuario usuario = new Usuario();
 
-                Animal animal = animalDAO.get((int) json.get("animal"), conexao);
-                Usuario usuario = usuarioDAO.get((int) json.get("usuario"), conexao);
+                animal =  animal.consultarID((int) json.get("animal"),conexao);
+                usuario = usuario.consultarID((int) json.get("usuario"),conexao);
                 if (usuario != null && animal != null)
                     return true;
 
