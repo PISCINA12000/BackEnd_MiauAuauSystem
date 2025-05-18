@@ -51,18 +51,24 @@ public class AgendarMedicamentoRestView {
             @RequestParam int medicamento,
             @RequestParam String dataAplicacao,
             @RequestParam boolean status) {
+        try{
+            Map<String, Object> json = new HashMap<>();
+            json.put("animal", animal);
+            json.put("medicamento", medicamento);
+            json.put("dataAplicacao", dataAplicacao);
+            json.put("status", status);
 
-        Map<String, Object> json = new HashMap<>();
-        json.put("animal", animal);
-        json.put("medicamento", medicamento);
-        json.put("dataAplicacao", dataAplicacao);
-        json.put("status", status);
 
-        //mando para a controller
-        if (agendarMedController.onGravar(json))
-            return ResponseEntity.ok(json);
-        return ResponseEntity.badRequest().body(new Erro("Erro ao gravar agendamento de medicamento!!"));
-
+            //mando para a controller
+            if (agendarMedController.onGravar(json))
+                return ResponseEntity.ok(json);
+            return ResponseEntity.badRequest().body(new Erro("Não foi possivel gravar agendamento de medicamento!!"));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    new Erro("Não foi possível GRAVAR o agendamento e entrou na exceção!!"+ e.getMessage()));
+        }
     }
 
     // ATUALIZAR

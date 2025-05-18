@@ -28,6 +28,8 @@ public class AgendarMedicamentoController {
         // Criando a lista que conterá os JSON's
         List<AgendarMedicamento> agendamentos = agendarMedicamento.consultar(filtro, conexao);
 
+        //System.out.println(">>> Agendamentos retornados: " + agendamentos.size());
+
         if (agendamentos != null && !agendamentos.isEmpty()) {
             List<Map<String, Object>> lista = new ArrayList<>();
             for (int i = 0; i < agendamentos.size(); i++) {
@@ -91,20 +93,21 @@ public class AgendarMedicamentoController {
 
         //onde vou setar minhas informações seguindo as regras de negócios
         if (validar(json)) {
-            agendarMedicamento.setCodAgendarMedicamento(Integer.parseInt(json.get("codAgendarMedicamento").toString()));
-            //pega só cod do animal  e medicamento no json
-            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("codAnimal").toString()));
-            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("codTipoMedicamento").toString()));
+
+            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
+            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
 
             agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
             agendarMedicamento.setStatus((Boolean) json.get("status"));
 
-            if (agendarMedicamento.incluir(conexao)) {
-                return true;
-            }
-            return false;
         }else
             return false;
+
+
+        //se chegou até aqui está tudo certo
+        if (agendarMedicamento.incluir(conexao))
+            return true;
+        return false;
     }
 
 
@@ -113,10 +116,13 @@ public class AgendarMedicamentoController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
+        //System.out.println("Tentando excluir agendamento com ID: " + id);
         AgendarMedicamento agendarMed = agendarMedicamento.consultarID(id, conexao);
         // Se o agendamento for encontrada, exclui; caso contrário, retorna false
-        if (agendarMed != null)
+        if (agendarMed != null) {
+            //System.out.println("Agendamento encontrado: " + agendarMed.getCodAgendarMedicamento());
             return agendarMed.excluir(conexao);
+        }
         return false;
     }
 
@@ -133,8 +139,8 @@ public class AgendarMedicamentoController {
 
             agendarMedicamento.setCodAgendarMedicamento(Integer.parseInt(json.get("codAgendarMedicamento").toString()));
             //pega só cod do animal  e medicamento no json
-            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("codAnimal").toString()));
-            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("codTipoMedicamento").toString()));
+            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
+            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
 
             agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
             agendarMedicamento.setStatus((Boolean) json.get("status"));
@@ -150,14 +156,12 @@ public class AgendarMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         //instanciar modelo de animal e tipoMedicamento
-        AgendarMedicamento agendarMed = new AgendarMedicamento();
         Animal animal = new Animal();
         TipoMedicamento tipoMedicamento = new TipoMedicamento();
 
         //nesse return eu realizo 3 consultas para saber se de fato todos os codigos sao validos
-        return agendarMed.consultarID(Integer.parseInt(json.get("codAgendarMedicamento").toString()),conexao) != null &&
-                tipoMedicamento.consultarID(Integer.parseInt(json.get("codTipoMedicamento").toString()),conexao) != null &&
-                 animal.consultarID(Integer.parseInt(json.get("codAnimal").toString()),conexao) != null;
+        return tipoMedicamento.consultarID(Integer.parseInt(json.get("medicamento").toString()),conexao) != null &&
+                 animal.consultarID(Integer.parseInt(json.get("animal").toString()),conexao) != null;
 
     }
 

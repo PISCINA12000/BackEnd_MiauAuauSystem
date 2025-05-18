@@ -1,7 +1,9 @@
 package miau.auau.amigosdequatropatas.entities;
 
 import miau.auau.amigosdequatropatas.dao.AgendarMedicamentoDAO;
+import miau.auau.amigosdequatropatas.dao.LancamentoDAO;
 import miau.auau.amigosdequatropatas.util.Conexao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,6 +11,10 @@ import java.util.List;
 @Component
 public class AgendarMedicamento {
 
+    @Autowired
+    private AgendarMedicamentoDAO agendarMedicamentoDAO;
+
+    //campos da tabela no banco de dados
     private int codAgendarMedicamento;
     private int codMedicamento; // código do medicamento
     private int  codAnimal;
@@ -16,14 +22,14 @@ public class AgendarMedicamento {
     private Boolean status; // Campo de status (lido ou não)
 
     // Construtores
-
-
     public AgendarMedicamento(int codAgendarMedicamento, int codMedicamento, int codAnimal, String dataAplicacao, Boolean status) {
         this.codAgendarMedicamento = codAgendarMedicamento;
         this.codMedicamento = codMedicamento;
         this.codAnimal = codAnimal;
         this.dataAplicacao = dataAplicacao;
         this.status = status;
+        if(agendarMedicamentoDAO == null)
+            agendarMedicamentoDAO = new AgendarMedicamentoDAO();
     }
 
     public AgendarMedicamento() {
@@ -75,27 +81,22 @@ public class AgendarMedicamento {
 
     //CRUD
     public boolean incluir(Conexao conexao) {
-        AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.gravar(this, conexao); // Grava no banco
     }
 
     public List<AgendarMedicamento> consultar(String filtro, Conexao conexao) {
-        AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.get(filtro, conexao);
     }
 
     public AgendarMedicamento consultarID(int id, Conexao conexao) {
-        AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.get(id, conexao);
     }
 
     public boolean excluir(Conexao conexao) {
-        AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.apagar(this, conexao);
     }
 
     public boolean alterar(Conexao conexao) {
-        AgendarMedicamentoDAO agendarMedicamentoDAO = new AgendarMedicamentoDAO();
         return agendarMedicamentoDAO.alterar(this, conexao);
     }
 }
