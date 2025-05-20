@@ -23,31 +23,30 @@ public class ProntuarioDAO implements IDAL<Prontuario> {
     public boolean gravar(Prontuario entidade, Conexao conexao) {
         String sql = """
                 INSERT INTO prontuario (
-                    pron_id, pron_animal_id, pron_data, pron_tipoRegistro, pron_observacao, 
-                    pron_documento
-                ) VALUES (?, ?, ?, ?, ?, ?)
+                    pron_animal_id, pron_data, pron_tipoRegistro, pron_observacao, pron_documento
+                ) VALUES (?, ?, ?, ?, ?)
                 """;
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
 
 
-            stmt.setInt(1, entidade.getCod());
+            //stmt.setInt(1, entidade.getCod());
 
-            stmt.setInt(2, entidade.getCodAnimal());
+            stmt.setInt(1, entidade.getCodAnimal());
 
             // Converte a String de data para o formato de Date do SQL
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date parsedDate = dateFormat.parse(entidade.getData());
-            stmt.setDate(3, new Date(parsedDate.getTime()));
+            stmt.setDate(2, new Date(parsedDate.getTime()));
             //stmt.setDate(3, Date.valueOf(entidade.getData()));
 
-            stmt.setString(4, entidade.getTipoRegistro());
-            stmt.setString(5, entidade.getObservacao());
+            stmt.setString(3, entidade.getTipoRegistro());
+            stmt.setString(4, entidade.getObservacao());
 
             //para caso eu não envie pdf algum
             if (entidade.getPDF() == null)
-                stmt.setNull(6, java.sql.Types.BINARY);
+                stmt.setNull(5, java.sql.Types.BINARY);
             else
-                stmt.setBytes(6, entidade.getPDF());
+                stmt.setBytes(5, entidade.getPDF());
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException | ParseException e) {

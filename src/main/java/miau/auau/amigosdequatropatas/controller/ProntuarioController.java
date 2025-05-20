@@ -139,7 +139,7 @@ public class ProntuarioController {
 
         //onde vou setar minhas informações seguindo as regras de negócios
         if (validar(json)) {
-            prontuario.setCod(Integer.parseInt(json.get("cod").toString()));
+            //prontuario.setCod(Integer.parseInt(json.get("cod").toString()));
 
             prontuario.setCodAnimal(Integer.parseInt(json.get("codAnimal").toString()));
 
