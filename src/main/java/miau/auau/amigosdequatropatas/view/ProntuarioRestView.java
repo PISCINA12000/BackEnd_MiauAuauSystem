@@ -47,7 +47,7 @@ public class ProntuarioRestView {
     }
 
     //retorna todos os registros de um animal
-    @GetMapping("buscar-id/{id}")
+    @GetMapping("buscar_animal/{id}")
     public ResponseEntity<Object> getProntuario(@PathVariable(value = "id") int id) {
         List<Map<String, Object>> lista;
 
@@ -56,6 +56,19 @@ public class ProntuarioRestView {
         if(lista!=null && !lista.isEmpty())
             return ResponseEntity.ok().body(lista);
         return ResponseEntity.badRequest().body(new Erro("Não encontrado registros nesse ID do animal!!"));
+    }
+    //retorna registro com id
+    @GetMapping("buscar-id/{id}")
+    public ResponseEntity<Object> getAnimais(@PathVariable(value = "id") int id) {
+        Map<String, Object> json;
+
+        //mando para a controller
+        json = pronController.onBuscarId(id);
+        if(json != null) {
+            return ResponseEntity.ok(json);
+        }
+        else
+            return ResponseEntity.badRequest().body(new Erro("Animal não encontrado!!"));
     }
 
 

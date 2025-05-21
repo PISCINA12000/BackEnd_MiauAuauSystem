@@ -119,6 +119,33 @@ public class ProntuarioController {
 
     }
 
+    public Map<String, Object> onBuscarId(int id) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        Prontuario pron = prontuario.consultarID(id, conexao);
+        if (pron != null) {
+            Map<String, Object> json = new HashMap<>();
+            json.put("cod", pron.getCod());
+
+            //tratar animal
+            Animal animal = new Animal();
+            animal = animal.consultarID(pron.getCodAnimal(), conexao);
+            json.put("animal", animal);
+
+            json.put("data", pron.getData());
+
+            json.put("tipoRegistro", pron.getTipoRegistro());
+            json.put("observacao", pron.getObservacao());
+            json.put("arquivo", pron.getPDF());
+
+            return json;
+        }
+        return null;
+    }
+
+
     public byte[] onBuscarPDF(int id) {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
