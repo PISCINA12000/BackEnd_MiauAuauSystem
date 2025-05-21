@@ -118,6 +118,11 @@ public class Lancamento {
     }
 
     //CRUD
+
+    public List<Lancamento> consultarAnimal(int animalId, Conexao conexao) {
+        return lancamentoDAO.getAnimal(animalId, conexao);
+    }
+
     public List<Lancamento> consultar(String filtro, Conexao conexao) {
         return lancamentoDAO.get(filtro, conexao);
     }

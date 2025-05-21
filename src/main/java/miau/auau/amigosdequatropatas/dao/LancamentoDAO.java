@@ -163,6 +163,36 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         return lista;
     }
 
+
+
+    public List<Lancamento> getAnimal(int animalId, Conexao conexao) {
+        List<Lancamento> lista = new ArrayList<>();
+        String sql = "SELECT * FROM lancamento WHERE lan_codAnimal ="+animalId;
+
+        sql += " ORDER BY lan_data";
+
+        //System.out.println("SQL gerado: " + sql);
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                lista.add(new Lancamento(
+                        resultSet.getInt("lan_id"),
+                        resultSet.getDate("lan_data").toString(),
+                        resultSet.getInt("lan_codTpLanc"),
+                        resultSet.getInt("lan_codAnimal"),
+                        resultSet.getInt("lan_debito"),
+                        resultSet.getInt("lan_credito"),
+                        resultSet.getString("lan_descricao"),
+                        resultSet.getDouble("lan_valor"),
+                        resultSet.getBytes("lan_pdf")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
     public Map<String, Object> somatorioTipoPag(String debCred, int codTpPag, int ano, Conexao conexao) {
         Map<String, Object> soma = new HashMap<>();
         if(debCred.equalsIgnoreCase("credito")) {
