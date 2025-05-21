@@ -140,4 +140,32 @@ public class AdocaoDAO implements IDAL<Adocao> {
         }
         return lista;
     }
+
+    public List<Adocao> getAdocaoPeloUsuId(int id, String filtro, Conexao conexao) {
+        List<Adocao> list = new ArrayList();
+        String sql = "SELECT * FROM adocao JOIN animal on ado_animal_id = ani_id WHERE ado_usuario_id = "+id;
+        if (!filtro.isEmpty() && !filtro.equals(" "))
+        {
+            sql += " and ani_nome ILIKE '%" + filtro + "%'";
+        }
+        sql += " ORDER BY ani_nome";
+        System.out.println("SQL gerado: " + sql);
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()){
+
+                list.add(new Adocao(
+                    resultSet.getInt("ado_id"),
+                    new AnimalDAO().get(resultSet.getInt("ado_animal_id"), conexao),
+                    new UsuarioDAO().get(resultSet.getInt("ado_usuario_id"), conexao),
+                    resultSet.getString("ado_data"),
+                    resultSet.getString("ado_status")));
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

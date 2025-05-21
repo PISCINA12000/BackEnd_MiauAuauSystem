@@ -115,6 +115,64 @@ public class AdocaoController {
             return null;
     }
 
+    public List<Map<String, Object>> onBuscarAdocaoPeloUsuId(int id, String filtro) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        //criando a lista que conterá os JSON's
+        Adocao adocao = new Adocao();
+        List<Adocao> lista = adocao.consultarAdocaoPeloUsuId(id, filtro, conexao);
+
+        //verificação de a minha lista JSON está vazia ou não
+        if (lista!=null) {
+            //crio uma lista json contendo os animais que retornaram no meu consultar
+            List<Map<String, Object>> listaJson = new ArrayList<>();
+            for (int i=0; i<lista.size(); i++) {
+
+                Adocao a = lista.get(i);
+                // dados animal
+                Map<String, Object> jsonAnimal = new HashMap<>();
+                jsonAnimal.put("codAnimal", a.getAnimal().getCodAnimal());
+                jsonAnimal.put("nome", a.getAnimal().getNome());
+                jsonAnimal.put("sexo", a.getAnimal().getSexo());
+                jsonAnimal.put("raca", a.getAnimal().getRaca());
+                jsonAnimal.put("dataNascimento", a.getAnimal().getDataNascimento());
+                jsonAnimal.put("peso", a.getAnimal().getPeso());
+                jsonAnimal.put("castrado", a.getAnimal().getCastrado());
+                jsonAnimal.put("adotado", a.getAnimal().getAdotado());
+                jsonAnimal.put("especie", a.getAnimal().getEspecie());
+                jsonAnimal.put("cor", a.getAnimal().getCor());
+                jsonAnimal.put("imagemBase64", a.getAnimal().getImagemBase64());
+
+                Map<String, Object> jsonUsuario = new HashMap<>();
+                jsonUsuario.put("codUsuario", a.getUsuario().getCod());
+                jsonUsuario.put("nome", a.getUsuario().getNome());
+                jsonUsuario.put("email", a.getUsuario().getEmail());
+                jsonUsuario.put("telefone", a.getUsuario().getTelefone());
+                jsonUsuario.put("cpf", a.getUsuario().getCpf());
+                jsonUsuario.put("sexo", a.getUsuario().getSexo());
+                jsonUsuario.put("privilegio", a.getUsuario().getPrivilegio());
+                jsonUsuario.put("cep", a.getUsuario().getCep());
+                jsonUsuario.put("bairro", a.getUsuario().getBairro());
+                jsonUsuario.put("numero", a.getUsuario().getNumero());
+                jsonUsuario.put("rua", a.getUsuario().getRua());
+                jsonUsuario.put("cidade", a.getUsuario().getCidade());
+                jsonUsuario.put("estado", a.getUsuario().getEstado());
+
+                Map<String, Object> jsonAdocao = new HashMap<>();
+                jsonAdocao.put("codAdocao", a.getCodAdocao());
+                jsonAdocao.put("data", a.getData());
+                jsonAdocao.put("status", a.getStatus());
+                jsonAdocao.put("animal", jsonAnimal);
+                jsonAdocao.put("usuario", jsonUsuario);
+                listaJson.add(jsonAdocao);
+            }
+            return listaJson;
+        }
+        else
+            return null;
+    }
     public boolean onDelete(int id) {
         // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();

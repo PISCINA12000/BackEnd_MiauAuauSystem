@@ -84,7 +84,11 @@ public class Adocao {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.get(id, conexao);
     }
-
+    public List<Adocao> consultarAdocaoPeloUsuId(int id, String filtro,Conexao conexao)
+    {
+        AdocaoDAO adocaoDAO = new AdocaoDAO();
+        return adocaoDAO.getAdocaoPeloUsuId(id, filtro,conexao);
+    }
     public boolean excluir(Conexao conexao) {
         AdocaoDAO adocaoDAO = new AdocaoDAO();
         return adocaoDAO.apagar(this, conexao);

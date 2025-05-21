@@ -68,7 +68,18 @@ public class AdocaoRestView {
             return ResponseEntity.badRequest().body(new Erro("Acesso não permitido"));
 
     }
+    @GetMapping("buscarAdocaoPeloUsuId/{id}/{filtro}")
+    public ResponseEntity<Object> buscarAdocaoPeloUsuId(@PathVariable (value = "id") int id, @PathVariable(value = "filtro") String filtro)
+    {
+        List<Map<String, Object>> listaJson;
+        AdocaoController adocaoController = new AdocaoController();
+        listaJson = adocaoController.onBuscarAdocaoPeloUsuId(id, filtro);
+        if (listaJson.size() > 0)
+            return ResponseEntity.ok(listaJson);
+        else
+            return ResponseEntity.badRequest().body(new Erro("Nenhuma adocao encontrada!"));
 
+    }
 
     @GetMapping("buscarAno")
     public ResponseEntity<Object> getAnos()
