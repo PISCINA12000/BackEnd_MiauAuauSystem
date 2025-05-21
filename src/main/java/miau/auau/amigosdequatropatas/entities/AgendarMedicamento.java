@@ -99,4 +99,8 @@ public class AgendarMedicamento {
     public boolean alterar(Conexao conexao) {
         return agendarMedicamentoDAO.alterar(this, conexao);
     }
+
+    public List<AgendarMedicamento> consultarIdAnimal(int animalId, Conexao conexao) {
+        return agendarMedicamentoDAO.getIdAnimal(animalId, conexao);
+    }
 }

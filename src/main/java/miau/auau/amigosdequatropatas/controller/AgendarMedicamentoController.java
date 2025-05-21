@@ -20,6 +20,42 @@ public class AgendarMedicamentoController {
     private AgendarMedicamento agendarMedicamento;
 
 
+    public List<Map<String, Object>> onBuscarIdAnimal(int animalId) {
+        // Criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        // Criando a lista que conterá os JSON's
+        List<AgendarMedicamento> agendamentos = agendarMedicamento.consultarIdAnimal(animalId, conexao);
+
+        //System.out.println(">>> Agendamentos retornados: " + agendamentos.size());
+
+        if (agendamentos != null && !agendamentos.isEmpty()) {
+            List<Map<String, Object>> lista = new ArrayList<>();
+            for (int i = 0; i < agendamentos.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
+
+                json.put("codAgendarMedicamento", agendamentos.get(i).getCodAgendarMedicamento());
+
+                Animal animal = new Animal();
+                animal = animal.consultarID(agendamentos.get(i).getCodAnimal(), conexao);
+                json.put("animal", animal);
+
+
+                TipoMedicamento tipoMed = new TipoMedicamento();
+                tipoMed = tipoMed.consultarID(agendamentos.get(i).getCodMedicamento(), conexao);
+                json.put("medicamento",tipoMed);
+
+                json.put("dataAplicacao", agendamentos.get(i).getDataAplicacao());
+                json.put("status", agendamentos.get(i).getStatus());  // Adicionando o campo de status
+
+                lista.add(json);
+            }
+            return lista;
+        }
+        return null;
+    }
+
     public List<Map<String, Object>> onBuscar(String filtro) {
         // Criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();

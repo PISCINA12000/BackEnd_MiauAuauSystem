@@ -18,6 +18,18 @@ public class AgendarMedicamentoRestView {
     private AgendarMedicamentoController agendarMedController;
 
 
+    @GetMapping("buscar_animal/{animalId}")
+    public ResponseEntity<Object> getAgendamentos(@PathVariable(value = "animalId") int animalId) {
+        List<Map<String, Object>> listaJson;
+
+        // mando para a controller
+        listaJson= agendarMedController.onBuscarIdAnimal(animalId);
+
+        if (listaJson != null)
+            return ResponseEntity.ok(listaJson);
+        return ResponseEntity.badRequest().body(new Erro("Nenhum agendamento encontrado!!"));
+    }
+
     // vazio, retorna todos
     @GetMapping("buscar/{filtro}")
     public ResponseEntity<Object> getAgendamentos(@PathVariable(value = "filtro") String filtro) {

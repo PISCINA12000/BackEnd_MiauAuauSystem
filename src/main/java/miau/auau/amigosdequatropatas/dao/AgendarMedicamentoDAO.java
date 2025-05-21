@@ -2,6 +2,7 @@ package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.AgendarMedicamento;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -118,6 +119,35 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
         if (filtro != null && !filtro.trim().isEmpty()) {
             sql += " WHERE LOWER(a.ani_nome) LIKE LOWER('%" + filtro.trim() + "%')";
         }
+        //System.out.println(">>> SQL gerado: " + sql);
+
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                lista.add(new AgendarMedicamento(
+                        resultSet.getInt("agemed_id"),
+                        resultSet.getInt("agemed_medicamento_id"),
+                        resultSet.getInt("agemed_animal_id"),
+                        resultSet.getString("agemed_dataAplicacao"),
+                        resultSet.getBoolean("agemed_status")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+
+    public List<AgendarMedicamento> getIdAnimal(int animalId, Conexao conexao) {
+        List<AgendarMedicamento> lista = new ArrayList<>();
+
+        //System.out.println(">>> Filtro recebido: '" + filtro + "'");
+
+        // Começo da query com JOIN
+        String sql = "SELECT * FROM agendar_medicamento WHERE agemed_animal_id ="+animalId+ " AND agemed_status = false";
+
         //System.out.println(">>> SQL gerado: " + sql);
 
         ResultSet resultSet = conexao.consultar(sql);
