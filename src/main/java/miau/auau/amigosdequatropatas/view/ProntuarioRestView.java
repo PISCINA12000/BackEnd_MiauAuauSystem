@@ -96,7 +96,7 @@ public class ProntuarioRestView {
             @RequestParam String data,
             @RequestParam String tipoRegistro,
             @RequestParam String observacao,
-            @RequestParam (value="pdf", required = false) MultipartFile arq)
+            @RequestParam (value="pdf", required = false) MultipartFile pdf)
     {
         try{
             Map<String, Object> json = new HashMap<>();
@@ -107,8 +107,8 @@ public class ProntuarioRestView {
 
             //agora tratar o pdf para um arquivo binário para conseguir passar para a minha controller
             //posso atribuir nulo para a chave pois o pdf é algo opcional
-            if(arq != null && !arq.isEmpty()){
-                byte[] arquivo = arq.getBytes();
+            if(pdf != null && !pdf.isEmpty()){
+                byte[] arquivo = pdf.getBytes();
                 json.put("arquivo",arquivo);
             }
             else
