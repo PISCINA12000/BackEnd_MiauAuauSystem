@@ -25,7 +25,7 @@ public class LancamentoRestView {
 
         //mando para a controller
         lista = lancController.onBuscarAnimal(animalId);
-        if(lista!=null && !lista.isEmpty())
+        if(lista!=null /*&& !lista.isEmpty()*/)  //aqui pode retornar lista vazia
             return ResponseEntity.ok().body(lista);
         return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os lançamentos!!"));
     }

@@ -30,7 +30,7 @@ public class AgendarMedicamentoController {
 
         //System.out.println(">>> Agendamentos retornados: " + agendamentos.size());
 
-        if (agendamentos != null && !agendamentos.isEmpty()) {
+        if (agendamentos != null /*&& !agendamentos.isEmpty()*/) {
             List<Map<String, Object>> lista = new ArrayList<>();
             for (int i = 0; i < agendamentos.size(); i++) {
                 Map<String, Object> json = new HashMap<>();

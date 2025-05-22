@@ -26,7 +26,7 @@ public class LancamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         List<Lancamento> lancamentos = lancamento.consultarAnimal(animalId, conexao);
-        if (lancamentos != null && !lancamentos.isEmpty()) {
+        if (lancamentos != null /*&& !lancamentos.isEmpty()*/) {
             List<Map<String, Object>> lista = new ArrayList<>();
             for (int i = 0; i < lancamentos.size(); i++) {
                 Map<String, Object> json = new HashMap<>();

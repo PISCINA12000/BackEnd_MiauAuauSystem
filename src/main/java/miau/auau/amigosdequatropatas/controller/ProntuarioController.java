@@ -92,7 +92,7 @@ public class ProntuarioController {
 
         List<Prontuario> prontuarios= prontuario.consultarPorIdAnimal(id, conexao);
 
-        if (prontuarios != null && !prontuarios.isEmpty()) {
+        if (prontuarios != null /*&& !prontuarios.isEmpty()*/) {
             List<Map<String, Object>> lista = new ArrayList<>();
             for (int i = 0; i < prontuarios.size(); i++) {
                 Map<String, Object> json = new HashMap<>();
