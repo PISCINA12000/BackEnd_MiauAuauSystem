@@ -72,7 +72,7 @@ public class ProntuarioDAO implements IDAL<Prontuario> {
             ps.setInt(1, entidade.getCodAnimal());
 
             // Converte a String de data para o formato de Date do SQL
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date parsedDate = dateFormat.parse(entidade.getData());
             ps.setDate(2, new Date(parsedDate.getTime()));
             //ps.setDate(3, Date.valueOf(entidade.getData()));
