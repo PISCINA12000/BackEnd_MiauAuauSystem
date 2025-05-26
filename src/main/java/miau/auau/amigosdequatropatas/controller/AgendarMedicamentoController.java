@@ -1,12 +1,12 @@
 package miau.auau.amigosdequatropatas.controller;
 
-import miau.auau.amigosdequatropatas.dao.AnimalDAO;
-import miau.auau.amigosdequatropatas.dao.TipoMedicamentoDAO;
+
 import miau.auau.amigosdequatropatas.entities.AgendarMedicamento;
 import miau.auau.amigosdequatropatas.entities.Animal;
 import miau.auau.amigosdequatropatas.entities.TipoMedicamento;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,39 +16,45 @@ import java.util.Map;
 @Component
 public class AgendarMedicamentoController {
 
-    public boolean onGravar(Map<String, Object> json) {
-        System.out.println(json);
-        if (validar(json)) {
-            // Criar a conexão para o banco de dados
-            SingletonDB singletonDB = SingletonDB.getInstance();
-            Conexao conexao = singletonDB.getConexao();
+    @Autowired
+    private AgendarMedicamento agendarMedicamento;
 
-            AgendarMedicamento agendarMedicamento = new AgendarMedicamento();
 
-            AnimalDAO animalDAO = new AnimalDAO();
-            Animal animal = animalDAO.get((int) json.get("animal"), conexao);
+    public List<Map<String, Object>> onBuscarIdAnimal(int animalId) {
+        // Criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
-            TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
-            TipoMedicamento tipoMedicamento = tipoMedicamentoDAO.get((int) json.get("medicamento"), conexao);
+        // Criando a lista que conterá os JSON's
+        List<AgendarMedicamento> agendamentos = agendarMedicamento.consultarIdAnimal(animalId, conexao);
 
-            String dataAplicacao = json.get("dataAplicacao").toString();
+        //System.out.println(">>> Agendamentos retornados: " + agendamentos.size());
 
-            Boolean status = (Boolean) json.get("status");
+        if (agendamentos != null /*&& !agendamentos.isEmpty()*/) {
+            List<Map<String, Object>> lista = new ArrayList<>();
+            for (int i = 0; i < agendamentos.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
 
-            agendarMedicamento.setAnimal(animal);
-            agendarMedicamento.setMedicamento(tipoMedicamento);
-            agendarMedicamento.setDataAplicacao(dataAplicacao);
-            agendarMedicamento.setStatus(status);  // Atribuindo o status
+                json.put("codAgendarMedicamento", agendamentos.get(i).getCodAgendarMedicamento());
 
-            if (agendarMedicamento.incluir(conexao)) {
-                return true;
+                Animal animal = new Animal();
+                animal = animal.consultarID(agendamentos.get(i).getCodAnimal(), conexao);
+                json.put("animal", animal);
+
+
+                TipoMedicamento tipoMed = new TipoMedicamento();
+                tipoMed = tipoMed.consultarID(agendamentos.get(i).getCodMedicamento(), conexao);
+                json.put("medicamento",tipoMed);
+
+                json.put("dataAplicacao", agendamentos.get(i).getDataAplicacao());
+                json.put("status", agendamentos.get(i).getStatus());  // Adicionando o campo de status
+
+                lista.add(json);
             }
-
-            return false;
+            return lista;
         }
-        return false;
+        return null;
     }
-
 
     public List<Map<String, Object>> onBuscar(String filtro) {
         // Criando a conexão
@@ -56,47 +62,88 @@ public class AgendarMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         // Criando a lista que conterá os JSON's
-        AgendarMedicamento agendarMedicamento = new AgendarMedicamento();
-        List<AgendarMedicamento> lista = agendarMedicamento.consultar(filtro, conexao);
+        List<AgendarMedicamento> agendamentos = agendarMedicamento.consultar(filtro, conexao);
 
-        if (lista != null) {
-            List<Map<String, Object>> listaJson = new ArrayList<>();
-            for (int i = 0; i < lista.size(); i++) {
-                AgendarMedicamento am = lista.get(i);
+        //System.out.println(">>> Agendamentos retornados: " + agendamentos.size());
 
-                Map<String, Object> jsonAnimal = new HashMap<>();
-                jsonAnimal.put("codAnimal", am.getAnimal().getCodAnimal());
-                jsonAnimal.put("nome", am.getAnimal().getNome());
-                jsonAnimal.put("sexo", am.getAnimal().getSexo());
-                jsonAnimal.put("raca", am.getAnimal().getRaca());
-                jsonAnimal.put("dataNascimento", am.getAnimal().getDataNascimento());
-                jsonAnimal.put("peso", am.getAnimal().getPeso());
-                jsonAnimal.put("castrado", am.getAnimal().getCastrado());
-                jsonAnimal.put("adotado", am.getAnimal().getAdotado());
-                jsonAnimal.put("especie", am.getAnimal().getEspecie());
-                jsonAnimal.put("cor", am.getAnimal().getCor());
-                jsonAnimal.put("imagemBase64", am.getAnimal().getImagemBase64());
+        if (agendamentos != null /*&& !agendamentos.isEmpty()*/) {
+            List<Map<String, Object>> lista = new ArrayList<>();
+            for (int i = 0; i < agendamentos.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
 
-                Map<String, Object> jsonTipoMedicamento = new HashMap<>();
-                jsonTipoMedicamento.put("codTipoMedicamento", am.getMedicamento().getCod());
-                jsonTipoMedicamento.put("nome", am.getMedicamento().getNome());
-                jsonTipoMedicamento.put("forma", am.getMedicamento().getFormaFarmaceutica());
-                jsonTipoMedicamento.put("descricao", am.getMedicamento().getDescricao());
+                json.put("codAgendarMedicamento", agendamentos.get(i).getCodAgendarMedicamento());
 
-                // Adicionando o status no JSON
-                Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
-                jsonAgendarMedicamento.put("codAgendarMedicamento", am.getCodAgendarMedicamento());
-                jsonAgendarMedicamento.put("animal", jsonAnimal);
-                jsonAgendarMedicamento.put("medicamento", jsonTipoMedicamento);
-                jsonAgendarMedicamento.put("dataAplicacao", am.getDataAplicacao());
-                jsonAgendarMedicamento.put("status", am.getStatus());  // Adicionando o campo de status
+                Animal animal = new Animal();
+                animal = animal.consultarID(agendamentos.get(i).getCodAnimal(), conexao);
+                json.put("animal", animal);
 
-                listaJson.add(jsonAgendarMedicamento);
+
+                TipoMedicamento tipoMed = new TipoMedicamento();
+                tipoMed = tipoMed.consultarID(agendamentos.get(i).getCodMedicamento(), conexao);
+                json.put("medicamento",tipoMed);
+
+                json.put("dataAplicacao", agendamentos.get(i).getDataAplicacao());
+                json.put("status", agendamentos.get(i).getStatus());  // Adicionando o campo de status
+
+                lista.add(json);
             }
-            return listaJson;
-        } else {
-            return null;
+            return lista;
         }
+        return null;
+    }
+
+
+    public Map<String, Object> onBuscarId(int id) {
+        // Criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        AgendarMedicamento agendarMed= agendarMedicamento.consultarID(id, conexao);
+        if (agendarMed != null) {
+            Map<String, Object> json = new HashMap<>();
+
+            json.put("codAgendarMedicamento", agendarMed.getCodAgendarMedicamento());
+
+            Animal animal = new Animal();
+            animal = animal.consultarID(agendarMed.getCodAnimal(), conexao);
+            json.put("animal", animal);
+
+            TipoMedicamento tipoMed = new TipoMedicamento();
+            tipoMed = tipoMed.consultarID(agendarMed.getCodMedicamento(), conexao);
+            json.put("medicamento",tipoMed);
+
+
+            json.put("dataAplicacao", agendarMed.getDataAplicacao());
+            json.put("status", agendarMed.getStatus());
+
+            return json;
+        }
+        return null;
+    }
+
+
+    public boolean onGravar(Map<String, Object> json) {
+        // Criar a conexão para o banco de dados
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        //onde vou setar minhas informações seguindo as regras de negócios
+        if (validar(json)) {
+
+            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
+            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
+
+            agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
+            agendarMedicamento.setStatus((Boolean) json.get("status"));
+
+        }else
+            return false;
+
+
+        //se chegou até aqui está tudo certo
+        if (agendarMedicamento.incluir(conexao))
+            return true;
+        return false;
     }
 
 
@@ -105,55 +152,17 @@ public class AgendarMedicamentoController {
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
 
-        // Consultando o agendamento do medicamento pelo ID
-        AgendarMedicamento agendarMedicamento = new AgendarMedicamento();
-        agendarMedicamento = agendarMedicamento.consultarID(id, conexao);
+        //System.out.println("Tentando excluir agendamento com ID: " + id);
+        AgendarMedicamento agendarMed = agendarMedicamento.consultarID(id, conexao);
         // Se o agendamento for encontrada, exclui; caso contrário, retorna false
-        if (agendarMedicamento != null)
-            return agendarMedicamento.excluir(conexao);
+        if (agendarMed != null) {
+            //System.out.println("Agendamento encontrado: " + agendarMed.getCodAgendarMedicamento());
+            return agendarMed.excluir(conexao);
+        }
         return false;
     }
 
-    public Map<String, Object> onBuscarId(int id) {
-        // Criando a conexão
-        SingletonDB singletonDB = SingletonDB.getInstance();
-        Conexao conexao = singletonDB.getConexao();
 
-        // Consultando o agendamento pelo ID
-        AgendarMedicamento agendarMedicamento = new AgendarMedicamento();
-        agendarMedicamento = agendarMedicamento.consultarID(id, conexao);
-
-        if (agendarMedicamento != null) {
-            Map<String, Object> jsonAnimal = new HashMap<>();
-            jsonAnimal.put("codAnimal", agendarMedicamento.getAnimal().getCodAnimal());
-            jsonAnimal.put("nome", agendarMedicamento.getAnimal().getNome());
-            jsonAnimal.put("sexo", agendarMedicamento.getAnimal().getSexo());
-            jsonAnimal.put("raca", agendarMedicamento.getAnimal().getRaca());
-            jsonAnimal.put("dataNascimento", agendarMedicamento.getAnimal().getDataNascimento());
-            jsonAnimal.put("peso", agendarMedicamento.getAnimal().getPeso());
-            jsonAnimal.put("castrado", agendarMedicamento.getAnimal().getCastrado());
-            jsonAnimal.put("adotado", agendarMedicamento.getAnimal().getAdotado());
-            jsonAnimal.put("especie", agendarMedicamento.getAnimal().getEspecie());
-            jsonAnimal.put("cor", agendarMedicamento.getAnimal().getCor());
-            jsonAnimal.put("imagemBase64", agendarMedicamento.getAnimal().getImagemBase64());
-
-            Map<String, Object> jsonTipoMedicamento = new HashMap<>();
-            jsonTipoMedicamento.put("codTipoMedicamento", agendarMedicamento.getMedicamento().getCod());
-            jsonTipoMedicamento.put("nome", agendarMedicamento.getMedicamento().getNome());
-            jsonTipoMedicamento.put("forma", agendarMedicamento.getMedicamento().getFormaFarmaceutica());
-            jsonTipoMedicamento.put("descricao", agendarMedicamento.getMedicamento().getDescricao());
-
-            Map<String, Object> jsonAgendarMedicamento = new HashMap<>();
-            jsonAgendarMedicamento.put("codAgendarMedicamento", agendarMedicamento.getCodAgendarMedicamento());
-            jsonAgendarMedicamento.put("animal", jsonAnimal);
-            jsonAgendarMedicamento.put("medicamento", jsonTipoMedicamento);
-            jsonAgendarMedicamento.put("dataAplicacao", agendarMedicamento.getDataAplicacao());
-            jsonAgendarMedicamento.put("status", agendarMedicamento.getStatus());  // Adicionando o campo de status
-
-            return jsonAgendarMedicamento;
-        }
-        return null;
-    }
 
 
 
@@ -163,21 +172,14 @@ public class AgendarMedicamentoController {
         Conexao conexao = singletonDB.getConexao();
 
         if (validarAlterar(json)) {
-            AgendarMedicamento agendarMedicamento = new AgendarMedicamento();
-            AnimalDAO animalDAO = new AnimalDAO();
-            TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
 
-            Animal animal = animalDAO.get((int) json.get("animal"), conexao);
-            TipoMedicamento tipoMedicamento = tipoMedicamentoDAO.get((int) json.get("medicamento"), conexao);
+            agendarMedicamento.setCodAgendarMedicamento(Integer.parseInt(json.get("codAgendarMedicamento").toString()));
+            //pega só cod do animal  e medicamento no json
+            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
+            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
 
-            agendarMedicamento.setCodAgendarMedicamento((int) json.get("codAgendarMedicamento"));
-            agendarMedicamento.setAnimal(animal);
-            agendarMedicamento.setMedicamento(tipoMedicamento);
             agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
-
-            Boolean status =(Boolean) json.get("status");
-
-            agendarMedicamento.setStatus(status);  // Atribuindo o status
+            agendarMedicamento.setStatus((Boolean) json.get("status"));
 
             return agendarMedicamento.alterar(conexao);
         }
@@ -186,24 +188,17 @@ public class AgendarMedicamentoController {
 
 
     private boolean validar(Map<String, Object> json) {
-        //retorna verdade se todas as informações forem válidas
-        if (json != null && json.containsKey("medicamento") && json.containsKey("animal") && json.containsKey("dataAplicacao")) {
-            SingletonDB singletonDB = SingletonDB.getInstance();
-            Conexao conexao = singletonDB.getConexao();
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
 
-            // Verificar se os objetos existem no banco
-            AnimalDAO animalDAO = new AnimalDAO();
-            TipoMedicamentoDAO tipoMedicamentoDAO = new TipoMedicamentoDAO();
+        //instanciar modelo de animal e tipoMedicamento
+        Animal animal = new Animal();
+        TipoMedicamento tipoMedicamento = new TipoMedicamento();
 
-            Animal animal;
-            TipoMedicamento tipoMedicamento;
-            animal = animalDAO.get((int) json.get("animal"), conexao);
-            tipoMedicamento = tipoMedicamentoDAO.get((int) json.get("medicamento"), conexao);
-            if (tipoMedicamento != null && animal != null)
-                return true;
-        }
+        //nesse return eu realizo 3 consultas para saber se de fato todos os codigos sao validos
+        return tipoMedicamento.consultarID(Integer.parseInt(json.get("medicamento").toString()),conexao) != null &&
+                 animal.consultarID(Integer.parseInt(json.get("animal").toString()),conexao) != null;
 
-        return false;
     }
 
     private boolean validarAlterar(Map<String, Object> json) {

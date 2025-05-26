@@ -19,6 +19,52 @@ public class LancamentoController {
     @Autowired
     private Lancamento lancamento;
 
+
+    public List<Map<String, Object>> onBuscarAnimal(int animalId) {
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        List<Lancamento> lancamentos = lancamento.consultarAnimal(animalId, conexao);
+        if (lancamentos != null /*&& !lancamentos.isEmpty()*/) {
+            List<Map<String, Object>> lista = new ArrayList<>();
+            for (int i = 0; i < lancamentos.size(); i++) {
+                Map<String, Object> json = new HashMap<>();
+                json.put("cod", lancamentos.get(i).getCod());
+                json.put("data", lancamentos.get(i).getData());
+
+                //tratar do tipoLançamento
+                TipoLancamento tipoLancamento = new TipoLancamento();
+                tipoLancamento = tipoLancamento.consultarID(lancamentos.get(i).getCodTpLanc(), conexao);
+                json.put("TpLanc", tipoLancamento);
+
+                //tratar do animal
+                if (lancamentos.get(i).getCodAnimal() == 0)
+                    json.put("animal", null);
+                else {
+                    Animal animal = new Animal();
+                    animal = animal.consultarID(lancamentos.get(i).getCodAnimal(), conexao);
+                    json.put("animal", animal);
+                }
+
+                //tratar débito e crédito
+                PlanoContasGerencial planoContasGerencial = new PlanoContasGerencial();
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getDebito(), conexao);
+                json.put("debito", planoContasGerencial);
+                planoContasGerencial = planoContasGerencial.consultarID(lancamentos.get(i).getCredito(), conexao);
+                json.put("credito", planoContasGerencial);
+
+                json.put("descricao", lancamentos.get(i).getDescricao());
+                json.put("valor", lancamentos.get(i).getValor());
+                json.put("arquivo", lancamentos.get(i).getPDF());
+                lista.add(json);
+            }
+            return lista;
+        }
+        return null;
+    }
+
+
     public List<Map<String, Object>> onBuscar(String filtro) {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();

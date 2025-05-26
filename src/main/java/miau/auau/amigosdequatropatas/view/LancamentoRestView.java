@@ -18,6 +18,18 @@ public class LancamentoRestView {
     @Autowired
     private LancamentoController lancController;
 
+
+    @GetMapping("buscar_animal/{animalId}")
+    public ResponseEntity<Object> getLancamentoAnimal(@PathVariable(value = "animalId") int animalId) {
+        List<Map<String, Object>> lista;
+
+        //mando para a controller
+        lista = lancController.onBuscarAnimal(animalId);
+        if(lista!=null /*&& !lista.isEmpty()*/)  //aqui pode retornar lista vazia
+            return ResponseEntity.ok().body(lista);
+        return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os lançamentos!!"));
+    }
+
     @GetMapping("buscar/{filtro}")
     public ResponseEntity<Object> getLancamento(@PathVariable(value = "filtro") String filtro) {
         List<Map<String, Object>> lista;
