@@ -80,6 +80,18 @@ public class LancamentoRestView {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+//    @GetMapping("anos")
+//    public ResponseEntity<Object> getAnos() {
+//        List<Map<String,Object>> listaAnos;
+//
+//        //mandar para a controller
+//        listaAnos = lancController.onGetAnos();
+//        if(listaAnos!=null && !listaAnos.isEmpty()){
+//            return ResponseEntity.ok().body(listaAnos);
+//        }
+//        return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os anos!!"));
+//    }
+
     @PostMapping("gravar")
     public ResponseEntity<Object> postLancamento(
             @RequestParam String data,
