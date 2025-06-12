@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import miau.auau.amigosdequatropatas.entities.Adocao;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
@@ -48,9 +49,41 @@ public class UsuarioController {
         Conexao conexao = singletonDB.getConexao();
 
         Usuario usuario =  usuarioModel.consultarID(id,conexao); //consulto para confirmar se existe ou não
-        if (usuario != null) {
+        if (usuario != null)
+        {
+            int i = 0;
+            if (usuario.getPrivilegio().equals("A") )
+            {
+                List<Usuario> usuarios = usuarioModel.consultar("", conexao);
+                List<Usuario> aux = new ArrayList<>();
+                while(i < usuarios.size())
+                {
+                    if(usuarios.get(i).getPrivilegio().equals("A"))
+                        aux.add(usuarios.get(i));
+
+                    i++;
+                }
+                if (aux.size() == 1)
+                {
+                    return false;
+                }
+            }
+            Adocao adocao = new Adocao();
+            Adocao a;
+            List<Adocao> adocaoList = adocao.consultar("", conexao);
+            i = 0;
+            while (i < adocaoList.size())
+            {
+                a = adocaoList.get(i);
+                if(a.getUsuario().getCod() == id)
+                {
+                    a.excluir(conexao);
+                }
+                i++;
+            }
             return usuario.excluir(conexao);
         }
+
         return false;
     }
 

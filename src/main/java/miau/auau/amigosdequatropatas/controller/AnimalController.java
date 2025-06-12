@@ -57,7 +57,23 @@ public class AnimalController {
         Animal animal = animalModel.consultarID(id, conexao);
         // Se o animal for encontrado, exclui; caso contrário, retorna false
         if (animal != null)
+        {
+            Adocao adocao = new Adocao();
+            Adocao a;
+            List<Adocao> adocaoList = adocao.consultar("", conexao);
+            int i = 0;
+            while (i < adocaoList.size())
+            {
+                a = adocaoList.get(i);
+                if (a.getAnimal().getCodAnimal() == animal.getCodAnimal())
+                {
+                    a.excluir(conexao);
+                }
+                i++;
+            }
             return animal.excluir(conexao);
+        }
+
         return false;
     }
 

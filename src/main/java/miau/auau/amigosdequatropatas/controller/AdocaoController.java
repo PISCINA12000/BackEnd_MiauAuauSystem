@@ -43,7 +43,6 @@ public class AdocaoController {
 
             if (adocao.incluir(conexao))
             {
-                animal.setAdotado("Sim");
                 return animal.alterar(conexao);
                 // commit; finalizar transação e desconectar
 
@@ -271,16 +270,12 @@ public class AdocaoController {
         {
 
             Adocao adocaoNovo = new Adocao();
-            Adocao adocao = new Adocao();
             Animal animal = new Animal();
-            Adocao adocaoAntigo;
 
-            Animal animalAntigo = new Animal();
             Animal animalNovo;
             Usuario usuario = new Usuario();
 
             // Recupera os dados antigos e novos
-            adocaoAntigo = adocao.consultarID((int) json.get("codAdocao"), conexao);
             animalNovo = animal.consultarID((int) json.get("animal"), conexao);
             usuario = usuario.consultarID((int) json.get("usuario"), conexao);
 
@@ -293,32 +288,31 @@ public class AdocaoController {
 
             if (adocaoNovo.alterar(conexao))
             {
-                int flag = 1;
-                // Se o animal foi trocado na alteração
-                if (adocaoAntigo.getAnimal().getCodAnimal() != animalNovo.getCodAnimal())
-                {
-                    animalAntigo = animalAntigo.consultarID(adocaoAntigo.getAnimal().getCodAnimal(), conexao);
-                    animalAntigo.setAdotado("Não");
-                    animalAntigo.alterar(conexao);
 
-                    animalNovo.setAdotado("Sim");
-
-                }
-                else
                 if (adocaoNovo.getStatus().equals("Cancelada"))
                 {
                     animalNovo.setAdotado("Não");
                 }
                 else
-                if (adocaoAntigo.getStatus().equals("Cancelada") && adocaoNovo.getStatus().equals("Pendente"))
+                if (adocaoNovo.getStatus().equals("Aprovada"))
                 {
-                    if (!animalNovo.getAdotado().equals("Sim"))
-                        animalNovo.setAdotado("Sim");
-                    else
-                        flag = 0;
+                    animalNovo.setAdotado("Sim");
+                    Adocao adocao = new Adocao();
+                    Adocao aux;
+                    List<Adocao> adocaoList = adocao.consultar("", conexao);
+                    int i = 0;
+                    while(i < adocaoList.size())
+                    {
+                        aux = adocaoList.get(i);
+                        if(aux.getStatus().equals("Pendente") && aux.getAnimal().getCodAnimal() == adocaoNovo.getAnimal().getCodAnimal() && aux.getCodAdocao() != adocaoNovo.getCodAdocao())
+                        {
+                            aux.setStatus("Cancelada");
+                            aux.alterar(conexao);
+                        }
+                        i++;
+                    }
                 }
-                if (flag == 1)
-                    animalNovo.alterar(conexao);
+                animalNovo.alterar(conexao);
                 return true;
             }
         }
