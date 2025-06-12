@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class SingletonDB {
     private static SingletonDB instance;
     private static Conexao conexao;
-    private static final String URL = "jdbc:postgresql://auaumiaudb.cv8k8mi28ibu.sa-east-1.rds.amazonaws.com/";
-    private static final String BASE_NAME = "auaumiaudb";
-    private static final String USER = "postgres";
-    private static final String SENHA = "postgres123";
+    private static final String URL = ConfigLoader.get("db.url");
+    private static final String BASE_NAME = ConfigLoader.get("db.name");
+    private static final String USER = ConfigLoader.get("db.user");
+    private static final String SENHA = ConfigLoader.get("db.password");
 
     public SingletonDB() {
         Conectar();
@@ -70,7 +70,7 @@ public class SingletonDB {
         comandos.add("bdutil/" + arquivo);
         comandos.add(database);
         ProcessBuilder pb = new ProcessBuilder(comandos);
-        pb.environment().put("PGPASSWORD", "postgres123");
+        pb.environment().put("PGPASSWORD", ConfigLoader.get("db.password"));
         try {
             final Process process = pb.start();
             final BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -105,7 +105,7 @@ public class SingletonDB {
         comandos.add("--verbose");
         comandos.add("bdutil/" + arquivo);
         ProcessBuilder pb = new ProcessBuilder(comandos);
-        pb.environment().put("PGPASSWORD", "postgres123");
+        pb.environment().put("PGPASSWORD", ConfigLoader.get("db.password"));
         try {
             final Process process = pb.start();
             final BufferedReader r = new BufferedReader(
