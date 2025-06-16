@@ -16,16 +16,16 @@ public class AgendarMedicamento {
 
     //campos da tabela no banco de dados
     private int codAgendarMedicamento;
-    private int codMedicamento; // código do medicamento
-    private int  codAnimal;
+    private TipoMedicamento Medicamento; // código do medicamento
+    private Animal  Animal;
     private String dataAplicacao;
     private Boolean status; // Campo de status (lido ou não)
 
     // Construtores
-    public AgendarMedicamento(int codAgendarMedicamento, int codMedicamento, int codAnimal, String dataAplicacao, Boolean status) {
+    public AgendarMedicamento(int codAgendarMedicamento, TipoMedicamento codMedicamento, Animal codAnimal, String dataAplicacao, Boolean status) {
         this.codAgendarMedicamento = codAgendarMedicamento;
-        this.codMedicamento = codMedicamento;
-        this.codAnimal = codAnimal;
+        this.Medicamento = codMedicamento;
+        this.Animal = codAnimal;
         this.dataAplicacao = dataAplicacao;
         this.status = status;
         if(agendarMedicamentoDAO == null)
@@ -33,7 +33,7 @@ public class AgendarMedicamento {
     }
 
     public AgendarMedicamento() {
-        this(0, 0, 0, "", false); // Inicializa com status false (não lido)
+        this(0, null, null, "", false); // Inicializa com status false (não lido)
     }
 
     // Getters e Setters
@@ -47,20 +47,20 @@ public class AgendarMedicamento {
         this.codAgendarMedicamento = codAgendarMedicamento;
     }
 
-    public int getCodMedicamento() {
-        return codMedicamento;
+    public TipoMedicamento getMedicamento() {
+        return Medicamento;
     }
 
-    public void setCodMedicamento(int codMedicamento) {
-        this.codMedicamento = codMedicamento;
+    public void setMedicamento(TipoMedicamento tipoMedicamento) {
+        this.Medicamento = tipoMedicamento;
     }
 
-    public int getCodAnimal() {
-        return codAnimal;
+    public Animal getAnimal() {
+        return Animal;
     }
 
-    public void setCodAnimal(int codAnimal) {
-        this.codAnimal = codAnimal;
+    public void setAnimal(Animal animal) {
+        this.Animal = animal;
     }
 
     public String getDataAplicacao() {

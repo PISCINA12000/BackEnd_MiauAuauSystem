@@ -239,14 +239,5 @@ public class ProntuarioController {
         return Integer.parseInt(json.get("cod").toString()) > 0 && validar(json);
     }
 
-    /*public boolean validarAnimal(Map<String, Object> json) {
-        SingletonDB singletonDB = SingletonDB.getInstance();
-        Conexao conexao = singletonDB.getConexao();
-
-        //instanciar um animal para consultar se o mesmo recebido existe
-        Animal animal = new Animal();
-
-        return animal.consultarID(Integer.parseInt(json.get("codAnimal").toString()), conexao) != null;
-    }*/
 
 }

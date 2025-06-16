@@ -1,5 +1,6 @@
 package miau.auau.amigosdequatropatas.dao;
 import miau.auau.amigosdequatropatas.entities.AgendarMedicamento;
+import miau.auau.amigosdequatropatas.entities.TipoMedicamento;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.IDAL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
                 """;
 
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
-            stmt.setInt(1,entidade.getCodMedicamento());
-            stmt.setInt(2, entidade.getCodAnimal());
+            stmt.setInt(1,entidade.getMedicamento().getCod());
+            stmt.setInt(2, entidade.getAnimal().getCodAnimal());
 
             // Converte a String de data para o formato de Date do SQL
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -54,8 +55,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
             WHERE agemed_id = ?
             """;
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
-            stmt.setInt(1,entidade.getCodMedicamento());
-            stmt.setInt(2, entidade.getCodAnimal());
+            stmt.setInt(1,entidade.getMedicamento().getCod());
+            stmt.setInt(2, entidade.getAnimal().getCodAnimal());
 
             // Converte a String de data para o formato de Date do SQL
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -93,8 +94,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
             if (resultSet.next()) {
                 agendarMedicamento = new AgendarMedicamento(
                         id,
-                        resultSet.getInt("agemed_medicamento_id"),
-                        resultSet.getInt("agemed_animal_id"),
+                        new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"),conexao),
+                        new AnimalDAO().get(resultSet.getInt("agemed_animal_id"),conexao),
                         resultSet.getString("agemed_dataAplicacao"),
                         resultSet.getBoolean("agemed_status") // Recupera o status do banco
                 );
@@ -126,8 +127,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
             while (resultSet.next()) {
                 lista.add(new AgendarMedicamento(
                         resultSet.getInt("agemed_id"),
-                        resultSet.getInt("agemed_medicamento_id"),
-                        resultSet.getInt("agemed_animal_id"),
+                        new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"),conexao),
+                        new AnimalDAO().get(resultSet.getInt("agemed_animal_id"),conexao),
                         resultSet.getString("agemed_dataAplicacao"),
                         resultSet.getBoolean("agemed_status")
                 ));
@@ -155,8 +156,8 @@ public class AgendarMedicamentoDAO implements IDAL<AgendarMedicamento> {
             while (resultSet.next()) {
                 lista.add(new AgendarMedicamento(
                         resultSet.getInt("agemed_id"),
-                        resultSet.getInt("agemed_medicamento_id"),
-                        resultSet.getInt("agemed_animal_id"),
+                        new TipoMedicamentoDAO().get(resultSet.getInt("agemed_medicamento_id"),conexao),
+                        new AnimalDAO().get(resultSet.getInt("agemed_animal_id"),conexao),
                         resultSet.getString("agemed_dataAplicacao"),
                         resultSet.getBoolean("agemed_status")
                 ));
