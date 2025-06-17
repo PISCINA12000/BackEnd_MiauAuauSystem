@@ -19,7 +19,6 @@ public class LancamentoController {
     @Autowired
     private Lancamento lancamento;
 
-
     public List<Map<String, Object>> onBuscarAnimal(int animalId) {
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
@@ -189,6 +188,18 @@ public class LancamentoController {
             json.put("valor", lanc.getValor());
             json.put("arquivo", lanc.getPDF());
             return json;
+        }
+        return null;
+    }
+
+    public List<Map<String, Object>> onGetAnos(){
+        //criando a conexão
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        List<Map<String, Object>> anos = lancamento.consultarAnos(conexao);
+        if(anos != null && !anos.isEmpty()){
+            return anos;
         }
         return null;
     }

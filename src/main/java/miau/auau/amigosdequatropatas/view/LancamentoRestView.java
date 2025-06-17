@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,38 @@ public class LancamentoRestView {
         return ResponseEntity.badRequest().body(new Erro("Não existe lançamentos dentro desse período!!"));
     }
 
+    @GetMapping("buscar-filtro")
+    public ResponseEntity<Object> getLancamentoFiltros(
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) String dataIni,
+            @RequestParam(required = false) String dataFim)
+    {
+        List<Map<String,Object>> lancamentos;
+        List<Map<String, Object>> lancFiltrado = new ArrayList<>();
+
+        //mando para a controller
+        lancamentos = lancController.onBuscarData(dataIni, dataFim);
+        if(lancamentos != null && !lancamentos.isEmpty()){
+            if(filtro != null && !filtro.isEmpty()){
+                //filtrar os lancamentos dentro dessa data
+                for(int i=0; i<lancamentos.size(); i++){
+                    if(lancamentos.get(i).get("descricao") != null){
+                        if(lancamentos.get(i).get("descricao").toString().contains(filtro.toLowerCase()))
+                            lancFiltrado.add(lancamentos.get(i));
+                    }
+                }
+                if(!lancFiltrado.isEmpty())
+                    return ResponseEntity.ok().body(lancFiltrado);
+                else
+                    return ResponseEntity.badRequest().body(new Erro("Não possui lancamentos com esse filtros!!"));
+            }
+            else
+                return ResponseEntity.ok().body(lancamentos);
+        }
+        return ResponseEntity.badRequest().body(new Erro("Não possui lancamentos com esse filtros!!"));
+
+    }
+
     @GetMapping("buscar-id/{id}")
     public ResponseEntity<Object> getLancamento(@PathVariable(value = "id") int id) {
         Map<String, Object> json;
@@ -80,17 +113,17 @@ public class LancamentoRestView {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-//    @GetMapping("anos")
-//    public ResponseEntity<Object> getAnos() {
-//        List<Map<String,Object>> listaAnos;
-//
-//        //mandar para a controller
-//        listaAnos = lancController.onGetAnos();
-//        if(listaAnos!=null && !listaAnos.isEmpty()){
-//            return ResponseEntity.ok().body(listaAnos);
-//        }
-//        return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os anos!!"));
-//    }
+    @GetMapping("anos")
+    public ResponseEntity<Object> getAnos() {
+        List<Map<String,Object>> listaAnos;
+
+        //mandar para a controller
+        listaAnos = lancController.onGetAnos();
+        if(listaAnos!=null && !listaAnos.isEmpty()){
+            return ResponseEntity.ok().body(listaAnos);
+        }
+        return ResponseEntity.badRequest().body(new Erro("Não foi possível recuperar os anos!!"));
+    }
 
     @PostMapping("gravar")
     public ResponseEntity<Object> postLancamento(

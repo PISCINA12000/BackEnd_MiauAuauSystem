@@ -16,10 +16,12 @@ public class BalanceteRestView {
     @Autowired
     private BalanceteController balanceteController;
 
-    @GetMapping("ano/{ano}")
-    public ResponseEntity<Object> getBalancete(@PathVariable(value = "ano") int ano){
+    @GetMapping()
+    public ResponseEntity<Object> getBalancete(
+            @RequestParam int ano,
+            @RequestParam(required = false) Integer mes){
         List<Map<String,Object>> balancete;
-        balancete = balanceteController.onBalanceteAno(ano);
+        balancete = balanceteController.onBalanceteAno(ano, mes);
         if(balancete != null && !balancete.isEmpty()){
             return ResponseEntity.ok(balancete);
         }

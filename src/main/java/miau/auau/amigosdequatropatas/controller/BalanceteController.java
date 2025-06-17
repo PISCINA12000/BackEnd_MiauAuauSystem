@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class BalanceteController {
-    public List<Map<String, Object>> onBalanceteAno(int ano){
+    public List<Map<String, Object>> onBalanceteAno(int ano, Integer mes){
         //criando a conexão
         SingletonDB singletonDB = SingletonDB.getInstance();
         Conexao conexao = singletonDB.getConexao();
@@ -41,11 +41,11 @@ public class BalanceteController {
             linhaBalancete.put("referencial", pcr.getDescricao());
 
             //somar o debito desse tipoPagamento
-            somaPcr = lancamento.somaTipoPag("debito",pcr.getCod(),ano,conexao);
+            somaPcr = lancamento.somaTipoPag("debito",pcr.getCod(),ano, mes, conexao);
             linhaBalancete.put("debito", somaPcr.get("soma"));
 
             //somar o credito desse tipoPagamento
-            somaPcr = lancamento.somaTipoPag("credito",pcr.getCod(),ano,conexao);
+            somaPcr = lancamento.somaTipoPag("credito",pcr.getCod(),ano, mes, conexao);
             linhaBalancete.put("credito", somaPcr.get("soma"));
 
             //adicionar no balancete final
