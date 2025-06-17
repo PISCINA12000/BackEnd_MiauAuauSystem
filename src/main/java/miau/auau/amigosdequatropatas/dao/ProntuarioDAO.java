@@ -157,7 +157,7 @@ public class ProntuarioDAO implements IDAL<Prontuario> {
     //busca pelo ID do animal(pode ser varias linhas)
     public List<Prontuario> getIdAnimal(int id, Conexao conexao) {
         List<Prontuario> lista = new ArrayList<>();
-        String sql = "SELECT * FROM prontuario WHERE pron_animal_id = " + id;
+        String sql = "SELECT * FROM prontuario WHERE pron_animal_id = " + id + " ORDER BY pron_data";
         ResultSet resultSet = conexao.consultar(sql);
         try {
             while (resultSet.next()) {

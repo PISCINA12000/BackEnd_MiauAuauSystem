@@ -1,6 +1,7 @@
 package miau.auau.amigosdequatropatas.view;
 
 
+import miau.auau.amigosdequatropatas.controller.AdocaoController;
 import miau.auau.amigosdequatropatas.controller.ProntuarioController;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,4 +174,21 @@ public class ProntuarioRestView {
             return ResponseEntity.ok().body(new Erro("Registro do prontuário excluído com sucesso!"));
         return ResponseEntity.badRequest().body(new Erro("Não foi possível excluir o Registro do prontuário!!"));
     }
+
+    @GetMapping("pdf/{codAnimal}")
+    public ResponseEntity<Object> downloadPdf(@PathVariable (value = "codAnimal") int codAnimal) throws IOException
+    {
+        Map<String, Object> json = new HashMap<>();
+        json.put("codAnimal", codAnimal);
+
+        byte[] pdf = pronController.onGerarPdf(json);
+        if (pdf != null && pdf.length > 0)
+        {
+            return ResponseEntity.ok().body(pdf);
+        }
+        else
+            return ResponseEntity.badRequest().body(new Erro("Erro ao gerar PDF!!"));
+    }
+
+
 }
