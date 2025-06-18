@@ -1,11 +1,14 @@
 package miau.auau.amigosdequatropatas.controller;
 
+import miau.auau.amigosdequatropatas.dao.DoacaoDAO;
 import miau.auau.amigosdequatropatas.dao.UsuarioDAO;
 import miau.auau.amigosdequatropatas.entities.Doacao;
 import miau.auau.amigosdequatropatas.entities.Usuario;
 import miau.auau.amigosdequatropatas.util.Conexao;
 import miau.auau.amigosdequatropatas.util.SingletonDB;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,5 +191,76 @@ public class DoacaoController {
 
         return false;
     }
+
+    public List<Map<String, Object>> onBuscarPorUsuario(int codUsuario) {
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        Doacao doacao = new Doacao();
+        List<Doacao> lista = doacao.consultarPorUsuario(codUsuario, conexao);
+
+        if (lista != null) {
+            List<Map<String, Object>> listaJson = new ArrayList<>();
+            for (Doacao a : lista) {
+                Map<String, Object> jsonUsuario = new HashMap<>();
+                jsonUsuario.put("cod", a.getUsuario().getCod());
+                jsonUsuario.put("nome", a.getUsuario().getNome());
+                jsonUsuario.put("email", a.getUsuario().getEmail());
+                jsonUsuario.put("telefone", a.getUsuario().getTelefone());
+
+                Map<String, Object> jsonDoacao = new HashMap<>();
+                jsonDoacao.put("codDoacao", a.getCodDoacao());
+                jsonDoacao.put("status", a.getStatus());
+                jsonDoacao.put("data", a.getData());
+                jsonDoacao.put("valor", a.getValor());
+                jsonDoacao.put("usuario", jsonUsuario);
+
+                listaJson.add(jsonDoacao);
+            }
+            return listaJson;
+        } else {
+            return null;
+        }
+    }
+
+    public List<Map<String, Object>> buscarPorData(String dataInicio, String dataFim) {
+        List<Map<String, Object>> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT doa_id AS codDoacao, doa_data AS data, doa_valor AS valor, doa_status AS status
+        FROM doacao
+        WHERE CAST(doa_data AS DATE) BETWEEN ? AND ?
+        AND doa_status = 'Aprovada'
+        ORDER BY doa_data
+    """;
+
+        SingletonDB singletonDB = SingletonDB.getInstance();
+        Conexao conexao = singletonDB.getConexao();
+
+        try {
+            PreparedStatement stmt = conexao.getPreparedStatement(sql);
+            stmt.setDate(1, java.sql.Date.valueOf(dataInicio));
+            stmt.setDate(2, java.sql.Date.valueOf(dataFim));
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> registro = new HashMap<>();
+                registro.put("codDoacao", rs.getInt("codDoacao"));
+                registro.put("data", rs.getDate("data").toString());
+                registro.put("valor", rs.getDouble("valor"));
+                registro.put("status", rs.getString("status"));
+                lista.add(registro);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+
 
 }

@@ -1,6 +1,7 @@
 package miau.auau.amigosdequatropatas.view;
 
 import miau.auau.amigosdequatropatas.controller.DoacaoController;
+import miau.auau.amigosdequatropatas.entities.Doacao;
 import miau.auau.amigosdequatropatas.util.Erro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,5 +90,32 @@ public class DoacaoRestView
             return ResponseEntity.ok(json);
         } else
             return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar doação!!"));
+    }
+
+    @GetMapping("buscarPorUsuario/{id}")
+    public ResponseEntity<Object> getDoacoesPorUsuario(@PathVariable(value = "id") int codUsuario) {
+        DoacaoController doacaoController = new DoacaoController();
+        List<Map<String, Object>> listaJson = doacaoController.onBuscarPorUsuario(codUsuario);
+
+        if (listaJson != null && !listaJson.isEmpty()) {
+            return ResponseEntity.ok().body(listaJson);
+        } else {
+            return ResponseEntity.badRequest().body(new Erro("Nenhuma doação encontrada para este usuário."));
+        }
+    }
+
+    @GetMapping("relatorio-por-data")
+    public ResponseEntity<Object> relatorioPorData(
+            @RequestParam String dataInicio,
+            @RequestParam String dataFim) {
+
+        DoacaoController controller = new DoacaoController();
+        List<Map<String, Object>> lista = controller.buscarPorData(dataInicio, dataFim);
+
+        if (lista != null && !lista.isEmpty()) {
+            return ResponseEntity.ok(lista);
+        } else {
+            return ResponseEntity.ok(List.of());
+        }
     }
 }

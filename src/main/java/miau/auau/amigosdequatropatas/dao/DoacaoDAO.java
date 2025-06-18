@@ -99,16 +99,35 @@ public class DoacaoDAO implements IDAL<Doacao> {
     @Override
     public List<Doacao> get(String filtro, Conexao conexao) {
         List<Doacao> lista = new ArrayList<>();
-        String sql = "SELECT * FROM doacao";
+        String sql = """
+            SELECT d.* 
+            FROM doacao d
+            INNER JOIN usuario u ON u.usu_id = d.doa_usuario_id
+            """;
+
         if (filtro != null && !filtro.isBlank()) {
-            sql += " WHERE TO_CHAR(doa_data, 'YYYY') = ?";
+            sql += """
+               WHERE 
+                 TO_CHAR(d.doa_data, 'YYYY') LIKE ? OR
+                 LOWER(u.usu_nome) LIKE ? OR
+                 LOWER(u.usu_email) LIKE ? OR
+                 u.usu_telefone LIKE ? OR
+                 CAST(d.doa_valor AS VARCHAR) LIKE ?
+               """;
         }
-        sql += " ORDER BY doa_data";
+
+        sql += " ORDER BY d.doa_data";
 
         try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
             if (filtro != null && !filtro.isBlank()) {
-                stmt.setString(1, filtro);
+                String filtroLike = "%" + filtro.toLowerCase() + "%";
+                stmt.setString(1, filtroLike);
+                stmt.setString(2, filtroLike);
+                stmt.setString(3, filtroLike);
+                stmt.setString(4, filtroLike);
+                stmt.setString(5, filtroLike);
             }
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 lista.add(new Doacao(
@@ -124,4 +143,51 @@ public class DoacaoDAO implements IDAL<Doacao> {
         }
         return lista;
     }
+
+    public List<Doacao> buscarPorUsuario(int codUsuario, Conexao conexao) {
+        List<Doacao> lista = new ArrayList<>();
+        String sql = "SELECT * FROM doacao WHERE doa_usuario_id = ? ORDER BY doa_data";
+
+        try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
+            stmt.setInt(1, codUsuario);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                lista.add(new Doacao(
+                        rs.getInt("doa_id"),
+                        new UsuarioDAO().get(rs.getInt("doa_usuario_id"), conexao),
+                        rs.getString("doa_status"),
+                        rs.getDate("doa_data").toString(),
+                        rs.getInt("doa_valor")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public List<Doacao> buscarPorData(String dataInicio, String dataFim, Conexao conexao) {
+        List<Doacao> lista = new ArrayList<>();
+        String sql = "SELECT * FROM doacao WHERE doa_data BETWEEN ? AND ? AND doa_status = 'Aprovada' ORDER BY doa_data";
+
+        try (PreparedStatement stmt = conexao.getPreparedStatement(sql)) {
+            stmt.setDate(1, java.sql.Date.valueOf(dataInicio));
+            stmt.setDate(2, java.sql.Date.valueOf(dataFim));
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                lista.add(new Doacao(
+                        rs.getInt("doa_id"),
+                        new UsuarioDAO().get(rs.getInt("doa_usuario_id"), conexao),
+                        rs.getString("doa_status"),
+                        rs.getDate("doa_data").toString(),
+                        rs.getInt("doa_valor")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 }

@@ -88,4 +88,9 @@ public class Doacao {
         DoacaoDAO doacaoDAO = new DoacaoDAO();
         return doacaoDAO.alterar(this, conexao);
     }
+
+    public List<Doacao> consultarPorUsuario(int codUsuario, Conexao conexao) {
+        return new DoacaoDAO().buscarPorUsuario(codUsuario, conexao);
+    }
+
 }
