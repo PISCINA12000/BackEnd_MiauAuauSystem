@@ -48,13 +48,21 @@ public class AccessFilter implements Filter {
             } else {
                 forbidden(res);
             }
-        } else if (isUsuarioRoute(method, path)) {
+        }
+        else if (isUsuarioRoute(method, path)) {
             if (method.equals("PUT") && !nivel.equals("C") && !nivel.equals("A")) {
                 forbidden(res);
             } else if (method.equals("GET") && path.contains("/buscar-id") && !nivel.equals("C") && !nivel.equals("A")) {
                 forbidden(res);
             } else {
                 chain.doFilter(request, response);
+            }
+        }
+        else if (isDoacaoRoute(method, path)) {
+            if (nivel.equals("C") || nivel.equals("A")) {
+                chain.doFilter(request, response);
+            } else {
+                forbidden(res);
             }
         }
         else if (isAnimalRoute(method, path)) {
@@ -97,6 +105,13 @@ public class AccessFilter implements Filter {
     private boolean isAnimalRoute(String method, String path) {
         return path.startsWith("/apis/animal") && (
                 path.contains("/buscar-filtro") || path.contains("/buscar-cor") || path.contains("/buscar-raca")
+        );
+    }
+
+    private boolean isDoacaoRoute(String method, String path) {
+        return path.startsWith("/apis/doacao") && (
+                (method.equals("POST") && path.contains("/gravar"))
+                || (method.equals("GET") && path.matches(".*/buscarPorUsuario/\\d+"))
         );
     }
 
