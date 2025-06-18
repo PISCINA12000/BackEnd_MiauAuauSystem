@@ -163,11 +163,9 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         return lista;
     }
 
-
-
     public List<Lancamento> getAnimal(int animalId, Conexao conexao) {
         List<Lancamento> lista = new ArrayList<>();
-        String sql = "SELECT * FROM lancamento WHERE lan_codAnimal ="+animalId;
+        String sql = "SELECT * FROM lancamento WHERE lan_codAnimal =" + animalId;
 
         sql += " ORDER BY lan_data";
 
@@ -193,9 +191,26 @@ public class LancamentoDAO implements IDAL<Lancamento> {
         return lista;
     }
 
+    public List<Map<String, Object>> getAnos(Conexao conexao) {
+        List<Map<String, Object>> anos = new ArrayList<>();
+        String sql = "SELECT DISTINCT extract(year from lan_data) as ano FROM lancamento ORDER BY ano";
+
+        ResultSet resultSet = conexao.consultar(sql);
+        try {
+            while (resultSet.next()) {
+                Map<String, Object> ano = new HashMap<>();
+                ano.put("ano", resultSet.getInt("ano"));
+                anos.add(ano);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return anos;
+    }
+
     public Map<String, Object> somatorioTipoPag(String debCred, int codTpPag, int ano, Conexao conexao) {
         Map<String, Object> soma = new HashMap<>();
-        if(debCred.equalsIgnoreCase("credito")) {
+        if (debCred.equalsIgnoreCase("credito")) {
             //faço o somatório do crédito==codTpPag
             String sql = """
                     SELECT SUM(lancamento.lan_valor) AS soma_valores
@@ -207,15 +222,13 @@ public class LancamentoDAO implements IDAL<Lancamento> {
             sql = sql.replace("#1", "" + codTpPag)
                     .replace("#2", "" + ano);
             ResultSet resultSet = conexao.consultar(sql);
-            try{
+            try {
                 resultSet.next();
-                soma.put("soma",resultSet.getDouble("soma_valores"));
-            }
-            catch (Exception e){
+                soma.put("soma", resultSet.getDouble("soma_valores"));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             //faço o somatório do débito==codTpPag
             String sql = """
                     SELECT SUM(lancamento.lan_valor) AS soma_valores
@@ -227,11 +240,54 @@ public class LancamentoDAO implements IDAL<Lancamento> {
             sql = sql.replace("#1", "" + codTpPag)
                     .replace("#2", "" + ano);
             ResultSet resultSet = conexao.consultar(sql);
-            try{
+            try {
                 resultSet.next();
-                soma.put("soma",resultSet.getDouble("soma_valores"));
+                soma.put("soma", resultSet.getDouble("soma_valores"));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e){
+        }
+        return soma;
+    }
+
+    public Map<String, Object> somatorioTipoPag(String debCred, int codTpPag, int ano, Integer mes, Conexao conexao) {
+        Map<String, Object> soma = new HashMap<>();
+        if (debCred.equalsIgnoreCase("credito")) {
+            //faço o somatório do crédito==codTpPag
+            String sql = """
+                    SELECT SUM(lancamento.lan_valor) AS soma_valores
+                    FROM lancamento inner join plano_contas_gerencial
+                        ON lancamento.lan_credito = plano_contas_gerencial.pcg_id
+                    WHERE plano_contas_gerencial.pcr_id = #1
+                    AND EXTRACT(YEAR FROM lan_data) = #2 AND EXTRACT(MONTH FROM lan_data) = #3
+                    """;
+            sql = sql.replace("#1", "" + codTpPag)
+                    .replace("#2", "" + ano)
+                    .replace("#3", "" + mes);
+            ResultSet resultSet = conexao.consultar(sql);
+            try {
+                resultSet.next();
+                soma.put("soma", resultSet.getDouble("soma_valores"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            //faço o somatório do débito==codTpPag
+            String sql = """
+                    SELECT SUM(lancamento.lan_valor) AS soma_valores
+                    FROM lancamento inner join plano_contas_gerencial
+                        ON lancamento.lan_debito = plano_contas_gerencial.pcg_id
+                    WHERE plano_contas_gerencial.pcr_id = #1
+                    AND EXTRACT(YEAR FROM lan_data) = #2 AND EXTRACT(MONTH FROM lan_data) = #3
+                    """;
+            sql = sql.replace("#1", "" + codTpPag)
+                    .replace("#2", "" + ano)
+                    .replace("#3", "" + mes);
+            ResultSet resultSet = conexao.consultar(sql);
+            try {
+                resultSet.next();
+                soma.put("soma", resultSet.getDouble("soma_valores"));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -240,20 +296,48 @@ public class LancamentoDAO implements IDAL<Lancamento> {
 
     public List<Lancamento> getByData(String dataInicial, String dataFinal, Conexao conexao) {
         List<Lancamento> lista = new ArrayList<>();
-        // Converter dataInicial e dataFinal para o formato AAAA-MM-DD
-        String[] partesDataInicial = dataInicial.split("/");
-        String dataInicialFormatada = partesDataInicial[2] + "-" + partesDataInicial[1] + "-" + partesDataInicial[0];
+        String dataFinalFormatada, dataInicialFormatada, sql;
 
-        String[] partesDataFinal = dataFinal.split("/");
-        String dataFinalFormatada = partesDataFinal[2] + "-" + partesDataFinal[1] + "-" + partesDataFinal[0];
+        if (dataInicial == null && dataFinal == null) {
+            return get("", conexao);
+        }
+        else if (dataInicial == null) { // Ou seja, quero tudo até a data final
+            // Converter para AAAA-MM-DD
+            String[] partesDataFinal = dataFinal.split("/");
+            dataFinalFormatada = partesDataFinal[2] + "-" + partesDataFinal[1] + "-" + partesDataFinal[0];
 
-        // Montar o comando SQL com as datas formatadas corretamente
-        String sql = """
-                SELECT * FROM lancamento
-                WHERE lan_data BETWEEN '#1' AND '#2'
-            """;
-        sql = sql.replace("#1", dataInicialFormatada)
-                .replace("#2", dataFinalFormatada);
+            sql = """
+                        SELECT * FROM lancamento
+                        WHERE lan_data <= '#1'
+                    """;
+            sql = sql.replace("#1", dataFinalFormatada);
+        }
+        else if (dataFinal == null) { // Quero tudo pra frente da data inicial
+            // Converter para AAAA-MM-DD
+            String[] partesDataInicial = dataInicial.split("/");
+            dataInicialFormatada = partesDataInicial[2] + "-" + partesDataInicial[1] + "-" + partesDataInicial[0];
+
+            sql = """
+                        SELECT * FROM lancamento
+                        WHERE lan_data >= '#1'
+                    """;
+            sql = sql.replace("#1", dataInicialFormatada);
+        }
+        else { // Quero tudo entre o intervalo
+            // Converter as duas datas para AAAA-MM-DD
+            String[] partesDataFinal = dataFinal.split("/");
+            dataFinalFormatada = partesDataFinal[2] + "-" + partesDataFinal[1] + "-" + partesDataFinal[0];
+
+            String[] partesDataInicial = dataInicial.split("/");
+            dataInicialFormatada = partesDataInicial[2] + "-" + partesDataInicial[1] + "-" + partesDataInicial[0];
+
+            sql = """
+                        SELECT * FROM lancamento
+                        WHERE lan_data BETWEEN '#1' AND '#2'
+                    """;
+            sql = sql.replace("#1", dataInicialFormatada)
+                    .replace("#2", dataFinalFormatada);
+        }
 
         System.out.println("SQL gerado: " + sql);
         ResultSet resultSet = conexao.consultar(sql);

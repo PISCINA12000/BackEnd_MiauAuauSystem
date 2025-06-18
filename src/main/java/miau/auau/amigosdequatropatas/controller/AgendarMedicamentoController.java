@@ -38,12 +38,12 @@ public class AgendarMedicamentoController {
                 json.put("codAgendarMedicamento", agendamentos.get(i).getCodAgendarMedicamento());
 
                 Animal animal = new Animal();
-                animal = animal.consultarID(agendamentos.get(i).getCodAnimal(), conexao);
+                animal = animal.consultarID(agendamentos.get(i).getAnimal().getCodAnimal(), conexao);
                 json.put("animal", animal);
 
 
                 TipoMedicamento tipoMed = new TipoMedicamento();
-                tipoMed = tipoMed.consultarID(agendamentos.get(i).getCodMedicamento(), conexao);
+                tipoMed = tipoMed.consultarID(agendamentos.get(i).getMedicamento().getCod(), conexao);
                 json.put("medicamento",tipoMed);
 
                 json.put("dataAplicacao", agendamentos.get(i).getDataAplicacao());
@@ -74,12 +74,12 @@ public class AgendarMedicamentoController {
                 json.put("codAgendarMedicamento", agendamentos.get(i).getCodAgendarMedicamento());
 
                 Animal animal = new Animal();
-                animal = animal.consultarID(agendamentos.get(i).getCodAnimal(), conexao);
+                animal = animal.consultarID(agendamentos.get(i).getAnimal().getCodAnimal(), conexao);
                 json.put("animal", animal);
 
 
                 TipoMedicamento tipoMed = new TipoMedicamento();
-                tipoMed = tipoMed.consultarID(agendamentos.get(i).getCodMedicamento(), conexao);
+                tipoMed = tipoMed.consultarID(agendamentos.get(i).getMedicamento().getCod(), conexao);
                 json.put("medicamento",tipoMed);
 
                 json.put("dataAplicacao", agendamentos.get(i).getDataAplicacao());
@@ -101,15 +101,14 @@ public class AgendarMedicamentoController {
         AgendarMedicamento agendarMed= agendarMedicamento.consultarID(id, conexao);
         if (agendarMed != null) {
             Map<String, Object> json = new HashMap<>();
-
             json.put("codAgendarMedicamento", agendarMed.getCodAgendarMedicamento());
 
             Animal animal = new Animal();
-            animal = animal.consultarID(agendarMed.getCodAnimal(), conexao);
+            animal = animal.consultarID(agendarMed.getAnimal().getCodAnimal(), conexao);
             json.put("animal", animal);
 
             TipoMedicamento tipoMed = new TipoMedicamento();
-            tipoMed = tipoMed.consultarID(agendarMed.getCodMedicamento(), conexao);
+            tipoMed = tipoMed.consultarID(agendarMed.getMedicamento().getCod(), conexao);
             json.put("medicamento",tipoMed);
 
 
@@ -130,8 +129,14 @@ public class AgendarMedicamentoController {
         //onde vou setar minhas informações seguindo as regras de negócios
         if (validar(json)) {
 
-            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
-            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
+            Animal animal = new Animal();
+            TipoMedicamento medicamento = new TipoMedicamento();
+
+            animal = animal.consultarID((int) json.get("animal"),conexao);
+            medicamento = medicamento.consultarID((int) json.get("medicamento"),conexao);
+
+            agendarMedicamento.setAnimal(animal);
+            agendarMedicamento.setMedicamento(medicamento);
 
             agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
             agendarMedicamento.setStatus((Boolean) json.get("status"));
@@ -173,10 +178,16 @@ public class AgendarMedicamentoController {
 
         if (validarAlterar(json)) {
 
+            Animal animal = new Animal();
+            TipoMedicamento medicamento = new TipoMedicamento();
+
+            animal = animal.consultarID((int) json.get("animal"),conexao);
+            medicamento = medicamento.consultarID((int) json.get("medicamento"),conexao);
+
             agendarMedicamento.setCodAgendarMedicamento(Integer.parseInt(json.get("codAgendarMedicamento").toString()));
             //pega só cod do animal  e medicamento no json
-            agendarMedicamento.setCodAnimal(Integer.parseInt(json.get("animal").toString()));
-            agendarMedicamento.setCodMedicamento(Integer.parseInt(json.get("medicamento").toString()));
+            agendarMedicamento.setAnimal(animal);
+            agendarMedicamento.setMedicamento(medicamento);
 
             agendarMedicamento.setDataAplicacao(json.get("dataAplicacao").toString());
             agendarMedicamento.setStatus((Boolean) json.get("status"));

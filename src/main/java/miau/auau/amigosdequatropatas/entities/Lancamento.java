@@ -135,8 +135,18 @@ public class Lancamento {
         return lancamentoDAO.get(id, conexao);
     }
 
-    public Map<String, Object> somaTipoPag(String debCred, int cod, int ano, Conexao conexao) {
-        return lancamentoDAO.somatorioTipoPag(debCred, cod, ano, conexao);
+    public List<Map<String, Object>> consultarAnos(Conexao conexao) {
+        return lancamentoDAO.getAnos(conexao);
+    }
+
+    public Map<String, Object> somaTipoPag(String debCred, int cod, int ano, Integer mes, Conexao conexao) {
+        if(mes == null){
+            //retorno o filtro apenas do ano
+            return lancamentoDAO.somatorioTipoPag(debCred, cod, ano, conexao);
+        }
+
+        //retorno filtrando tambem o mes
+        return lancamentoDAO.somatorioTipoPag(debCred, cod, ano, mes, conexao);
     }
 
     public boolean incluir(Conexao conexao) {
